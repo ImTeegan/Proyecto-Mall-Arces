@@ -7,4 +7,7 @@
     <string name="birthDate">Fecha de nacimiento</string>
     <string name="location">Provincia</string>
     <string name="createAccount">Crear cuenta</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="register">Registrarse</string>
+    <string name="omitir"><u>Omitir</u></string>
 </resources>
