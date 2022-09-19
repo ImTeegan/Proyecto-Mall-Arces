@@ -11,16 +11,26 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.util.Patterns;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
+
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Provinces;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -28,8 +38,12 @@ public class RegistrationActivity extends AppCompatActivity {
     private double currentLatitude = 0;
     private double currentLongitude = 0;
     private TextInputLayout tilLocation;
+    private TextInputLayout tilIdentification;
+    private TextInputLayout tilName;
+    private TextInputLayout tilEmail;
+    private TextInputLayout tilBirthDate;
     LocationManager locationManager;
-    private EditText tilBirthDate;
+    private EditText birthDate;
 
 
     @Override
@@ -44,11 +58,26 @@ public class RegistrationActivity extends AppCompatActivity {
             getLocation();
         }
         compareLocation();
-        tilBirthDate = findViewById(R.id.birthDate_field);
-        tilBirthDate.setOnClickListener(new View.OnClickListener() {
+        birthDate = findViewById(R.id.birthDate_field);
+        tilBirthDate = findViewById(R.id.til_birthDate);
+        birthDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getDatePickerDialog();
+            }
+        });
+        tilIdentification = findViewById(R.id.til_identification);
+        tilName = findViewById(R.id.til_name);
+        tilEmail = findViewById(R.id.til_email);
+        Button registrationButon = (Button) findViewById(R.id.registrationButton);
+        registrationButon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    validateData();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -113,14 +142,80 @@ public class RegistrationActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
-                        tilBirthDate.setText(dayOfMonth + "/" + dayOfMonth + "/" + year);
+                        birthDate.setText(dayOfMonth + "/" + (monthOfYear+1) + "/" + year);
                     }
                 },
                 year, month, day);
         datePickerDialog.show();
     }
 
-    public void saveUser(View view){
+    private boolean validateIdentification(String identification){
+        Pattern patron = Pattern.compile("^[0-9]+$");
+        if (!patron.matcher(identification).matches() || identification.isEmpty()) {
+            tilIdentification.setError("La identificación no es válida");
+            return false;
+        } else {
+            tilIdentification.setError(null);
+        }
+        return true;
+    }
+
+    private boolean validateName(String name){
+        Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
+        if (!patron.matcher(name).matches() || name.isEmpty()) {
+            tilName.setError("El nombre no es válido");
+            return false;
+        } else {
+            tilName.setError(null);
+        }
+        return true;
+    }
+
+    private boolean validateEmail(String email){
+        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            tilEmail.setError("El correo electronico no es válido");
+            return false;
+        } else {
+            tilEmail.setError(null);
+        }
+        return true;
+    }
+
+    private boolean validateBirthDate(String birthDate) throws ParseException {
+        if (!birthDate.isEmpty()){
+            LocalDate today = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+            LocalDate pastDate = LocalDate.parse(birthDate, formatter);
+            boolean isBefore = pastDate.isBefore(today);
+            if(!isBefore){
+                tilBirthDate.setError("La fecha ingresada no es valida");
+            }
+            else{
+                tilBirthDate.setError(null);
+            }
+            return isBefore;
+        }
+        tilBirthDate.setError("La fecha ingresada no es valida");
+        return false;
+    }
+
+    private void validateData() throws ParseException {
+        String identification = tilIdentification.getEditText().getText().toString();
+        String name = tilName.getEditText().getText().toString();
+        String email = tilEmail.getEditText().getText().toString();
+        String date = birthDate.getText().toString();
+        boolean validIdentification = validateIdentification(identification);
+        boolean validName = validateName(name);
+        boolean validEmail = validateEmail(email);
+        boolean validBirthDate = validateBirthDate(date);
+        if(validBirthDate && validEmail && validName && validIdentification){
+            Toast.makeText(this, "Registro exitoso",
+                    Toast.LENGTH_LONG).show();
+            saveUser();
+        }
+    }
+
+    public void saveUser(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

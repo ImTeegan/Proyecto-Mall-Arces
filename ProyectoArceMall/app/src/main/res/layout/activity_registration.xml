@@ -11,7 +11,7 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="40dp"
         android:fontFamily="@font/carrois_gothic"
         android:text="@string/registrationTitle"
         android:textColor="@color/dark_blue"
@@ -26,47 +26,50 @@
         android:id="@+id/til_identification"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="120dp"
         android:layout_marginEnd="30dp"
         android:ems="10"
         app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.184"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/identification_field"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
+            android:digits="1234567890"
             android:background="@drawable/textinput_bg"
             android:ems="10"
             android:fontFamily="@font/carrois_gothic"
             android:hint="@string/identification"
             android:inputType="text"
-            android:textColor="@android:color/black"
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_name"
-        android:layout_height="60dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
         android:ems="10"
         app:hintEnabled="false"
         app:layout_constraintTop_toBottomOf="@+id/til_identification"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.184"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
-
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/name_field"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/textinput_bg"
             android:ems="10"
             android:fontFamily="@font/carrois_gothic"
@@ -79,7 +82,7 @@
         android:id="@+id/til_email"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
@@ -87,25 +90,27 @@
         app:hintEnabled="false"
         app:layout_constraintTop_toBottomOf="@+id/til_name"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.184">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email_field"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@drawable/textinput_bg"
+            android:layout_height="wrap_content"
             android:ems="10"
             android:fontFamily="@font/carrois_gothic"
             android:hint="@string/email"
             android:inputType="text"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:background="@drawable/textinput_bg"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_birthDate"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
@@ -117,12 +122,14 @@
         android:focusableInTouchMode="false"
         app:layout_constraintTop_toBottomOf="@+id/til_email"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.184">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/birthDate_field"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/textinput_bg"
             android:ems="10"
             app:hintEnabled="false"
@@ -134,7 +141,6 @@
             android:hint="@string/birthDate"
             android:inputType="text"
             android:drawableRight="@drawable/ic_baseline_calendar_today_24"
-
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -157,22 +163,22 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:background="@drawable/textinput_bg"
+            android:drawableRight="@drawable/ic_baseline_location_on_24"
+            android:editable="false"
             android:ems="10"
+            android:focusable="false"
             android:fontFamily="@font/carrois_gothic"
             android:hint="@string/location"
             android:inputType="none"
-            android:focusable="false"
-            android:editable="false"
-            android:textColor="@android:color/black"
-            android:drawableRight="@drawable/ic_baseline_location_on_24"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textColor="@android:color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/registrationButton"
         android:layout_width="192dp"
         android:layout_height="59dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="44dp"
         android:layout_weight="1"
         android:background="@drawable/round_corners"
         android:shadowRadius="50"
@@ -180,8 +186,9 @@
         android:textColor="@android:color/black"
         android:textFontWeight="800"
         android:textSize="18dp"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_location"
-        android:onClick="saveUser"/>
+        app:layout_constraintTop_toBottomOf="@+id/til_location" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
