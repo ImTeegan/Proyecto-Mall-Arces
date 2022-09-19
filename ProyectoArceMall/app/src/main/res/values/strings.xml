@@ -13,4 +13,6 @@
     <string name="enterEmail">Ingrese su correo electrónico</string>
     <string name="enterPassword">Ingrese su contraseña</string>
     <string name="loginButton">Ingresar</string>
+    <string name="registerConfirmation">Se envió un correo a la cuenta registrada con la contraseña para iniciar sesión</string>
+    <string name="accept">Aceptar</string>
 </resources>
