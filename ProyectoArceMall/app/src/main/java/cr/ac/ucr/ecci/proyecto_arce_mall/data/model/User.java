@@ -11,6 +11,7 @@ public class User implements Parcelable {
     private String Email;
     private String Birthday;
     private String Province;
+    private String Password;
 
     public User(){
 
@@ -95,5 +96,13 @@ public class User implements Parcelable {
 
     public void setProvince(String province) {
         Province = province;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public void setPassword(String password) {
+        Password = password;
     }
 }
