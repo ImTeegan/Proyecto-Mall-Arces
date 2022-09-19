@@ -1,4 +1,4 @@
-package com.example.applicationtest1;
+package cr.ac.ucr.ecci.proyecto_arce_mall;
 
 import androidx.appcompat.app.AppCompatActivity;
 
