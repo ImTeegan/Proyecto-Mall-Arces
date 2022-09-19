@@ -212,11 +212,17 @@ public class RegistrationActivity extends AppCompatActivity {
             Toast.makeText(this, "Registro exitoso",
                     Toast.LENGTH_LONG).show();
             saveUser();
+            showConfirmationScreen();
         }
     }
 
     public void saveUser(){
         Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    private void showConfirmationScreen() {
+        Intent intent = new Intent(this, RegisterConfirmationActivity.class);
         startActivity(intent);
     }
 }

@@ -6,9 +6,32 @@ import android.os.Bundle;
 
 public class RegisterConfirmationActivity extends AppCompatActivity {
 
+    private Button acceptButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_confirmation);
+
+        this.instantiateComponents();
+        this.setButtonActions();
+    }
+
+    private void instantiateComponents() {
+        this.acceptButton = (Button) findViewById(R.id.acceptButton);
+    }
+
+    private void setButtonActions() {
+        this.acceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goBackToMainScreen();
+            }
+        });
+    }
+
+    private void goBackToMainScreen() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
