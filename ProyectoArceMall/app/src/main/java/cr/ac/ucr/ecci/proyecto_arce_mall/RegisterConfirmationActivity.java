@@ -20,7 +20,7 @@ public class RegisterConfirmationActivity extends AppCompatActivity {
     }
 
     private void instantiateComponents() {
-        this.acceptButton = (Button) findViewById(R.id.acceptButton);
+        this.acceptButton = (Button) findViewById(R.id.accept_button);
     }
 
     private void setButtonActions() {
