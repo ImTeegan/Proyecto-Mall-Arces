@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:fontFamily="@font/carrois_gothic"
-        android:text="@string/registrationTitle"
+        android:text="@string/registration_title"
         android:textColor="@color/dark_blue"
         android:textSize="32sp"
         android:textFontWeight="650"
@@ -107,7 +107,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_birthDate"
+        android:id="@+id/til_birth_date"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
         app:layout_constraintHorizontal_bias="0.184">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/birthDate_field"
+            android:id="@+id/birth_date_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/textinput_bg"
@@ -138,7 +138,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:fontFamily="@font/carrois_gothic"
-            android:hint="@string/birthDate"
+            android:hint="@string/birth_date"
             android:inputType="text"
             android:drawableRight="@drawable/ic_baseline_calendar_today_24"
             android:singleLine="true" />
@@ -154,7 +154,7 @@
         android:layout_marginEnd="30dp"
         android:ems="10"
         app:hintEnabled="false"
-        app:layout_constraintTop_toBottomOf="@+id/til_birthDate"
+        app:layout_constraintTop_toBottomOf="@+id/til_birth_date"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
@@ -175,14 +175,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/registrationButton"
+        android:id="@+id/registration_button"
         android:layout_width="192dp"
         android:layout_height="59dp"
         android:layout_marginTop="44dp"
         android:layout_weight="1"
         android:background="@drawable/round_corners"
         android:shadowRadius="50"
-        android:text="@string/createAccount"
+        android:text="@string/create_account"
         android:textColor="@android:color/black"
         android:textFontWeight="800"
         android:textSize="18dp"
