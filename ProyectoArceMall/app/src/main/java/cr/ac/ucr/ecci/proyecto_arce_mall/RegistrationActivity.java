@@ -211,7 +211,7 @@ public class RegistrationActivity extends AppCompatActivity {
         if(validBirthDate && validEmail && validName && validIdentification){
             Toast.makeText(this, "Registro exitoso",
                     Toast.LENGTH_LONG).show();
-            saveUser();
+            //saveUser();
             showConfirmationScreen();
         }
     }
