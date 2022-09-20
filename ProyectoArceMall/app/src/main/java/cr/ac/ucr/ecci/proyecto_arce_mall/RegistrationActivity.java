@@ -202,11 +202,11 @@ public class RegistrationActivity extends AppCompatActivity {
         Pattern pattern = Pattern.compile("^[0-9]+$");
 
         if (!pattern.matcher(identification).matches() || identification.isEmpty()) {
-            tilIdentification.setError("La identificación no es válida");
+            this.tilIdentification.setError("La identificación no es válida");
             return false;
         }
 
-        tilIdentification.setError(null);
+        this.tilIdentification.setError(null);
         return true;
     }
 
