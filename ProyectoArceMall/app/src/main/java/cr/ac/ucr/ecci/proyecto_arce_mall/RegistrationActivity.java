@@ -18,7 +18,6 @@ import android.widget.DatePicker;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -44,6 +43,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private TextInputLayout tilName;
     private TextInputLayout tilEmail;
     private TextInputLayout tilBirthDate;
+    private String province;
     LocationManager locationManager;
     private EditText birthDate;
     private DbHelper DataBase;
@@ -72,7 +72,7 @@ public class RegistrationActivity extends AppCompatActivity {
         tilIdentification = findViewById(R.id.til_identification);
         tilName = findViewById(R.id.til_name);
         tilEmail = findViewById(R.id.til_email);
-        Button registrationButon = (Button) findViewById(R.id.registrationButton);
+        Button registrationButon = (Button) findViewById(R.id.registerButton);
         registrationButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,8 +128,9 @@ public class RegistrationActivity extends AppCompatActivity {
                 Location.distanceBetween(currentLatitude, currentLongitude, province.getLatitude(), province.getLongitude(), results);
                 maps.put(province.getName(), results[0]);
             }
-            tilLocation.getEditText().setText(Collections.min(maps.entrySet(),
+            province = (Collections.min(maps.entrySet(),
                     Map.Entry.comparingByValue()).getKey());
+            tilLocation.getEditText().setText(province);
         }
     }
 
@@ -212,11 +213,7 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean validEmail = validateEmail(email);
         boolean validBirthDate = validateBirthDate(date);
         if(validBirthDate && validEmail && validName && validIdentification){
-            Toast.makeText(this, "Registro exitoso",
-                    Toast.LENGTH_LONG).show();
-            User newUser = new User(identification,
-                    name,email,
-                    date,Province.getText().toString());
+            User newUser = new User(identification, name,email, date,province);
             registerUser(newUser);
         }
     }
