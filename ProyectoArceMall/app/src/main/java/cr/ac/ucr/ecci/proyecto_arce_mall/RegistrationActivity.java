@@ -105,22 +105,22 @@ public class RegistrationActivity extends AppCompatActivity {
         final Builder builder = new Builder(this);
 
         builder.setMessage("Enable GPS")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new  DialogInterface.OnClickListener() {
+               .setCancelable(false)
+               .setPositiveButton("Yes", new  DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
 
-                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+             }).setNegativeButton("No", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
 
-                });
+        });
 
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
@@ -136,7 +136,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_COARSE_LOCATION);
 
         if ((preciseLocationPermission != PackageManager.PERMISSION_GRANTED)
-                && (approxLocationPermission != PackageManager.PERMISSION_GRANTED)) {
+            && (approxLocationPermission != PackageManager.PERMISSION_GRANTED)) {
 
             ActivityCompat.requestPermissions(this,
                     new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
@@ -156,7 +156,7 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void compareLocation() {
-        if(this.currentLatitude == 0 && this.currentLongitude == 0) {
+        if (this.currentLatitude == 0 && this.currentLongitude == 0) {
             this.tilLocation.getEditText().setText("San José");
         } else {
             Map<String, Float> map = new HashMap<String, Float>();
@@ -184,14 +184,14 @@ public class RegistrationActivity extends AppCompatActivity {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
-                RegistrationActivity.this,
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        birthDate.setText(dayOfMonth + "/" + (monthOfYear+1) + "/" + year);
-                    }
-                }, year, month, day);
+            RegistrationActivity.this,
+            new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year,
+                                      int monthOfYear, int dayOfMonth) {
+                    birthDate.setText(dayOfMonth + "/" + (monthOfYear+1) + "/" + year);
+                }
+            }, year, month, day);
 
         datePickerDialog.show();
     }
