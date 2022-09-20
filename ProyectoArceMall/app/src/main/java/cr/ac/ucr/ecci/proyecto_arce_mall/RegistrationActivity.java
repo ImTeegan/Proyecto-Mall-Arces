@@ -61,7 +61,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private void instantiateComponents() {
         this.tilLocation = (TextInputLayout) findViewById(R.id.til_location);
         this.locationManager = (LocationManager)
-                getSystemService(Context.LOCATION_SERVICE);
+                                getSystemService(Context.LOCATION_SERVICE);
         this.birthDate = findViewById(R.id.birth_date_field);
         this.tilBirthDate = findViewById(R.id.til_birthDate);
         this.tilIdentification = findViewById(R.id.til_identification);
@@ -106,7 +106,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         builder.setMessage("Enable GPS")
                .setCancelable(false)
-               .setPositiveButton("Yes", new  DialogInterface.OnClickListener() {
+               .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -145,7 +145,7 @@ public class RegistrationActivity extends AppCompatActivity {
         } else {
 
             Location locationGps = this.locationManager.getLastKnownLocation(LocationManager
-                    .GPS_PROVIDER);
+                                                                             .GPS_PROVIDER);
 
             if (locationGps != null) {
                 this.currentLatitude = locationGps.getLatitude();
@@ -161,19 +161,21 @@ public class RegistrationActivity extends AppCompatActivity {
         } else {
             Map<String, Float> map = new HashMap<String, Float>();
             float[] results = new float[8];
+
             for (Provinces province : Provinces.values()) {
 
                 Location.distanceBetween(this.currentLatitude,
-                        this.currentLongitude,
-                        province.getLatitude(),
-                        province.getLongitude(),
-                        results);
+                                         this.currentLongitude,
+                                         province.getLatitude(),
+                                         province.getLongitude(),
+                                         results);
                 map.put(province.getName(), results[0]);
 
             }
+
             this.tilLocation.getEditText()
-                    .setText(Collections.min(map.entrySet(),
-                            Map.Entry.comparingByValue()).getKey());
+                            .setText(Collections.min(map.entrySet(),
+                                     Map.Entry.comparingByValue()).getKey());
         }
     }
 
@@ -189,7 +191,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 @Override
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
-                    birthDate.setText(dayOfMonth + "/" + (monthOfYear+1) + "/" + year);
+                    birthDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
                 }
             }, year, month, day);
 
