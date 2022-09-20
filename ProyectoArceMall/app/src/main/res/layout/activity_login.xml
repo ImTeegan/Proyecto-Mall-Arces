@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/logoImage"
+        android:id="@+id/logo_image"
         android:layout_width="169dp"
         android:layout_height="336dp"
         android:layout_marginBottom="316dp"
@@ -35,12 +35,12 @@
         app:srcCompat="@drawable/logo" />
 
     <TextView
-        android:id="@+id/enterEmail"
+        android:id="@+id/enter_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="428dp"
         android:fontFamily="@font/carrois_gothic"
-        android:text="@string/enterEmail"
+        android:text="@string/enter_email"
         android:textColor="@color/dark_blue"
         android:textFontWeight="650"
         android:textSize="20sp"
@@ -74,12 +74,12 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/enterPassword"
+        android:id="@+id/enter_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="518dp"
         android:fontFamily="@font/carrois_gothic"
-        android:text="@string/enterPassword"
+        android:text="@string/enter_password"
         android:textColor="@color/dark_blue"
         android:textFontWeight="650"
         android:textSize="20sp"
@@ -116,14 +116,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/loginButton"
+        android:id="@+id/login_button"
         android:layout_width="192dp"
         android:layout_height="59dp"
         android:layout_marginTop="28dp"
         android:layout_weight="1"
         android:background="@drawable/round_corners"
         android:shadowRadius="50"
-        android:text="@string/loginButton"
+        android:text="@string/login_button"
         android:textColor="@android:color/black"
         android:textFontWeight="800"
         android:textSize="18dp"
