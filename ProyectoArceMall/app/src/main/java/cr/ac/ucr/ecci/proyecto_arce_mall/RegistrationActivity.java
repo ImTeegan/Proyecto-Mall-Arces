@@ -88,7 +88,7 @@ public class RegistrationActivity extends AppCompatActivity {
         });
 
         // Set registration button click action.
-        registrationButton.setOnClickListener(new View.OnClickListener() {
+        this.registrationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
