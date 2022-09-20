@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Proyecto-Arce-Mall</string>
     <string name="registrationTitle">Registrarse</string>
-    <string name="identification">Identificación</string>
-    <string name="name">Nombre</string>
-    <string name="email">Correo electrónico</string>
-    <string name="birthDate">Fecha de nacimiento</string>
+    <string name="identification">Identificación*</string>
+    <string name="name">Nombre*</string>
+    <string name="email">Correo electrónico*</string>
+    <string name="birthDate">Fecha de nacimiento*</string>
     <string name="location">Provincia</string>
     <string name="createAccount">Crear cuenta</string>
     <string name="login">Iniciar Sesión</string>
