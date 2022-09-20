@@ -214,21 +214,21 @@ public class RegistrationActivity extends AppCompatActivity {
         Pattern pattern = Pattern.compile("^[a-zA-Z ]+$");
 
         if (!pattern.matcher(name).matches() || name.isEmpty()) {
-            tilName.setError("El nombre no es válido");
+            this.tilName.setError("El nombre no es válido");
             return false;
         }
 
-        tilName.setError(null);
+        this.tilName.setError(null);
         return true;
     }
 
     private boolean validateEmail(String email){
         if (email.isEmpty() || !(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
-            tilEmail.setError("El correo electrónico no es válido");
+            this.tilEmail.setError("El correo electrónico no es válido");
             return false;
         }
 
-        tilEmail.setError(null);
+        this.tilEmail.setError(null);
         return true;
     }
 
@@ -240,15 +240,15 @@ public class RegistrationActivity extends AppCompatActivity {
             boolean isBefore = pastDate.isBefore(today);
 
             if (!isBefore) {
-                tilBirthDate.setError("La fecha ingresada no es válida");
+                this.tilBirthDate.setError("La fecha ingresada no es válida");
             } else {
-                tilBirthDate.setError(null);
+                this.tilBirthDate.setError(null);
             }
 
             return isBefore;
         }
 
-        tilBirthDate.setError("La fecha ingresada no es válida");
+        this.tilBirthDate.setError("La fecha ingresada no es válida");
         return false;
     }
 
