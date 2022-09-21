@@ -2,8 +2,11 @@ package cr.ac.ucr.ecci.proyecto_arce_mall.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.android.material.internal.ParcelableSparseArray;
+
+import java.util.Random;
 
 public class User implements Parcelable {
     private String Identification;
@@ -12,16 +15,20 @@ public class User implements Parcelable {
     private String Birthday;
     private String Province;
     private String Password;
+    private int firstTime;
 
     public User(){
 
     }
-    public User(  String Identification,String Name,String Email, String Birthday, String Province){
+    public User(  String Identification,String Name,String Email,
+                  String Birthday, String Province, int firstTime){
         this.Identification = Identification ;
         this.Name = Name;
         this.Email = Email;
         this.Birthday = Birthday;
         this.Province = Province;
+        this.firstTime = firstTime;
+        this.CreatePassword();
     }
 
     protected User(Parcel in) {
@@ -40,6 +47,21 @@ public class User implements Parcelable {
         dest.writeString(Birthday);
         dest.writeString(Province);
     }
+
+    private void CreatePassword(){
+        int leftLimit = 97;
+        int rightLimit = 122;
+        int targetStringLength = 15; //length of string
+        Random random = new Random();
+        String password = random.ints(leftLimit, rightLimit + 1)
+                .limit(targetStringLength)
+                .collect(StringBuilder::new,
+                        StringBuilder::appendCodePoint,
+                        StringBuilder::append)
+                .toString();
+        this.setPassword(password);
+    }
+
 
     @Override
     public int describeContents() {
@@ -104,5 +126,13 @@ public class User implements Parcelable {
 
     public void setPassword(String password) {
         Password = password;
+    }
+
+    public int getFirstTime() {
+        return firstTime;
+    }
+
+    public void setFirstTime(int firstTime) {
+        this.firstTime = firstTime;
     }
 }

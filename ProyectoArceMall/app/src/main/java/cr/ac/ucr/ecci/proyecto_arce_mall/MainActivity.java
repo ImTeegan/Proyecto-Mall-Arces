@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
                    Log.i("Email" , newUser.getEmail());
                    Log.i("Province" , newUser.getProvince());
                    Log.i("Birthday" , newUser.getBirthday());
+                   Log.i("Password",newUser.getPassword());
                }
 
                if(Database.checkUser("cesar@lopez.com","DEDOS")){

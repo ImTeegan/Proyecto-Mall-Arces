@@ -28,13 +28,13 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String COLUMN_USER_PASSWORD = "Password";
     private static final String COLUMN_USER_PROVINCE = "Province";
     private static final String COLUMN_USER_BIRTHDAY = "Birthday"; //FORMAT YYY MM DD ISO 8601,
-
+    private static final String COLUMN_USER_FIRST = "FirstTime";
     // create table sql query
-    private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
+    private final String  CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " TEXT PRIMARY KEY ," + COLUMN_USER_NAME + " TEXT, "
-            + COLUMN_USER_EMAIL + " TEXT, " + COLUMN_USER_PROVINCE + " TEXT,"
-            + COLUMN_USER_BIRTHDAY + " TEXT, "+ COLUMN_USER_PASSWORD + " TEXT " + ")";
-
+            + COLUMN_USER_EMAIL + " TEXT, " + COLUMN_USER_PROVINCE + " TEXT, "
+            + COLUMN_USER_BIRTHDAY + " TEXT, " + COLUMN_USER_PASSWORD + " TEXT, "
+            + COLUMN_USER_FIRST + " INTEGER " + ")";
 
     // drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
@@ -69,7 +69,8 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USER_EMAIL, user.getEmail());
         values.put(COLUMN_USER_PROVINCE, user.getProvince());
         values.put(COLUMN_USER_BIRTHDAY, user.getBirthday());
-        values.put(COLUMN_USER_PASSWORD, "DEDOS");//change this to random
+        values.put(COLUMN_USER_PASSWORD, user.getPassword());
+        values.put(COLUMN_USER_FIRST,user.getFirstTime());
         // Inserting Row
         Log.i("DATA BASE ",db.insert(TABLE_USER, null, values) + "");
         db.close();
@@ -84,6 +85,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USER_PROVINCE, user.getProvince());
         values.put(COLUMN_USER_BIRTHDAY, user.getBirthday());
         values.put(COLUMN_USER_PASSWORD, user.getPassword());
+        values.put(COLUMN_USER_FIRST,user.getFirstTime());
         // updating row
         db.update(TABLE_USER, values, COLUMN_USER_ID + " = ?",
                 new String[]{String.valueOf(user.getIdentification())});
@@ -110,7 +112,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 COLUMN_USER_EMAIL,
                 COLUMN_USER_PROVINCE,
                 COLUMN_USER_BIRTHDAY,
-                COLUMN_USER_PASSWORD
+                COLUMN_USER_PASSWORD,
+                COLUMN_USER_FIRST
         };
         // sorting orders
         String sortOrder =
@@ -135,6 +138,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 user.setProvince(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_PROVINCE)));
                 user.setBirthday(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_BIRTHDAY)));
                 user.setPassword(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_PASSWORD)));
+                user.setFirstTime(Integer.parseInt(String.valueOf(cursor.getColumnIndex(COLUMN_USER_FIRST))));
                 // Adding user record to list
                 userList.add(user);
             } while (cursor.moveToNext());

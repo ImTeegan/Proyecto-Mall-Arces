@@ -213,7 +213,7 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean validEmail = validateEmail(email);
         boolean validBirthDate = validateBirthDate(date);
         if(validBirthDate && validEmail && validName && validIdentification){
-            User newUser = new User(identification, name,email, date,province);
+            User newUser = new User(identification, name,email, date,province,1); //1 means TRUE
             registerUser(newUser);
         }
     }
