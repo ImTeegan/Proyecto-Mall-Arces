@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Proyecto-Arce-Mall</string>
+    <string name="registration_title">Registrarse</string>
+    <string name="identification">Identificación*</string>
+    <string name="name">Nombre*</string>
+    <string name="email">Correo electrónico*</string>
+    <string name="birth_date">Fecha de nacimiento*</string>
+    <string name="location">Provincia</string>
+    <string name="create_account">Crear cuenta</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="register">Registrarse</string>
+    <string name="omitir"><u>Omitir</u></string>
+    <string name="enter_email">Ingrese su correo electrónico</string>
+    <string name="enter_password">Ingrese su contraseña</string>
+    <string name="login_button">Ingresar</string>
+    <string name="register_confirmation">Se envió un correo a la cuenta registrada con la contraseña para iniciar sesión</string>
+    <string name="accept">Aceptar</string>
 </resources>
