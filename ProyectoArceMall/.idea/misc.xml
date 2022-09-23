@@ -3,22 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/botton_nav_menu_style.xml" value="0.195" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/grid_item_style.xml" value="0.1" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/grid_style.xml" value="0.103" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/round_corners.xml" value="0.1215" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/search_field.xml" value="0.1215" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/textinput_bg.xml" value="0.1215" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_registration.xml" value="0.1" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_store.xml" value="0.22" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/grid_item.xml" value="0.24003623188405798" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/grid_items.xml" value="0.24003623188405798" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/list_item.xml" value="0.33" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/menu/button_nav_menu.xml" value="0.190625" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/menu/search_bar.xml" value="0.2942708333333333" />
         <entry key="..\:/Documentos/Proyecto-Moviles/ProyectoArceMall/app/src/main/res/layout/activity_main.xml" value="0.1398148148148148" />
-        <entry key="..\:/Documentos/proyectooooo/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.193" />
-        <entry key="..\:/Documentos/proyectooooo/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/bottom_registration_bg.xml" value="0.192" />
-        <entry key="..\:/Documentos/proyectooooo/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/ic_baseline_calendar_today_24.xml" value="0.193" />
-        <entry key="..\:/Documentos/proyectooooo/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/ic_launcher_background.xml" value="0.193" />
-        <entry key="..\:/Documentos/proyectooooo/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/textinput_bg.xml" value="0.193" />
-        <entry key="..\:/Documentos/proyectooooo/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_main.xml" value="0.1398148148148148" />
-        <entry key="..\:/Documentos/proyectooooo/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_registration.xml" value="0.25" />
-        <entry key="..\:/Documentos/prueba/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.288" />
-        <entry key="..\:/Documentos/prueba/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/ic_baseline_calendar_today_24.xml" value="0.288" />
-        <entry key="..\:/Documentos/prueba/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.288" />
-        <entry key="..\:/Documentos/prueba/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/ic_launcher_background.xml" value="0.288" />
-        <entry key="..\:/Documentos/prueba/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/round_corners.xml" value="0.288" />
-        <entry key="..\:/Documentos/prueba/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/textinput_bg.xml" value="0.288" />
-        <entry key="..\:/Documentos/prueba/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/Documentos/prueba/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_registration.xml" value="0.25" />
       </map>
     </option>
   </component>

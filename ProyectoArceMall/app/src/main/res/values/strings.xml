@@ -15,4 +15,8 @@
     <string name="login_button">Ingresar</string>
     <string name="register_confirmation">Se envió un correo a la cuenta registrada con la contraseña para iniciar sesión</string>
     <string name="accept">Aceptar</string>
+    <string name="search">Buscar en Arce Shopping</string>
+    <string name="homeTitle">Inicio</string>
+    <string name="userTitle">Cuenta</string>
+    <string name="cartTitle">Carrito</string>
 </resources>
