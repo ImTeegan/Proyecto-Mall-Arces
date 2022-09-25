@@ -30,6 +30,9 @@
             android:name=".RegistrationActivity"
             android:exported="false" />
         <activity
+            android:name=".StoreActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
