@@ -9,33 +9,36 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import java.util.ArrayList;
+
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.R;
 
 public class ProductAdapter extends ArrayAdapter<Product> {
 
-    public ProductAdapter(@NonNull Context context, ArrayList<Product> courseModelArrayList) {
-        super(context, 0, courseModelArrayList);
+    public ProductAdapter(@NonNull Context context, List<Product> productList) {
+        super(context, 0, productList);
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        View listitemView = convertView;
-        if (listitemView == null) {
-            listitemView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
+        View listItemView = convertView;
+        if (listItemView == null) {
+            listItemView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
         }
 
-        Product courseModel = getItem(position);
-        TextView productName = listitemView.findViewById(R.id.productName);
-        TextView productPrice = listitemView.findViewById(R.id.productPrice);
-        ImageView productImage = listitemView.findViewById(R.id.productImage);
+        Product product = getItem(position);
+        TextView productName = listItemView.findViewById(R.id.productName);
+        TextView productPrice = listItemView.findViewById(R.id.productPrice);
+        ImageView productImage = listItemView.findViewById(R.id.productImage);
 
-        productName.setText(courseModel.getproductName());
-        productPrice.setText(courseModel.getproductPrice());
-        productImage.setImageResource(courseModel.getImgid());
-        return listitemView;
+        productName.setText(product.getTitle());
+        productPrice.setText("Precio: $" + product.getPrice());
+        Picasso.get().load(product.getImgid()).into(productImage);
+        return listItemView;
     }
 }

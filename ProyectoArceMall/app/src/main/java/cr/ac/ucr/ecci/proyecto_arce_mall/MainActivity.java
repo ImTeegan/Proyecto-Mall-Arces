@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void registrationScreen(View view){
-        Intent intent = new Intent(this, RegistrationActivity.class);
+        Intent intent = new Intent(this, StoreActivity.class);
         startActivity(intent);
     }
 }

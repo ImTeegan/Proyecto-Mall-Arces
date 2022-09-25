@@ -1,39 +1,35 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall.resources;
 
 public class Product {
-    // string productName for storing productName
-    // and imgid for storing image id.
-    private String productName;
-    private String productPrice;
-    private int imgid;
+    private int id;
+    private String title;
+    private String description;
+    private int price;
+    private double discountPercentage;
+    private int stock;
+    private String brand;
+    private String category;
+    private String thumbnail;
+    private String[] images;
 
-    public Product(String productName, String productPrice, int imgid) {
-        this.productName = productName;
-        this.productPrice = productPrice;
-        this.imgid = imgid;
+    public String getTitle() {
+        return title;
     }
 
-    public String getproductName() {
-        return productName;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setproductName(String productName) {
-        this.productName = productName;
+    public String getPrice() {
+        return String.valueOf(price);
     }
 
-    public String getproductPrice() {
-        return productPrice;
+    public void setPrice(int price) {
+        this.price = price;
     }
 
-    public void setproductPrice(String productPrice) {
-        this.productPrice = productName;
+    public String getImgid() {
+        return images[0];
     }
 
-    public int getImgid() {
-        return imgid;
-    }
-
-    public void setImgid(int imgid) {
-        this.imgid = imgid;
-    }
 }
