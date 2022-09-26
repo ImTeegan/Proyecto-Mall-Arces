@@ -33,6 +33,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Provinces;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -40,6 +42,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private static final int REQUEST_LOCATION = 1;
     private double currentLatitude = 0;
     private double currentLongitude = 0;
+    private String province;
     private TextInputLayout tilLocation;
     private TextInputLayout tilIdentification;
     private TextInputLayout tilName;
@@ -48,6 +51,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private LocationManager locationManager;
     private EditText birthDate;
     private Button registrationButton;
+    private DbHelper dataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,7 @@ public class RegistrationActivity extends AppCompatActivity {
         this.tilName = findViewById(R.id.til_name);
         this.tilEmail = findViewById(R.id.til_email);
         this.registrationButton = (Button) findViewById(R.id.registration_button);
+        this.dataBase = new DbHelper(this);
     }
 
     private void setComponentActions() {
@@ -163,19 +168,12 @@ public class RegistrationActivity extends AppCompatActivity {
             float[] results = new float[8];
 
             for (Provinces province : Provinces.values()) {
-
-                Location.distanceBetween(this.currentLatitude,
-                                         this.currentLongitude,
-                                         province.getLatitude(),
-                                         province.getLongitude(),
-                                         results);
+                Location.distanceBetween(currentLatitude, currentLongitude, province.getLatitude(), province.getLongitude(), results);
                 map.put(province.getName(), results[0]);
-
             }
-
-            this.tilLocation.getEditText()
-                            .setText(Collections.min(map.entrySet(),
-                                     Map.Entry.comparingByValue()).getKey());
+            this.province = (Collections.min(map.entrySet(),
+                    Map.Entry.comparingByValue()).getKey());
+            this.tilLocation.getEditText().setText(province);
         }
     }
 
@@ -263,15 +261,15 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean validEmail = validateEmail(email);
         boolean validBirthDate = validateBirthDate(date);
 
-        if (validBirthDate && validEmail && validName && validIdentification) {
+        if(validBirthDate && validEmail && validName && validIdentification) {
+            User newUser = new User(identification, name, email, date, this.province, 1); //1 means TRUE
+            registerUser(newUser);
             Toast.makeText(this, "Registro exitoso", Toast.LENGTH_LONG).show();
-             saveUser();
-            //showConfirmationScreen();
         }
     }
 
-    // TODO: Change this method to save an user.
-    private void saveUser() {
+    public void registerUser(User user){
+        this.dataBase.addUser(user);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
