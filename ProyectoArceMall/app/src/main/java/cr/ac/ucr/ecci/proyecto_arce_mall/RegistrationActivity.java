@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -168,7 +167,8 @@ public class RegistrationActivity extends AppCompatActivity {
             float[] results = new float[8];
 
             for (Provinces province : Provinces.values()) {
-                Location.distanceBetween(currentLatitude, currentLongitude, province.getLatitude(), province.getLongitude(), results);
+                Location.distanceBetween(currentLatitude, currentLongitude, province.getLatitude(),
+                                         province.getLongitude(), results);
                 map.put(province.getName(), results[0]);
             }
             this.province = (Collections.min(map.entrySet(),
@@ -220,7 +220,7 @@ public class RegistrationActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean validateEmail(String email){
+    private boolean validateEmail(String email) {
         if (email.isEmpty() || !(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
             this.tilEmail.setError("El correo electrónico no es válido");
             return false;
@@ -262,13 +262,14 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean validBirthDate = validateBirthDate(date);
 
         if(validBirthDate && validEmail && validName && validIdentification) {
-            User newUser = new User(identification, name, email, date, this.province, 1); //1 means TRUE
+            // 1 means TRUE
+            User newUser = new User(identification, name, email, date, this.province, 1);
             registerUser(newUser);
             Toast.makeText(this, "Registro exitoso", Toast.LENGTH_LONG).show();
         }
     }
 
-    public void registerUser(User user){
+    public void registerUser(User user) {
         this.dataBase.addUser(user);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

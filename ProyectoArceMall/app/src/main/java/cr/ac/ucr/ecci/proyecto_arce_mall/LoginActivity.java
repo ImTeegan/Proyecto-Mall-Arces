@@ -10,12 +10,18 @@ import android.widget.Button;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.ParseException;
+import java.util.List;
+
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputLayout tilEmail;
     private TextInputLayout tilPassword;
     private Button loginButton;
+    private DbHelper database;
+    private List<User> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
         this.tilEmail = (TextInputLayout) findViewById(R.id.til_email);
         this.tilPassword = (TextInputLayout) findViewById(R.id.til_password);
         this.loginButton = (Button) findViewById(R.id.login_button);
+        this.database = new DbHelper(this);
+        this.users = this.database.getAllUser();
     }
 
     /**
@@ -53,19 +61,25 @@ public class LoginActivity extends AppCompatActivity {
      * @throws ParseException
      */
     private void validateData() throws ParseException {
-        String email = tilEmail.getEditText().getText().toString();
+        String email = this.tilEmail.getEditText().getText().toString();
 
         boolean validEmail = this.validateEmail(email);
 
     }
 
-    private boolean validateEmail(String email){
+    private boolean validateEmail(String email) {
         if (email.isEmpty() || !(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
             this.tilEmail.setError("El correo electrónico no es válido");
             return false;
         }
 
         this.tilEmail.setError(null);
+        return true;
+    }
+
+    private boolean validatePassword(String password) {
+
+
         return true;
     }
 }
