@@ -43,6 +43,7 @@
         android:textColor="@android:color/black"
         android:textFontWeight="900"
         android:textSize="16dp"
+        android:onClick="showLoginScreen"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logoViewcard" />
@@ -59,7 +60,7 @@
         android:textColor="@android:color/black"
         android:textFontWeight="800"
         android:textSize="16dp"
-        android:onClick="registrationScreen"
+        android:onClick="showRegistrationScreen"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginButton" />

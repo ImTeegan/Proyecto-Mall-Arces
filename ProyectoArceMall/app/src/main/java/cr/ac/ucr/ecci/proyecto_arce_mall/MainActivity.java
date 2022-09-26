@@ -14,8 +14,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void registrationScreen(View view){
+    public void showRegistrationScreen(View view) {
         Intent intent = new Intent(this, RegistrationActivity.class);
+        startActivity(intent);
+    }
+
+    public void showLoginScreen(View view) {
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 }
