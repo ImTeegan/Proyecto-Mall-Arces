@@ -33,6 +33,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Provinces;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -46,12 +48,16 @@ public class RegistrationActivity extends AppCompatActivity {
     private TextInputLayout tilEmail;
     private TextInputLayout tilBirthDate;
     private LocationManager locationManager;
+    private String province;
+    LocationManager locationManager;
     private EditText birthDate;
     private Button registrationButton;
+    private DbHelper DataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DataBase = new DbHelper(this);
         setContentView(R.layout.activity_registration);
 
         this.instantiateComponents();
@@ -86,6 +92,11 @@ public class RegistrationActivity extends AppCompatActivity {
                 getDatePickerDialog();
             }
         });
+        tilIdentification = findViewById(R.id.til_identification);
+        tilName = findViewById(R.id.til_name);
+        tilEmail = findViewById(R.id.til_email);
+        Button registrationButon = (Button) findViewById(R.id.registerButton);
+        registrationButon.setOnClickListener(new View.OnClickListener() {
 
         // Set registration button click action.
         this.registrationButton.setOnClickListener(new View.OnClickListener() {
@@ -121,27 +132,16 @@ public class RegistrationActivity extends AppCompatActivity {
                     }
 
         });
-
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
+
     private void getLocation() {
-        // Get permission values for precise and approximate location.
-        int preciseLocationPermission = ActivityCompat.checkSelfPermission(
-                RegistrationActivity.this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        int approxLocationPermission = ActivityCompat.checkSelfPermission(
-                RegistrationActivity.this,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
-
-        if ((preciseLocationPermission != PackageManager.PERMISSION_GRANTED)
-            && (approxLocationPermission != PackageManager.PERMISSION_GRANTED)) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                    REQUEST_LOCATION);
-
+        if (ActivityCompat.checkSelfPermission(
+                RegistrationActivity.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                RegistrationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         } else {
 
             Location locationGps = this.locationManager.getLastKnownLocation(LocationManager
@@ -151,7 +151,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 this.currentLatitude = locationGps.getLatitude();
                 this.currentLongitude = locationGps.getLongitude();
             }
-
         }
     }
 
@@ -172,10 +171,10 @@ public class RegistrationActivity extends AppCompatActivity {
                 map.put(province.getName(), results[0]);
 
             }
-
-            this.tilLocation.getEditText()
-                            .setText(Collections.min(map.entrySet(),
-                                     Map.Entry.comparingByValue()).getKey());
+            province = (Collections.min(maps.entrySet(),
+                    Map.Entry.comparingByValue()).getKey());
+            tilLocation.getEditText().setText(province);
+;
         }
     }
 
@@ -216,6 +215,8 @@ public class RegistrationActivity extends AppCompatActivity {
         if (!pattern.matcher(name).matches() || name.isEmpty()) {
             this.tilName.setError("El nombre no es válido");
             return false;
+        } else {
+            tilName.setError(null);
         }
 
         this.tilName.setError(null);
@@ -223,9 +224,11 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private boolean validateEmail(String email){
-        if (email.isEmpty() || !(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
-            this.tilEmail.setError("El correo electrónico no es válido");
+        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            tilEmail.setError("El correo electronico no es válido");
             return false;
+        } else {
+            tilEmail.setError(null);
         }
 
         this.tilEmail.setError(null);
@@ -262,16 +265,18 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean validName = validateName(name);
         boolean validEmail = validateEmail(email);
         boolean validBirthDate = validateBirthDate(date);
-
-        if (validBirthDate && validEmail && validName && validIdentification) {
+        if(validBirthDate && validEmail && validName && validIdentification){
+            User newUser = new User(identification, name,email, date,province,1); //1 means TRUE
+            registerUser(newUser);
             Toast.makeText(this, "Registro exitoso", Toast.LENGTH_LONG).show();
             // saveUser();
             showConfirmationScreen();
-        }
+
     }
 
     // TODO: Change this method to save an user.
-    private void saveUser() {
+    public void registerUser(User user){
+        DataBase.addUser(user);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
