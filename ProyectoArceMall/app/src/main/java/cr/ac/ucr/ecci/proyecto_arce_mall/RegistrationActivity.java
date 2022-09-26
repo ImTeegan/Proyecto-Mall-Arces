@@ -63,7 +63,7 @@ public class RegistrationActivity extends AppCompatActivity {
         this.locationManager = (LocationManager)
                                 getSystemService(Context.LOCATION_SERVICE);
         this.birthDate = findViewById(R.id.birth_date_field);
-        this.tilBirthDate = findViewById(R.id.til_birthDate);
+        this.tilBirthDate = findViewById(R.id.til_birth_date);
         this.tilIdentification = findViewById(R.id.til_identification);
         this.tilName = findViewById(R.id.til_name);
         this.tilEmail = findViewById(R.id.til_email);
@@ -191,7 +191,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 @Override
                 public void onDateSet(DatePicker view, int year,
                                       int monthOfYear, int dayOfMonth) {
-                    this.birthDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                    birthDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
                 }
             }, year, month, day);
 
