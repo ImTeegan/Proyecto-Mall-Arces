@@ -18,6 +18,8 @@
     <string name="enter_code">Ingrese el código que se envió a su correo electróncio</string>
     <string name="accept">Aceptar</string>
     <string name="continue_text">Continuar</string>
+    <string name="enter_new_password">Ingrese su nueva contraseña</string>
+    <string name="confirm_new_password">Confirme su contraseña</string>
     <string name="search">Buscar en Arce Shopping</string>
     <string name="homeTitle">Inicio</string>
     <string name="userTitle">Cuenta</string>
