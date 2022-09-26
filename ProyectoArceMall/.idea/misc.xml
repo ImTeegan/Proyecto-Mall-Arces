@@ -4,8 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Documentos/Proyecto-Moviles/ProyectoArceMall/app/src/main/res/layout/activity_main.xml" value="0.1398148148148148" />
+        <entry key="..\:/Users/B86524/AndroidStudioProjects/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_change_password.xml" value="0.25" />
         <entry key="..\:/Users/B86524/AndroidStudioProjects/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_login.xml" value="0.17831813576494426" />
         <entry key="..\:/Users/B86524/AndroidStudioProjects/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_main.xml" value="0.14722222222222223" />
+        <entry key="..\:/Users/B86524/AndroidStudioProjects/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_password_code.xml" value="0.25" />
+        <entry key="..\:/Users/B86524/AndroidStudioProjects/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_registration.xml" value="0.18802083333333333" />
       </map>
     </option>
   </component>
