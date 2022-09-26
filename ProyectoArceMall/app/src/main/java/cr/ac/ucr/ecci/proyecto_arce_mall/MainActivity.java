@@ -3,14 +3,9 @@ package cr.ac.ucr.ecci.proyecto_arce_mall;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-
-import cr.ac.ucr.ecci.proyecto_arce_mall.mail.JavaMailAPI;
 import android.widget.Button;
 
 import java.util.List;
@@ -25,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //this is a test
         Button button = (Button) findViewById(R.id.loginButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,21 +42,10 @@ public class MainActivity extends AppCompatActivity {
                if(Database.checkUser("cesar@lopez.com","DEDOS")){
                    Log.i("INGRESA CORRECTAMENTE","SI INGRESA");
                };
-
-
             }
         });
-
-
-
     }
 
-    private void sendMail(){
-        String mail = "Prueba";
-
-        JavaMailAPI javaMailAPI = new JavaMailAPI(this, "medranom778@gmail.com", "mail", "subject");
-        javaMailAPI.execute();
-    }
     public void registrationScreen(View view){
         Intent intent = new Intent(this, RegistrationActivity.class);
         startActivity(intent);

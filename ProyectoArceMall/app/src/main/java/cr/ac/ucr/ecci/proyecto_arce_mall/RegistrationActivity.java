@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +19,6 @@ import android.widget.DatePicker;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -49,7 +47,6 @@ public class RegistrationActivity extends AppCompatActivity {
     private TextInputLayout tilBirthDate;
     private LocationManager locationManager;
     private String province;
-    LocationManager locationManager;
     private EditText birthDate;
     private Button registrationButton;
     private DbHelper DataBase;
@@ -92,11 +89,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 getDatePickerDialog();
             }
         });
-        tilIdentification = findViewById(R.id.til_identification);
-        tilName = findViewById(R.id.til_name);
-        tilEmail = findViewById(R.id.til_email);
-        Button registrationButon = (Button) findViewById(R.id.registerButton);
-        registrationButon.setOnClickListener(new View.OnClickListener() {
 
         // Set registration button click action.
         this.registrationButton.setOnClickListener(new View.OnClickListener() {
@@ -156,6 +148,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void compareLocation() {
         if (this.currentLatitude == 0 && this.currentLongitude == 0) {
+            province = "San José";
             this.tilLocation.getEditText().setText("San José");
         } else {
             Map<String, Float> map = new HashMap<String, Float>();
@@ -164,19 +157,19 @@ public class RegistrationActivity extends AppCompatActivity {
             for (Provinces province : Provinces.values()) {
 
                 Location.distanceBetween(this.currentLatitude,
-                                         this.currentLongitude,
-                                         province.getLatitude(),
-                                         province.getLongitude(),
-                                         results);
+                        this.currentLongitude,
+                        province.getLatitude(),
+                        province.getLongitude(),
+                        results);
                 map.put(province.getName(), results[0]);
 
             }
-            province = (Collections.min(maps.entrySet(),
+            province = (Collections.min(map.entrySet(),
                     Map.Entry.comparingByValue()).getKey());
             tilLocation.getEditText().setText(province);
-;
         }
     }
+
 
     private void getDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
@@ -265,24 +258,17 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean validName = validateName(name);
         boolean validEmail = validateEmail(email);
         boolean validBirthDate = validateBirthDate(date);
-        if(validBirthDate && validEmail && validName && validIdentification){
+        if (validBirthDate && validEmail && validName && validIdentification) {
             User newUser = new User(identification, name,email, date,province,1); //1 means TRUE
-            registerUser(newUser);
-            Toast.makeText(this, "Registro exitoso", Toast.LENGTH_LONG).show();
-            // saveUser();
-            showConfirmationScreen();
-
+            showConfirmationScreen(newUser);
+        }
     }
 
-    // TODO: Change this method to save an user.
-    public void registerUser(User user){
+    private void showConfirmationScreen(User user) {
         DataBase.addUser(user);
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-
-    private void showConfirmationScreen() {
         Intent intent = new Intent(this, RegisterConfirmationActivity.class);
+        intent.putExtra("email", user.getEmail());
+        intent.putExtra("password", user.getPassword());
         startActivity(intent);
     }
 }
