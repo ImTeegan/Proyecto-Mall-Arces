@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
             Log.i("ESTOY AQUI2", "AQUI2");
             Log.i("e-mail: ", current.getEmail());
             Log.i("Password: ", current.getPassword());
+            Log.i("First time: ", String.valueOf(current.getFirstTime()));
         }
     }
 

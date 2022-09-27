@@ -138,7 +138,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 user.setProvince(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_PROVINCE)));
                 user.setBirthday(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_BIRTHDAY)));
                 user.setPassword(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_PASSWORD)));
-                user.setFirstTime(Integer.parseInt(String.valueOf(cursor.getColumnIndex(COLUMN_USER_FIRST))));
+                user.setFirstTime(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_FIRST)));
                 // Adding user record to list
                 userList.add(user);
             } while (cursor.moveToNext());
@@ -171,8 +171,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 null);
 
         if (cursor.moveToFirst()) {
-            value = Integer.parseInt(String.valueOf(cursor.getColumnIndex(COLUMN_USER_FIRST)));
+            value = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_FIRST));
         }
+
+        cursor.close();
+        db.close();
 
         if (value == 1) {
             firstTime = true;
