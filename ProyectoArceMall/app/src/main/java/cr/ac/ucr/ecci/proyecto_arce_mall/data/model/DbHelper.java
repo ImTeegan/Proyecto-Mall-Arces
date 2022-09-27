@@ -150,7 +150,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public boolean checkUser(String email, String password) {
-        boolean Succes=false;
+        boolean Success=false;
         String[] Columns = {
                 COLUMN_USER_ID
         };
@@ -168,9 +168,9 @@ public class DbHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         if (cursorCount > 0) {
-            Succes = true;
+            Success = true;
         }
-        return Succes;
+        return Success;
     }
 
 
