@@ -2,6 +2,7 @@ package cr.ac.ucr.ecci.proyecto_arce_mall;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -77,7 +78,11 @@ public class LoginActivity extends AppCompatActivity {
         boolean validated = this.validateEmailAndPassword(email, password);
 
         if (validated) {
-            
+            if (this.database.isFirstTime(email)) {
+                this.showChangePasswordScreen();
+            } else {
+                this.showStore();
+            }
         }
 
     }
@@ -89,19 +94,25 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (!database.checkUser(email, password)) {
-            Toast.makeText(this.getApplicationContext(), "Correo o contraseña incorrectos",
-                           Toast.LENGTH_LONG).show();
+            this.tilEmail.setError("Correo o contraseña incorrectos");
+            this.tilPassword.setError("Correo o contraseña incorrectos");
+            this.tilPassword.setErrorIconDrawable(null);
+            /*Toast.makeText(this.getApplicationContext(), "Correo o contraseña incorrectos",
+                           Toast.LENGTH_LONG).show();*/
             return false;
         }
 
-        Log.i("Ganamos: ", "es correcto.");
         this.tilEmail.setError(null);
         return true;
     }
 
-    private boolean validatePassword(String password) {
+    private void showChangePasswordScreen() {
+        Intent intent = new Intent(this, ChangePasswordActivity.class);
+        startActivity(intent);
+    }
 
-
-        return true;
+    private void showStore() {
+        Intent intent = new Intent(this, StoreActivity.class);
+        startActivity(intent);
     }
 }
