@@ -62,14 +62,21 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void validateData() throws ParseException {
         String email = this.tilEmail.getEditText().getText().toString();
+        String password = this.tilEmail.getEditText().getText().toString();
 
-        boolean validEmail = this.validateEmail(email);
+        boolean validEmail = this.validateEmailAndPassword(email, password);
 
     }
 
-    private boolean validateEmail(String email) {
+    private boolean validateEmailAndPassword(String email, String password) {
         if (email.isEmpty() || !(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
             this.tilEmail.setError("El correo electrónico no es válido");
+            return false;
+        }
+
+        if (!database.checkUser(email, password)) {
+            this.tilEmail.setError(null);
+            this.tilPassword.setError("Correo o contraseña incorrectos");
             return false;
         }
 

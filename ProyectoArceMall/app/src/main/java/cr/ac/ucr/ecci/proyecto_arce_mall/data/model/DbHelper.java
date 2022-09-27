@@ -149,6 +149,38 @@ public class DbHelper extends SQLiteOpenHelper {
         return userList;
     }
 
+    public boolean isFirstTime(String email) {
+        boolean firstTime = false;
+        int value = -1;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] columns = {
+                COLUMN_USER_FIRST
+        };
+
+        String selection = COLUMN_USER_EMAIL + " = ?";
+        String[] selectionArgs = { email };
+
+        Cursor cursor = db.query(TABLE_USER, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        if (cursor.moveToFirst()) {
+            value = Integer.parseInt(String.valueOf(cursor.getColumnIndex(COLUMN_USER_FIRST));
+        }
+
+        if (value == 1) {
+            firstTime = true;
+        }
+
+        return firstTime;
+    }
+
     public boolean checkUser(String email, String password) {
         boolean Succes=false;
         String[] Columns = {
