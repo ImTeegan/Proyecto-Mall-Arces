@@ -3,9 +3,11 @@ package cr.ac.ucr.ecci.proyecto_arce_mall;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -38,6 +40,14 @@ public class LoginActivity extends AppCompatActivity {
         this.loginButton = (Button) findViewById(R.id.login_button);
         this.database = new DbHelper(this);
         this.users = this.database.getAllUser();
+
+        Log.i("ESTOY AQUI1", "AQUI1");
+        for (int index = 0; index < this.users.size(); ++index) {
+            User current = this.users.get(index);
+            Log.i("ESTOY AQUI2", "AQUI2");
+            Log.i("e-mail: ", current.getEmail());
+            Log.i("Password: ", current.getPassword());
+        }
     }
 
     /**
@@ -62,9 +72,13 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void validateData() throws ParseException {
         String email = this.tilEmail.getEditText().getText().toString();
-        String password = this.tilEmail.getEditText().getText().toString();
+        String password = this.tilPassword.getEditText().getText().toString();
 
-        boolean validEmail = this.validateEmailAndPassword(email, password);
+        boolean validated = this.validateEmailAndPassword(email, password);
+
+        if (validated) {
+            
+        }
 
     }
 
@@ -75,11 +89,12 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (!database.checkUser(email, password)) {
-            this.tilEmail.setError(null);
-            this.tilPassword.setError("Correo o contraseña incorrectos");
+            Toast.makeText(this.getApplicationContext(), "Correo o contraseña incorrectos",
+                           Toast.LENGTH_LONG).show();
             return false;
         }
 
+        Log.i("Ganamos: ", "es correcto.");
         this.tilEmail.setError(null);
         return true;
     }

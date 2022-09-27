@@ -171,7 +171,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 null);
 
         if (cursor.moveToFirst()) {
-            value = Integer.parseInt(String.valueOf(cursor.getColumnIndex(COLUMN_USER_FIRST));
+            value = Integer.parseInt(String.valueOf(cursor.getColumnIndex(COLUMN_USER_FIRST)));
         }
 
         if (value == 1) {
