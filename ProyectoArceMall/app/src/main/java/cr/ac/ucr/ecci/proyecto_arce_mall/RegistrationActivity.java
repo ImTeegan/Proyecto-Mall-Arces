@@ -20,7 +20,6 @@ import android.widget.DatePicker;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -33,6 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Provinces;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -45,13 +46,15 @@ public class RegistrationActivity extends AppCompatActivity {
     private TextInputLayout tilName;
     private TextInputLayout tilEmail;
     private TextInputLayout tilBirthDate;
-    private LocationManager locationManager;
+    private String province;
+    LocationManager locationManager;
     private EditText birthDate;
-    private Button registrationButton;
+    private DbHelper DataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DataBase = new DbHelper(this);
         setContentView(R.layout.activity_registration);
 
         this.instantiateComponents();
@@ -86,9 +89,11 @@ public class RegistrationActivity extends AppCompatActivity {
                 getDatePickerDialog();
             }
         });
-
-        // Set registration button click action.
-        this.registrationButton.setOnClickListener(new View.OnClickListener() {
+        tilIdentification = findViewById(R.id.til_identification);
+        tilName = findViewById(R.id.til_name);
+        tilEmail = findViewById(R.id.til_email);
+        Button registrationButon = (Button) findViewById(R.id.registerButton);
+        registrationButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -151,7 +156,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 this.currentLatitude = locationGps.getLatitude();
                 this.currentLongitude = locationGps.getLongitude();
             }
-
         }
     }
 
@@ -262,16 +266,14 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean validName = validateName(name);
         boolean validEmail = validateEmail(email);
         boolean validBirthDate = validateBirthDate(date);
-
-        if (validBirthDate && validEmail && validName && validIdentification) {
-            Toast.makeText(this, "Registro exitoso", Toast.LENGTH_LONG).show();
-             saveUser();
-            //showConfirmationScreen();
+        if(validBirthDate && validEmail && validName && validIdentification){
+            User newUser = new User(identification, name,email, date,province,1); //1 means TRUE
+            registerUser(newUser);
         }
     }
 
-    // TODO: Change this method to save an user.
-    private void saveUser() {
+    public void registerUser(User user){
+        DataBase.addUser(user);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
