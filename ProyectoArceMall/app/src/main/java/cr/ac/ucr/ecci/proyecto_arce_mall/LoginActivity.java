@@ -25,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private DbHelper database;
     private List<User> users;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         this.loginButton = (Button) findViewById(R.id.login_button);
         this.database = new DbHelper(this);
         this.users = this.database.getAllUser();
+
 
         Log.i("ESTOY AQUI1", "AQUI1");
         for (int index = 0; index < this.users.size(); ++index) {
@@ -80,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (validated) {
             if (this.database.isFirstTime(email)) {
-                this.showChangePasswordScreen();
+                this.showChangePasswordScreen(email);
             } else {
                 this.showStore();
             }
@@ -107,13 +109,17 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-    private void showChangePasswordScreen() {
+    private void showChangePasswordScreen(String email) {
+        user = users.stream().filter(user -> user.getEmail().equals(email)).findFirst().get();
         Intent intent = new Intent(this, ChangePasswordActivity.class);
+        intent.putExtra("user", user);
         startActivity(intent);
+        finish();
     }
 
     private void showStore() {
         Intent intent = new Intent(this, StoreActivity.class);
         startActivity(intent);
+        finish();
     }
 }

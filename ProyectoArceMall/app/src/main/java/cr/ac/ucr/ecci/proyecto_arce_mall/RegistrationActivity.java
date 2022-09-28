@@ -273,6 +273,7 @@ public class RegistrationActivity extends AppCompatActivity {
         this.dataBase.addUser(user);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
 //    private void showConfirmationScreen() {
