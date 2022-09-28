@@ -9,59 +9,64 @@ import com.google.android.material.internal.ParcelableSparseArray;
 import java.util.Random;
 
 public class User implements Parcelable {
-    private String Identification;
-    private String Name;
-    private String Email;
-    private String Birthday;
-    private String Province;
-    private String Password;
+    private String identification;
+    private String name;
+    private String email;
+    private String birthday;
+    private String province;
+    private String password;
     private int firstTime;
 
-    public User(){
+    public User() {
 
     }
-    public User(  String Identification,String Name,String Email,
-                  String Birthday, String Province, int firstTime){
-        this.Identification = Identification ;
-        this.Name = Name;
-        this.Email = Email;
-        this.Birthday = Birthday;
-        this.Province = Province;
+
+    public User(String identification, String name, String email,
+                String birthday, String province, int firstTime) {
+        this.identification = identification ;
+        this.name = name;
+        this.email = email;
+        this.birthday = birthday;
+        this.province = province;
         this.firstTime = firstTime;
         this.CreatePassword();
     }
 
     protected User(Parcel in) {
-        Identification = in.readString();
-        Name = in.readString();
-        Email = in.readString();
-        Birthday = in.readString();
-        Province = in.readString();
+        this.identification = in.readString();
+        this.name = in.readString();
+        this.email = in.readString();
+        this.birthday = in.readString();
+        this.province = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(Identification);
-        dest.writeString(Name);
-        dest.writeString(Email);
-        dest.writeString(Birthday);
-        dest.writeString(Province);
+        dest.writeString(this.identification);
+        dest.writeString(this.name);
+        dest.writeString(this.email);
+        dest.writeString(this.birthday);
+        dest.writeString(this.province);
     }
 
-    private void CreatePassword(){
+    /**
+     * Creates a random password for a new user.
+     */
+    private void CreatePassword() {
         int leftLimit = 97;
         int rightLimit = 122;
-        int targetStringLength = 15; //length of string
+        int targetStringLength = 15; // Length of string
+
         Random random = new Random();
         String password = random.ints(leftLimit, rightLimit + 1)
-                .limit(targetStringLength)
-                .collect(StringBuilder::new,
-                        StringBuilder::appendCodePoint,
-                        StringBuilder::append)
-                .toString();
+                                .limit(targetStringLength)
+                                .collect(StringBuilder::new,
+                                         StringBuilder::appendCodePoint,
+                                         StringBuilder::append)
+                                .toString();
+
         this.setPassword(password);
     }
-
 
     @Override
     public int describeContents() {
@@ -81,51 +86,51 @@ public class User implements Parcelable {
     };
 
     public String getIdentification() {
-        return Identification;
+        return this.identification;
     }
 
     public void setIdentification(String identification) {
-        Identification = identification;
+        this.identification = identification;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
 
     public String getBirthday() {
-        return Birthday;
+        return birthday;
     }
 
     public void setBirthday(String birthday) {
-        Birthday = birthday;
+        this.birthday = birthday;
     }
 
     public String getProvince() {
-        return Province;
+        return province;
     }
 
     public void setProvince(String province) {
-        Province = province;
+        this.province = province;
     }
 
     public String getPassword() {
-        return Password;
+        return password;
     }
 
     public void setPassword(String password) {
-        Password = password;
+        this.password = password;
     }
 
     public int getFirstTime() {
