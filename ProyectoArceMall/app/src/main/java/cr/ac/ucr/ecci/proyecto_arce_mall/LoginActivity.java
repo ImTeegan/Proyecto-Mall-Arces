@@ -41,13 +41,12 @@ public class LoginActivity extends AppCompatActivity {
         this.tilPassword = (TextInputLayout) findViewById(R.id.til_password);
         this.loginButton = (Button) findViewById(R.id.login_button);
         this.database = new DbHelper(this);
+
+        // The following code is only for testing.
         this.users = this.database.getAllUser();
 
-
-        Log.i("ESTOY AQUI1", "AQUI1");
         for (int index = 0; index < this.users.size(); ++index) {
             User current = this.users.get(index);
-            Log.i("ESTOY AQUI2", "AQUI2");
             Log.i("e-mail: ", current.getEmail());
             Log.i("Password: ", current.getPassword());
             Log.i("First time: ", String.valueOf(current.getFirstTime()));
