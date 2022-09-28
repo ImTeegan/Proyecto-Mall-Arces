@@ -14,7 +14,12 @@
     <string name="enter_password">Ingrese su contraseña</string>
     <string name="login_button">Ingresar</string>
     <string name="register_confirmation">Se envió un correo a la cuenta registrada con la contraseña para iniciar sesión</string>
+    <string name="change_password_title">Cambio de contraseña</string>
+    <string name="enter_code">Ingrese el código que se envió a su correo electrónico</string>
     <string name="accept">Aceptar</string>
+    <string name="continue_text">Continuar</string>
+    <string name="enter_new_password">Ingrese su nueva contraseña</string>
+    <string name="confirm_new_password">Confirme su contraseña</string>
     <string name="search">Buscar en Arce Shopping</string>
     <string name="homeTitle">Inicio</string>
     <string name="userTitle">Cuenta</string>

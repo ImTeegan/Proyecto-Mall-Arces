@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +19,7 @@ import android.widget.DatePicker;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -41,20 +41,20 @@ public class RegistrationActivity extends AppCompatActivity {
     private static final int REQUEST_LOCATION = 1;
     private double currentLatitude = 0;
     private double currentLongitude = 0;
+    private String province;
     private TextInputLayout tilLocation;
     private TextInputLayout tilIdentification;
     private TextInputLayout tilName;
     private TextInputLayout tilEmail;
     private TextInputLayout tilBirthDate;
-    private String province;
-    LocationManager locationManager;
+    private LocationManager locationManager;
     private EditText birthDate;
-    private DbHelper DataBase;
+    private Button registrationButton;
+    private DbHelper dataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DataBase = new DbHelper(this);
         setContentView(R.layout.activity_registration);
 
         this.instantiateComponents();
@@ -71,6 +71,7 @@ public class RegistrationActivity extends AppCompatActivity {
         this.tilName = findViewById(R.id.til_name);
         this.tilEmail = findViewById(R.id.til_email);
         this.registrationButton = (Button) findViewById(R.id.registration_button);
+        this.dataBase = new DbHelper(this);
     }
 
     private void setComponentActions() {
@@ -89,11 +90,9 @@ public class RegistrationActivity extends AppCompatActivity {
                 getDatePickerDialog();
             }
         });
-        tilIdentification = findViewById(R.id.til_identification);
-        tilName = findViewById(R.id.til_name);
-        tilEmail = findViewById(R.id.til_email);
-        Button registrationButon = (Button) findViewById(R.id.registerButton);
-        registrationButon.setOnClickListener(new View.OnClickListener() {
+
+        // Set registration button click action.
+        this.registrationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -167,19 +166,13 @@ public class RegistrationActivity extends AppCompatActivity {
             float[] results = new float[8];
 
             for (Provinces province : Provinces.values()) {
-
-                Location.distanceBetween(this.currentLatitude,
-                                         this.currentLongitude,
-                                         province.getLatitude(),
-                                         province.getLongitude(),
-                                         results);
+                Location.distanceBetween(currentLatitude, currentLongitude, province.getLatitude(),
+                                         province.getLongitude(), results);
                 map.put(province.getName(), results[0]);
-
             }
-
-            this.tilLocation.getEditText()
-                            .setText(Collections.min(map.entrySet(),
-                                     Map.Entry.comparingByValue()).getKey());
+            this.province = (Collections.min(map.entrySet(),
+                    Map.Entry.comparingByValue()).getKey());
+            this.tilLocation.getEditText().setText(province);
         }
     }
 
@@ -226,7 +219,7 @@ public class RegistrationActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean validateEmail(String email){
+    private boolean validateEmail(String email) {
         if (email.isEmpty() || !(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
             this.tilEmail.setError("El correo electrónico no es válido");
             return false;
@@ -266,16 +259,20 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean validName = validateName(name);
         boolean validEmail = validateEmail(email);
         boolean validBirthDate = validateBirthDate(date);
-        if(validBirthDate && validEmail && validName && validIdentification){
-            User newUser = new User(identification, name,email, date,province,1); //1 means TRUE
+
+        if(validBirthDate && validEmail && validName && validIdentification) {
+            // 1 means TRUE
+            User newUser = new User(identification, name, email, date, this.province, 1);
             registerUser(newUser);
+            Toast.makeText(this, "Registro exitoso", Toast.LENGTH_LONG).show();
         }
     }
 
-    public void registerUser(User user){
-        DataBase.addUser(user);
+    public void registerUser(User user) {
+        this.dataBase.addUser(user);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
 //    private void showConfirmationScreen() {

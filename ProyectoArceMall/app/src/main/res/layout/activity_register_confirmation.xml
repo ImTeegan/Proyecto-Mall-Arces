@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_orange"
+    tools:context=".RegisterConfirmationActivity">
+
+    <ImageView
+        android:id="@+id/check_image"
+        android:layout_width="152dp"
+        android:layout_height="154dp"
+        android:layout_marginBottom="432dp"
+        android:background="@drawable/round_corners"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/check" />
+
+    <TextView
+        android:id="@+id/confirmation_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="324dp"
+        android:fontFamily="@font/carrois_gothic"
+        android:gravity="center"
+        android:text="@string/register_confirmation"
+        android:textColor="@color/dark_blue"
+        android:textFontWeight="650"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/accept_button"
+        android:layout_width="192dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="28dp"
+        android:layout_weight="1"
+        android:background="@drawable/round_corners"
+        android:shadowRadius="50"
+        android:text="@string/accept"
+        android:textColor="@android:color/black"
+        android:textFontWeight="800"
+        android:textSize="18dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/confirmation_text" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

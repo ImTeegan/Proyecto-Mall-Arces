@@ -138,7 +138,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 user.setProvince(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_PROVINCE)));
                 user.setBirthday(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_BIRTHDAY)));
                 user.setPassword(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_PASSWORD)));
-                user.setFirstTime(Integer.parseInt(String.valueOf(cursor.getColumnIndex(COLUMN_USER_FIRST))));
+                user.setFirstTime(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_FIRST)));
                 // Adding user record to list
                 userList.add(user);
             } while (cursor.moveToNext());
@@ -147,6 +147,41 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
         // return user list
         return userList;
+    }
+
+    public boolean isFirstTime(String email) {
+        boolean firstTime = false;
+        int value = -1;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] columns = {
+                COLUMN_USER_FIRST
+        };
+
+        String selection = COLUMN_USER_EMAIL + " = ?";
+        String[] selectionArgs = { email };
+
+        Cursor cursor = db.query(TABLE_USER, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        if (cursor.moveToFirst()) {
+            value = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_FIRST));
+        }
+
+        cursor.close();
+        db.close();
+
+        if (value == 1) {
+            firstTime = true;
+        }
+
+        return firstTime;
     }
 
     public boolean checkUser(String email, String password) {

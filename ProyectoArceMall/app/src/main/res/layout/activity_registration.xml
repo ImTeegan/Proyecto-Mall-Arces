@@ -175,7 +175,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/registerButton"
+        android:id="@+id/registration_button"
         android:layout_width="192dp"
         android:layout_height="59dp"
         android:layout_marginTop="44dp"
