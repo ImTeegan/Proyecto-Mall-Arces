@@ -130,22 +130,12 @@ public class RegistrationActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+
     private void getLocation() {
-        // Get permission values for precise and approximate location.
-        int preciseLocationPermission = ActivityCompat.checkSelfPermission(
-                RegistrationActivity.this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        int approxLocationPermission = ActivityCompat.checkSelfPermission(
-                RegistrationActivity.this,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
-
-        if ((preciseLocationPermission != PackageManager.PERMISSION_GRANTED)
-            && (approxLocationPermission != PackageManager.PERMISSION_GRANTED)) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                    REQUEST_LOCATION);
-
+        if (ActivityCompat.checkSelfPermission(
+                RegistrationActivity.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                RegistrationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         } else {
 
             Location locationGps = this.locationManager.getLastKnownLocation(LocationManager
@@ -155,12 +145,12 @@ public class RegistrationActivity extends AppCompatActivity {
                 this.currentLatitude = locationGps.getLatitude();
                 this.currentLongitude = locationGps.getLongitude();
             }
-
         }
     }
 
     private void compareLocation() {
         if (this.currentLatitude == 0 && this.currentLongitude == 0) {
+            province = "San José";
             this.tilLocation.getEditText().setText("San José");
         } else {
             Map<String, Float> map = new HashMap<String, Float>();
@@ -260,8 +250,7 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean validName = validateName(name);
         boolean validEmail = validateEmail(email);
         boolean validBirthDate = validateBirthDate(date);
-
-        if(validBirthDate && validEmail && validName && validIdentification) {
+        if (validBirthDate && validEmail && validName && validIdentification) {
             User newUser = new User(identification, name,email, date,province,1); //1 means TRUE
             showConfirmationScreen(newUser);
         }
