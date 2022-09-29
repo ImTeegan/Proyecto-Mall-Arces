@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -21,6 +23,7 @@ import cr.ac.ucr.ecci.proyecto_arce_mall.ProductActivity;
 import cr.ac.ucr.ecci.proyecto_arce_mall.R;
 import cr.ac.ucr.ecci.proyecto_arce_mall.StoreActivity;
 
+//public class ProductAdapter extends ArrayAdapter<Product> implements Filterable {
 public class ProductAdapter extends ArrayAdapter<Product> {
 
     private Context context;
@@ -57,5 +60,25 @@ public class ProductAdapter extends ArrayAdapter<Product> {
         Picasso.get().load(product.getImgid()).into(productImage);
         return listItemView;
     }
+/*
+    @Override
+    public Filter getFilter(){
+        Filter filter = new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                return null;
+            }
 
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+
+            }
+        };
+        return filter;
+    }
+
+    private class ProductFilter extends Filter
+    {*/
+
+    }
 }
