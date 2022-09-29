@@ -10,19 +10,28 @@
         <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/round_corners.xml" value="0.1215" />
         <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/search_field.xml" value="0.1215" />
         <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/drawable/textinput_bg.xml" value="0.1215" />
-        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_change_password.xml" value="0.1" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_change_password.xml" value="0.25" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_password_code.xml" value="0.1" />
-        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_register_confirmation.xml" value="0.1" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_password_code.xml" value="0.12952898550724637" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_product.xml" value="0.25" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_register_confirmation.xml" value="0.12952898550724637" />
         <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_registration.xml" value="0.1" />
         <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/activity_store.xml" value="0.22" />
         <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/grid_item.xml" value="0.24003623188405798" />
         <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/grid_items.xml" value="0.24003623188405798" />
         <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/list_item.xml" value="0.6224677716390423" />
+        <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/layout/no_internet_connection.xml" value="0.33" />
         <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/menu/botton_nav_menu.xml" value="0.18802083333333333" />
         <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/menu/button_nav_menu.xml" value="0.190625" />
         <entry key="..\:/Documentos/Moviles/Proyecto-Mall-Arces/ProyectoArceMall/app/src/main/res/menu/search_bar.xml" value="0.2942708333333333" />
         <entry key="..\:/Documentos/Proyecto-Moviles/ProyectoArceMall/app/src/main/res/layout/activity_main.xml" value="0.1398148148148148" />
+        <entry key="..\:/Users/cesar/OneDrive/Escritorio/ProyectoMoviles/ProyectoArceMall/app/src/main/res/layout/activity_main.xml" value="0.21467391304347827" />
+        <entry key="..\:/Users/cesar/OneDrive/Escritorio/ProyectoMoviles/ProyectoArceMall/app/src/main/res/layout/activity_product.xml" value="0.25" />
+        <entry key="..\:/Users/cesar/OneDrive/Escritorio/ProyectoMoviles/ProyectoArceMall/app/src/main/res/layout/activity_registration.xml" value="0.21467391304347827" />
+        <entry key="..\:/Users/cesar/OneDrive/Escritorio/ProyectoMoviles/ProyectoArceMall/app/src/main/res/layout/activity_store.xml" value="0.17" />
+        <entry key="..\:/Users/cesar/OneDrive/Escritorio/ProyectoMoviles/ProyectoArceMall/app/src/main/res/layout/list_item.xml" value="0.33" />
+        <entry key="..\:/Users/cesar/OneDrive/Escritorio/ProyectoMoviles/ProyectoArceMall/app/src/main/res/layout/view_product.xml" value="0.22" />
       </map>
     </option>
   </component>

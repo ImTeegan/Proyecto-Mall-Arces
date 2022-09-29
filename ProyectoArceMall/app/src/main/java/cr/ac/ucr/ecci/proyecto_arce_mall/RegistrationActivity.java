@@ -97,8 +97,8 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     validateData();
-                } catch (ParseException exception) {
-                    exception.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -240,7 +240,7 @@ public class RegistrationActivity extends AppCompatActivity {
         return false;
     }
 
-    private void validateData() throws ParseException {
+    private void validateData() throws Exception {
         String identification = tilIdentification.getEditText().getText().toString();
         String name = tilName.getEditText().getText().toString();
         String email = tilEmail.getEditText().getText().toString();
@@ -256,11 +256,14 @@ public class RegistrationActivity extends AppCompatActivity {
         }
     }
 
-    private void showConfirmationScreen(User user) {
+    private void showConfirmationScreen(User user) throws Exception {
+        String firstPassword = user.getPassword();
+        EncryptPassword encryptPassword = new EncryptPassword();
+        user.setPassword(encryptPassword.encryptPassword(user.getPassword()));
         this.dataBase.addUser(user);
         Intent intent = new Intent(this, RegisterConfirmationActivity.class);
         intent.putExtra("email", user.getEmail());
-        intent.putExtra("password", user.getPassword());
+        intent.putExtra("password", firstPassword);
         startActivity(intent);
     }
 }

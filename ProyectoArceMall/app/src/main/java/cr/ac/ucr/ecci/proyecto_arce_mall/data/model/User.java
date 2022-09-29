@@ -24,7 +24,7 @@ public class User implements Parcelable {
     }
 
     public User(String identification, String name, String email,
-                String birthday, String province, int firstTime) {
+                String birthday, String province, int firstTime) throws Exception {
         this.identification = identification ;
         this.name = name;
         this.email = email;
@@ -60,14 +60,14 @@ public class User implements Parcelable {
         int targetStringLength = 15; // Length of string
 
         Random random = new Random();
-        EncryptPassword encryptPassword = new EncryptPassword();
 
-        String password = encryptPassword.encryptPassword(random.ints(leftLimit, rightLimit + 1)
+
+        String password = random.ints(leftLimit, rightLimit + 1)
                                 .limit(targetStringLength)
                                 .collect(StringBuilder::new,
                                          StringBuilder::appendCodePoint,
                                          StringBuilder::append)
-                                .toString());
+                                .toString();
 
         this.setPassword(password);
     }

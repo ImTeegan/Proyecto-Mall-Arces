@@ -217,7 +217,7 @@ public class DbHelper extends SQLiteOpenHelper {
      * @param password  The password of an user
      * @return true if the parameters match; false otherwise
      */
-    public boolean checkUser(String email, String password) {
+    public boolean checkUser(String email, String password) throws Exception {
         boolean success=false;
         EncryptPassword encryptPassword = new EncryptPassword();
         password = encryptPassword.encryptPassword(password);

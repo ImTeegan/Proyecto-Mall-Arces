@@ -26,6 +26,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_change_password);
 
         this.instantiateComponents();
+        this.setComponentActions();
     }
 
     private void instantiateComponents() {
@@ -40,12 +41,16 @@ public class ChangePasswordActivity extends AppCompatActivity {
         this.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                validatePassword();
+                try {
+                    validatePassword();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
-    protected void validatePassword() {
+    protected void validatePassword() throws Exception {
         String newPassword = tilNewPassword.getEditText().getText().toString();
         String confirmPassword = tilConfirmPassword.getEditText().getText().toString();
 
@@ -59,9 +64,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
         }
     }
 
-    protected void savePassword(User user, String newPassword) {
+    protected void savePassword(User user, String newPassword) throws Exception {
         user.setFirstTime(0);
-        user.setPassword(newPassword);
+        EncryptPassword encryptPassword = new EncryptPassword();
+        user.setPassword(encryptPassword.encryptPassword(newPassword));
 
         this.dataBase.updateUser(user);
 
