@@ -21,11 +21,9 @@ public class NetworkChangeListener extends BroadcastReceiver {
 
         if(!Common.isConnectedToInternet(context)) {
 
-            this.goToMainScreen(context);
-
-            AlertDialog.Builder builder =  new AlertDialog.Builder(context);
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
             View view = LayoutInflater.from(context)
-                    .inflate(R.layout.no_internet_connection,null);
+                    .inflate(R.layout.no_internet_connection, null);
             builder.setView(view);
 
             AppCompatButton retryButton = view.findViewById(R.id.retry_button);
@@ -37,7 +35,10 @@ public class NetworkChangeListener extends BroadcastReceiver {
 
             retryButton.setOnClickListener(view1 -> {
                 dialog.dismiss();
-                onReceive(context,intent);
+                onReceive(context, intent);
+                if (Common.isConnectedToInternet(context)) {
+                    this.goToMainScreen(context);
+                }
             });
         }
     }
