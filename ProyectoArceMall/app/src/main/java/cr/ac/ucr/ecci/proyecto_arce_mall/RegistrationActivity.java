@@ -9,9 +9,11 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +37,7 @@ import java.util.regex.Pattern;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Provinces;
+import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -51,6 +54,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText birthDate;
     private Button registrationButton;
     private DbHelper dataBase;
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,19 @@ public class RegistrationActivity extends AppCompatActivity {
 
         this.instantiateComponents();
         this.setComponentActions();
+    }
+
+    @Override
+    protected void onStart() {
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(this.networkChangeListener,intentFilter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(this.networkChangeListener);
+        super.onStop();
     }
 
     private void instantiateComponents() {
@@ -259,8 +276,10 @@ public class RegistrationActivity extends AppCompatActivity {
     private void showConfirmationScreen(User user) throws Exception {
         String firstPassword = user.getPassword();
         EncryptPassword encryptPassword = new EncryptPassword();
+
         user.setPassword(encryptPassword.encryptPassword(user.getPassword()));
         this.dataBase.addUser(user);
+
         Intent intent = new Intent(this, RegisterConfirmationActivity.class);
         intent.putExtra("email", user.getEmail());
         intent.putExtra("password", firstPassword);

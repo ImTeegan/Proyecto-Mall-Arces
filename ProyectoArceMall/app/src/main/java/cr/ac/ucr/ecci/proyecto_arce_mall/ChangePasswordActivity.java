@@ -3,6 +3,8 @@ package cr.ac.ucr.ecci.proyecto_arce_mall;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
+import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
@@ -19,6 +22,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private TextInputLayout tilNewPassword;
     private TextInputLayout tilConfirmPassword;
     private User user;
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,19 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         this.instantiateComponents();
         this.setComponentActions();
+    }
+
+    @Override
+    protected void onStart() {
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(this.networkChangeListener,intentFilter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(this.networkChangeListener);
+        super.onStop();
     }
 
     private void instantiateComponents() {

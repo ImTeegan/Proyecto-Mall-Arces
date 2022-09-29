@@ -2,6 +2,8 @@ package cr.ac.ucr.ecci.proyecto_arce_mall;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -21,9 +23,12 @@ import java.util.List;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.ProductAdapter;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
+import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
 public class StoreActivity extends AppCompatActivity {
 
+
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
     GridView productsGrid;
     private final String storeAPI = "https://dummyjson.com/products";
 
@@ -57,5 +62,16 @@ public class StoreActivity extends AppCompatActivity {
         requestQueue.add(myRequest);
     }
 
+    @Override
+    protected void onStart() {
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(this.networkChangeListener,intentFilter);
+        super.onStart();
+    }
 
+    @Override
+    protected void onStop() {
+        unregisterReceiver(this.networkChangeListener);
+        super.onStop();
+    }
 }
