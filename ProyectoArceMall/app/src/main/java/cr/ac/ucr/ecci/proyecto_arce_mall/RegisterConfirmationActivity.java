@@ -3,16 +3,20 @@ package cr.ac.ucr.ecci.proyecto_arce_mall;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.mail.JavaMailAPI;
 
 public class RegisterConfirmationActivity extends AppCompatActivity {
 
     private Button acceptButton;
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,19 @@ public class RegisterConfirmationActivity extends AppCompatActivity {
             String email = message.getString("email");
             this.sendMail(email, password);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(this.networkChangeListener,intentFilter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(this.networkChangeListener);
+        super.onStop();
     }
 
     private void instantiateComponents() {

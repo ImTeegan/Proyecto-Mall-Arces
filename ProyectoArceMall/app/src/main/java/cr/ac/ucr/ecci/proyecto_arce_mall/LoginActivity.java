@@ -3,6 +3,8 @@ package cr.ac.ucr.ecci.proyecto_arce_mall;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -17,6 +19,7 @@ import java.util.List;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
+import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -26,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     private DbHelper database;
     private List<User> users;
     private User user;
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +40,30 @@ public class LoginActivity extends AppCompatActivity {
         this.setComponentActions();
     }
 
+    @Override
+    protected void onStart() {
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(this.networkChangeListener,intentFilter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(this.networkChangeListener);
+        super.onStop();
+    }
+
     private void instantiateComponents() {
         this.tilEmail = (TextInputLayout) findViewById(R.id.til_email);
         this.tilPassword = (TextInputLayout) findViewById(R.id.til_password);
         this.loginButton = (Button) findViewById(R.id.login_button);
         this.database = new DbHelper(this);
+
+        // The following code is only for testing.
         this.users = this.database.getAllUser();
 
-
-        Log.i("ESTOY AQUI1", "AQUI1");
         for (int index = 0; index < this.users.size(); ++index) {
             User current = this.users.get(index);
-            Log.i("ESTOY AQUI2", "AQUI2");
             Log.i("e-mail: ", current.getEmail());
             Log.i("Password: ", current.getPassword());
             Log.i("First time: ", String.valueOf(current.getFirstTime()));
