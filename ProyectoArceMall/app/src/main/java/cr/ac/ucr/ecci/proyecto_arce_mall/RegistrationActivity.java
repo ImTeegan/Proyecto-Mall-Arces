@@ -50,7 +50,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private LocationManager locationManager;
     private EditText birthDate;
     private Button registrationButton;
-    private DbHelper DataBase;
+    private DbHelper dataBase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -265,7 +265,7 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void showConfirmationScreen(User user) {
-        DataBase.addUser(user);
+        this.dataBase.addUser(user);
         Intent intent = new Intent(this, RegisterConfirmationActivity.class);
         intent.putExtra("email", user.getEmail());
         intent.putExtra("password", user.getPassword());

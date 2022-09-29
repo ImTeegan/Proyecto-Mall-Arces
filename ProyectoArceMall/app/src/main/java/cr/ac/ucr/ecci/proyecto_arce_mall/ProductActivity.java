@@ -33,6 +33,7 @@ public class ProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
         TextView name = findViewById(R.id.nameOFproduct);
+        TextView price = findViewById(R.id.priceOfProduct);
         TextView Description = findViewById(R.id.productDescription);
         ImageView Image = findViewById(R.id.productIcon);
         Button More = findViewById(R.id.More);
@@ -52,6 +53,7 @@ public class ProductActivity extends AppCompatActivity {
                         Gson gson = new Gson();
                         Product products = gson.fromJson(String.valueOf(myJsonObject), Product.class);
                         name.setText(products.getTitle());
+                        price.setText("$"+products.getPrice());
                         Description.setText(products.getDescription());
                         String [] images = products.getImages();
                         URL url = new URL(images[0]);
