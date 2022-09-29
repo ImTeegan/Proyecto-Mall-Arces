@@ -68,7 +68,6 @@ public class RegisterConfirmationActivity extends AppCompatActivity {
     }
 
     private void sendMail(String email, String password) throws Exception {
-        email = "medranom778@gmail.com";
         String message = "<h2>Gracias por crear su cuenta en Tienda Arce.</h2><br>";
         message += "<h3>Para ingresar por primera vez, ingrese la siguiente contraseña:</h3>";
         message += "<h4><font color=red>" + password + "</font></h4>";
