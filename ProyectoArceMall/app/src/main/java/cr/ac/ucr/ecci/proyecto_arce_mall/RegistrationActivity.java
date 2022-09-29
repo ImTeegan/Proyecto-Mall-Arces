@@ -75,10 +75,7 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void setComponentActions() {
-        // Verify if GPS provider is enabled or not.
-        if (this.locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            this.getLocation();
-        }
+        this.getLocation();
         this.compareLocation();
 
         // Set birth date field click action.

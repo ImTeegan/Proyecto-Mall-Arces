@@ -1,11 +1,14 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -21,6 +24,7 @@ import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 public class MainActivity extends AppCompatActivity {
 
     private LocationManager locationManager;
+    private static final int REQUEST_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (!this.locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             this.showEnableGpsDialog();
+        } else {
+            this.getLocation();
         }
     }
 
@@ -58,6 +64,25 @@ public class MainActivity extends AppCompatActivity {
                 });
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+
+    private void getLocation() {
+        // Get permission values for precise and approximate location.
+        int preciseLocationPermission = ActivityCompat.checkSelfPermission(
+                MainActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        int approxLocationPermission = ActivityCompat.checkSelfPermission(
+                MainActivity.this,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        if ((preciseLocationPermission != PackageManager.PERMISSION_GRANTED)
+                && (approxLocationPermission != PackageManager.PERMISSION_GRANTED)) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                    REQUEST_LOCATION);
+        }
     }
 
     public void showRegistrationScreen(View view) {
