@@ -5,7 +5,7 @@ public enum Provinces {
     HEREDIA("Heredia", 10.00236, -84.11651),
     ALAJUELA("Alajuela", 10.01652, -84.21163),
     CARTAGO("Cartago", 9.86444, -83.91944),
-    PUNTARENAS("Puntarenas", 9.97652, -84.06084),
+    PUNTARENAS("Puntarenas", 9.97625, -84.83836),
     LIMON("Limon", 9.99074, -83.03596),
     GUANACASTE("Guanacaste", 10.630573, -85.439346);
 
