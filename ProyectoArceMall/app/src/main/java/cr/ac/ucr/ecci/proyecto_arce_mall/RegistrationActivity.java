@@ -92,12 +92,7 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void setComponentActions() {
-        // Verify if GPS provider is enabled or not.
-        if (!this.locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            this.showEnableGpsDialog();
-        } else {
-            this.getLocation();
-        }
+        this.getLocation();
         this.compareLocation();
 
         // Set birth date field click action.
@@ -149,10 +144,20 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
     private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                RegistrationActivity.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                RegistrationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+        // Get permission values for precise and approximate location.
+        int preciseLocationPermission = ActivityCompat.checkSelfPermission(
+                RegistrationActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        int approxLocationPermission = ActivityCompat.checkSelfPermission(
+                RegistrationActivity.this,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        if ((preciseLocationPermission != PackageManager.PERMISSION_GRANTED)
+                && (approxLocationPermission != PackageManager.PERMISSION_GRANTED)) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                    REQUEST_LOCATION);
         } else {
 
             Location locationGps = this.locationManager.getLastKnownLocation(LocationManager
@@ -174,15 +179,20 @@ public class RegistrationActivity extends AppCompatActivity {
             float[] results = new float[8];
 
             for (Provinces province : Provinces.values()) {
-                Location.distanceBetween(currentLatitude, currentLongitude, province.getLatitude(),
-                                         province.getLongitude(), results);
+
+                Location.distanceBetween(this.currentLatitude,
+                                         this.currentLongitude,
+                                         province.getLatitude(),
+                                         province.getLongitude(),
+                                         results);
                 map.put(province.getName(), results[0]);
             }
-            this.province = (Collections.min(map.entrySet(),
+            province = (Collections.min(map.entrySet(),
                     Map.Entry.comparingByValue()).getKey());
-            this.tilLocation.getEditText().setText(province);
+            tilLocation.getEditText().setText(province);
         }
     }
+
 
     private void getDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
@@ -267,8 +277,10 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean validName = validateName(name);
         boolean validEmail = validateEmail(email);
         boolean validBirthDate = validateBirthDate(date);
+
         if (validBirthDate && validEmail && validName && validIdentification) {
-            User newUser = new User(identification, name,email, date,province,1); //1 means TRUE
+            // 1 means TRUE
+            User newUser = new User(identification, name, email, date, province,1);
             showConfirmationScreen(newUser);
         }
     }

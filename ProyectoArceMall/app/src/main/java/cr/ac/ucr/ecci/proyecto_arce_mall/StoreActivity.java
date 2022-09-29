@@ -37,6 +37,8 @@ public class StoreActivity extends AppCompatActivity {
 
     private ProductAdapter adapter;
 
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +64,19 @@ public class StoreActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(this.networkChangeListener,intentFilter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(this.networkChangeListener);
+        super.onStop();
     }
 
     private void buildRecycleView(){

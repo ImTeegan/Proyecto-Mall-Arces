@@ -2,6 +2,8 @@ package cr.ac.ucr.ecci.proyecto_arce_mall;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -23,11 +25,14 @@ import java.io.IOException;
 import java.net.URL;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
+import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
 public class ProductActivity extends AppCompatActivity {
 
     private final String storeAPI = "https://dummyjson.com/products/";
     private int productQuant = 1;
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,5 +99,18 @@ public class ProductActivity extends AppCompatActivity {
         if (productQuant>0) {
             productQuant--;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(this.networkChangeListener,intentFilter);
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        unregisterReceiver(this.networkChangeListener);
+        super.onStop();
     }
 }
