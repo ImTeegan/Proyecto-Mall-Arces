@@ -114,8 +114,8 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     validateData();
-                } catch (ParseException exception) {
-                    exception.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -142,6 +142,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     }
 
         });
+
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
@@ -173,20 +174,15 @@ public class RegistrationActivity extends AppCompatActivity {
             float[] results = new float[8];
 
             for (Provinces province : Provinces.values()) {
-
-                Location.distanceBetween(this.currentLatitude,
-                        this.currentLongitude,
-                        province.getLatitude(),
-                        province.getLongitude(),
-                        results);
+                Location.distanceBetween(currentLatitude, currentLongitude, province.getLatitude(),
+                                         province.getLongitude(), results);
                 map.put(province.getName(), results[0]);
             }
-            province = (Collections.min(map.entrySet(),
+            this.province = (Collections.min(map.entrySet(),
                     Map.Entry.comparingByValue()).getKey());
-            tilLocation.getEditText().setText(province);
+            this.tilLocation.getEditText().setText(province);
         }
     }
-
 
     private void getDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
@@ -225,20 +221,16 @@ public class RegistrationActivity extends AppCompatActivity {
         if (!pattern.matcher(name).matches() || name.isEmpty()) {
             this.tilName.setError("El nombre no es válido");
             return false;
-        } else {
-            tilName.setError(null);
         }
 
         this.tilName.setError(null);
         return true;
     }
 
-    private boolean validateEmail(String email){
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            tilEmail.setError("El correo electronico no es válido");
+    private boolean validateEmail(String email) {
+        if (email.isEmpty() || !(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
+            this.tilEmail.setError("El correo electrónico no es válido");
             return false;
-        } else {
-            tilEmail.setError(null);
         }
 
         this.tilEmail.setError(null);
@@ -265,7 +257,7 @@ public class RegistrationActivity extends AppCompatActivity {
         return false;
     }
 
-    private void validateData() throws ParseException {
+    private void validateData() throws Exception {
         String identification = tilIdentification.getEditText().getText().toString();
         String name = tilName.getEditText().getText().toString();
         String email = tilEmail.getEditText().getText().toString();
@@ -281,20 +273,16 @@ public class RegistrationActivity extends AppCompatActivity {
         }
     }
 
-    private void showConfirmationScreen(User user) {
-        String Error = this.dataBase.addUser(user);
-        if(Error.equals("Succes")){
-            Intent intent = new Intent(this, RegisterConfirmationActivity.class);
-            intent.putExtra("email", user.getEmail());
-            intent.putExtra("password", user.getPassword());
-            startActivity(intent);
-        }
-        if(Error.equals(" Esta identificación ya se encuentra en el sistema ")) {
-            tilIdentification.setError(Error);
-        }else{
-            tilEmail.setError(Error);
-        }
+    private void showConfirmationScreen(User user) throws Exception {
+        String firstPassword = user.getPassword();
+        EncryptPassword encryptPassword = new EncryptPassword();
 
+        user.setPassword(encryptPassword.encryptPassword(user.getPassword()));
+        this.dataBase.addUser(user);
 
+        Intent intent = new Intent(this, RegisterConfirmationActivity.class);
+        intent.putExtra("email", user.getEmail());
+        intent.putExtra("password", firstPassword);
+        startActivity(intent);
     }
 }

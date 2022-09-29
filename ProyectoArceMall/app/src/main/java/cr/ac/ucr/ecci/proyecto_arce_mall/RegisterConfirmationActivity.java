@@ -28,7 +28,11 @@ public class RegisterConfirmationActivity extends AppCompatActivity {
         if (message != null) {
             String password = message.getString("password");
             String email = message.getString("email");
-            this.sendMail(email, password);
+            try {
+                this.sendMail(email, password);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -63,7 +67,8 @@ public class RegisterConfirmationActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void sendMail(String email, String password){
+    private void sendMail(String email, String password) throws Exception {
+        email = "medranom778@gmail.com";
         String message = "<h2>Gracias por crear su cuenta en Tienda Arce.</h2><br>";
         message += "<h3>Para ingresar por primera vez, ingrese la siguiente contraseña:</h3>";
         message += "<h4><font color=red>" + password + "</font></h4>";

@@ -8,6 +8,8 @@ import com.google.android.material.internal.ParcelableSparseArray;
 
 import java.util.Random;
 
+import cr.ac.ucr.ecci.proyecto_arce_mall.EncryptPassword;
+
 public class User implements Parcelable {
     private String identification;
     private String name;
@@ -22,7 +24,7 @@ public class User implements Parcelable {
     }
 
     public User(String identification, String name, String email,
-                String birthday, String province, int firstTime) {
+                String birthday, String province, int firstTime) throws Exception {
         this.identification = identification ;
         this.name = name;
         this.email = email;
@@ -52,12 +54,14 @@ public class User implements Parcelable {
     /**
      * Creates a random password for a new user.
      */
-    private void CreatePassword() {
+    private void CreatePassword() throws Exception {
         int leftLimit = 97;
         int rightLimit = 122;
         int targetStringLength = 15; // Length of string
 
         Random random = new Random();
+
+
         String password = random.ints(leftLimit, rightLimit + 1)
                                 .limit(targetStringLength)
                                 .collect(StringBuilder::new,
