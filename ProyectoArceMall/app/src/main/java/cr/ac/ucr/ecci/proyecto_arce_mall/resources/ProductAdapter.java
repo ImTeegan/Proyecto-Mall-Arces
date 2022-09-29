@@ -1,84 +1,61 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall.resources;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Filter;
-import android.widget.Filterable;
-import android.widget.ImageView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.ProductActivity;
 import cr.ac.ucr.ecci.proyecto_arce_mall.R;
-import cr.ac.ucr.ecci.proyecto_arce_mall.StoreActivity;
 
-//public class ProductAdapter extends ArrayAdapter<Product> implements Filterable {
-public class ProductAdapter extends ArrayAdapter<Product> {
+public class ProductAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     private Context context;
+    List<Product> products;
 
-    public ProductAdapter(@NonNull Context context, List<Product> productList) {
-        super(context, 0, productList);
-        this.context =context;
+    public ProductAdapter(Context context, List<Product> products) {
+        this.context = context;
+        this.products = products;
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new MyViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item, parent, false));
+    }
 
-        View listItemView = convertView;
-        if (listItemView == null) {
-            listItemView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
-        }
-
-        Product product = getItem(position);
-        TextView productName = listItemView.findViewById(R.id.productName);
-        TextView productPrice = listItemView.findViewById(R.id.productPrice);
-        ImageView productImage = listItemView.findViewById(R.id.productImage);
-        Button buyButton = listItemView.findViewById(R.id.buyButton);
-        buyButton.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        holder.productName.setText(products.get(position).getTitle());
+        holder.productPrice.setText("Precio: $" + products.get(position).getPrice());
+        Picasso.get().load(products.get(position).getImgid()).into(holder.productImage);
+        holder.buyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ProductActivity.class);
-                intent.putExtra("ID",product.getId());
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("ID",products.get(position).getId());
                 context.startActivity(intent);
             }
         });
-        productName.setText(product.getTitle());
-        productPrice.setText("Precio: $" + product.getPrice());
-        Picasso.get().load(product.getImgid()).into(productImage);
-        return listItemView;
     }
-/*
+
     @Override
-    public Filter getFilter(){
-        Filter filter = new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                return null;
-            }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-
-            }
-        };
-        return filter;
+    public int getItemCount() {
+        return products.size();
     }
 
-    private class ProductFilter extends Filter
-    {*/
-
+    public void filterList(ArrayList<Product> filterlist) {
+        products = filterlist;
+        notifyDataSetChanged();
     }
 }
