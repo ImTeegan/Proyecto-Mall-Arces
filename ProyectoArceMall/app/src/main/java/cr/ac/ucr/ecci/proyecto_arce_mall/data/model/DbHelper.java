@@ -10,6 +10,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import cr.ac.ucr.ecci.proyecto_arce_mall.EncryptPassword;
+
 public class DbHelper extends SQLiteOpenHelper {
 
     // Database version
@@ -216,9 +218,10 @@ public class DbHelper extends SQLiteOpenHelper {
      * @param password  The password of an user
      * @return true if the parameters match; false otherwise
      */
-    public boolean checkUser(String email, String password) {
+    public boolean checkUser(String email, String password) throws Exception {
         boolean success = false;
-
+        EncryptPassword encryptPassword = new EncryptPassword();
+        password = encryptPassword.encryptPassword(password);
         String[] columns = {
                 COLUMN_USER_ID
         };

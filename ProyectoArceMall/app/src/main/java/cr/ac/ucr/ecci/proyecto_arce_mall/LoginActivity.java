@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     validateData();
-                } catch (ParseException exception) {
+                } catch (Exception exception) {
                     exception.printStackTrace();
                 }
             }
@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
      *
      * @throws ParseException
      */
-    private void validateData() throws ParseException {
+    private void validateData() throws Exception {
         String email = this.tilEmail.getEditText().getText().toString();
         String password = this.tilPassword.getEditText().getText().toString();
 
@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private boolean validateEmailAndPassword(String email, String password) {
+    private boolean validateEmailAndPassword(String email, String password) throws Exception {
         if (email.isEmpty() || !(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
             this.tilEmail.setError("El correo electrónico no es válido");
             return false;
@@ -99,8 +99,6 @@ public class LoginActivity extends AppCompatActivity {
             this.tilEmail.setError("Correo o contraseña incorrectos");
             this.tilPassword.setError("Correo o contraseña incorrectos");
             this.tilPassword.setErrorIconDrawable(null);
-            /*Toast.makeText(this.getApplicationContext(), "Correo o contraseña incorrectos",
-                           Toast.LENGTH_LONG).show();*/
             return false;
         }
 

@@ -262,22 +262,16 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean validBirthDate = validateBirthDate(date);
 
         if(validBirthDate && validEmail && validName && validIdentification) {
-            // 1 means TRUE
-            User newUser = new User(identification, name, email, date, this.province, 1);
-            registerUser(newUser);
-            Toast.makeText(this, "Registro exitoso", Toast.LENGTH_LONG).show();
+            User newUser = new User(identification, name,email, date,province,1); //1 means TRUE
+            showConfirmationScreen(newUser);
         }
     }
 
-    public void registerUser(User user) {
+    private void showConfirmationScreen(User user) {
         this.dataBase.addUser(user);
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, RegisterConfirmationActivity.class);
+        intent.putExtra("email", user.getEmail());
+        intent.putExtra("password", user.getPassword());
         startActivity(intent);
-        finish();
     }
-
-//    private void showConfirmationScreen() {
-//        Intent intent = new Intent(this, RegisterConfirmationActivity.class);
-//        startActivity(intent);
-//    }
 }
