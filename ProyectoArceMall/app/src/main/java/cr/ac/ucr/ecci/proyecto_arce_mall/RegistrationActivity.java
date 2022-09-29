@@ -267,7 +267,7 @@ public class RegistrationActivity extends AppCompatActivity {
         return false;
     }
 
-    private void validateData() throws ParseException {
+    private void validateData() throws Exception {
         String identification = tilIdentification.getEditText().getText().toString();
         String name = tilName.getEditText().getText().toString();
         String email = tilEmail.getEditText().getText().toString();
