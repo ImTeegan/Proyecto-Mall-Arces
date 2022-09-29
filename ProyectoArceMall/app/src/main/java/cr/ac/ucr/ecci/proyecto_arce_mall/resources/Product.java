@@ -93,4 +93,9 @@ public class Product {
     public void setImages(String[] images) {
         this.images = images;
     }
+
+    @Override
+    public String toString (){
+        return title;
+    }
 }

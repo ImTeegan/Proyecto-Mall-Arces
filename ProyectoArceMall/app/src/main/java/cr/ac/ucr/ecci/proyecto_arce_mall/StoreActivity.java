@@ -1,11 +1,15 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.widget.GridView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -27,19 +31,42 @@ import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
 public class StoreActivity extends AppCompatActivity {
 
-
-    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
-    GridView productsGrid;
     private final String storeAPI = "https://dummyjson.com/products";
+
+    private List<Product> productsArrayList;
+
+    private ProductAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store);
 
-        productsGrid = findViewById(R.id.grid);
+        buildRecycleView();
+        EditText editText = findViewById(R.id.search_bar);
 
-        List<Product> productsArrayList = new ArrayList<Product>();
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                filter(editable.toString());
+            }
+        });
+
+    }
+
+    private void buildRecycleView(){
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        productsArrayList = new ArrayList<Product>();
         StringRequest myRequest = new StringRequest(Request.Method.GET,
                 storeAPI,
                 response -> {
@@ -49,8 +76,10 @@ public class StoreActivity extends AppCompatActivity {
                         Gson gson = new Gson();
                         Product[] userArray = gson.fromJson(String.valueOf(arr), Product[].class);
                         Collections.addAll(productsArrayList, userArray);
-                        ProductAdapter adapter = new ProductAdapter(this, productsArrayList);
-                        productsGrid.setAdapter(adapter);
+                        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,false);
+                        recyclerView.setLayoutManager(gridLayoutManager);
+                        adapter = new ProductAdapter(getApplicationContext(), productsArrayList);
+                        recyclerView.setAdapter(adapter);
                     }catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -62,16 +91,14 @@ public class StoreActivity extends AppCompatActivity {
         requestQueue.add(myRequest);
     }
 
-    @Override
-    protected void onStart() {
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(this.networkChangeListener,intentFilter);
-        super.onStart();
-    }
+    private void filter(String text) {
+        ArrayList<Product> filteredList = new ArrayList<Product>();
 
-    @Override
-    protected void onStop() {
-        unregisterReceiver(this.networkChangeListener);
-        super.onStop();
+        for (Product item : productsArrayList) {
+            if (item.getTitle().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
+        adapter.filterList(filteredList);
     }
 }
