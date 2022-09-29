@@ -66,7 +66,7 @@ public class DbHelper extends SQLiteOpenHelper {
      * Creates a new user and adds it to the database.
      * @param user  The new user to add
      */
-    public void addUser(User user) {
+    public String addUser(User user) {
         String error = "Succes";
         Boolean isRegistered = false;
         Boolean BDTRY = false;

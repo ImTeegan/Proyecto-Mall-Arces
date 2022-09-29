@@ -39,7 +39,9 @@
         android:horizontalSpacing="30dp"
         android:verticalSpacing="85dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2" />
+        app:spanCount="2" >
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 
 </RelativeLayout>
