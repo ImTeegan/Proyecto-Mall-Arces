@@ -265,10 +265,19 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void showConfirmationScreen(User user) {
-        this.dataBase.addUser(user);
-        Intent intent = new Intent(this, RegisterConfirmationActivity.class);
-        intent.putExtra("email", user.getEmail());
-        intent.putExtra("password", user.getPassword());
-        startActivity(intent);
+        String Error = this.dataBase.addUser(user);
+        if(Error.equals("Succes")){
+            Intent intent = new Intent(this, RegisterConfirmationActivity.class);
+            intent.putExtra("email", user.getEmail());
+            intent.putExtra("password", user.getPassword());
+            startActivity(intent);
+        }
+        if(Error.equals(" Esta identificación ya se encuentra en el sistema ")) {
+            tilIdentification.setError(Error);
+        }else{
+            tilEmail.setError(Error);
+        }
+
+
     }
 }

@@ -61,7 +61,10 @@ public class DbHelper extends SQLiteOpenHelper {
      create a new user
      */
 
-    public void addUser(User user) {
+    public String  addUser(User user) {
+        String Error = "Succes";
+        Boolean IsRegistered = false;
+        Boolean BDTRY = false;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_USER_ID, user.getIdentification());
@@ -71,9 +74,26 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USER_BIRTHDAY, user.getBirthday());
         values.put(COLUMN_USER_PASSWORD, user.getPassword());
         values.put(COLUMN_USER_FIRST,user.getFirstTime());
-        // Inserting Row
-        Log.i("DATA BASE ",db.insert(TABLE_USER, null, values) + "");
+        BDTRY = db.isOpen();
+        List<User> users = this.getAllUser();
+        BDTRY = db.isOpen();
+        db = getWritableDatabase();
+        for(int i = 0;i<users.size();++i){
+            if(user.getIdentification().equals(users.get(i).getIdentification())){
+                IsRegistered=true;
+                Error = " Esta identificación ya se encuentra en el sistema ";
+            }
+            if(user.getEmail().equals(users.get(i).getEmail())){
+                IsRegistered=true;
+                Error = " Este correo ya se encuentra en el sistema ";
+            }
+        };
+        if (!IsRegistered){
+            // Inserting Row
+            Log.i("DATA BASE ",db.insert(TABLE_USER, null, values) + "");
+        }
         db.close();
+        return Error;
     }
 
     public void updateUser(User user) {
@@ -207,7 +227,5 @@ public class DbHelper extends SQLiteOpenHelper {
         }
         return Success;
     }
-
-
 }
 
