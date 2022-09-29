@@ -1,39 +1,96 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall.resources;
 
 public class Product {
-    // string productName for storing productName
-    // and imgid for storing image id.
-    private String productName;
-    private String productPrice;
-    private int imgid;
+    private int id;
+    private String title;
+    private String description;
+    private int price;
+    private double discountPercentage;
+    private int stock;
+    private String brand;
+    private String category;
+    private String thumbnail;
+    private String[] images;
 
-    public Product(String productName, String productPrice, int imgid) {
-        this.productName = productName;
-        this.productPrice = productPrice;
-        this.imgid = imgid;
+    public String getTitle() {
+        return title;
     }
 
-    public String getproductName() {
-        return productName;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setproductName(String productName) {
-        this.productName = productName;
+    public String getPrice() {
+        return String.valueOf(price);
     }
 
-    public String getproductPrice() {
-        return productPrice;
+    public void setPrice(int price) {
+        this.price = price;
     }
 
-    public void setproductPrice(String productPrice) {
-        this.productPrice = productName;
+    public String getImgid() {
+        return images[0];
     }
 
-    public int getImgid() {
-        return imgid;
+    public  int getId(){return id;}
+
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setImgid(int imgid) {
-        this.imgid = imgid;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getDiscountPercentage() {
+        return discountPercentage;
+    }
+
+    public void setDiscountPercentage(double discountPercentage) {
+        this.discountPercentage = discountPercentage;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String [] getImages() {
+        return images;
+    }
+
+    public void setImages(String[] images) {
+        this.images = images;
     }
 }

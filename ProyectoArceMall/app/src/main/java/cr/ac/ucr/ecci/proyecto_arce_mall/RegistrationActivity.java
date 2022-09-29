@@ -142,27 +142,16 @@ public class RegistrationActivity extends AppCompatActivity {
                     }
 
         });
-
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
+
     private void getLocation() {
-        // Get permission values for precise and approximate location.
-        int preciseLocationPermission = ActivityCompat.checkSelfPermission(
-                RegistrationActivity.this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        int approxLocationPermission = ActivityCompat.checkSelfPermission(
-                RegistrationActivity.this,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
-
-        if ((preciseLocationPermission != PackageManager.PERMISSION_GRANTED)
-            && (approxLocationPermission != PackageManager.PERMISSION_GRANTED)) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                    REQUEST_LOCATION);
-
+        if (ActivityCompat.checkSelfPermission(
+                RegistrationActivity.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                RegistrationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         } else {
 
             Location locationGps = this.locationManager.getLastKnownLocation(LocationManager
@@ -172,27 +161,32 @@ public class RegistrationActivity extends AppCompatActivity {
                 this.currentLatitude = locationGps.getLatitude();
                 this.currentLongitude = locationGps.getLongitude();
             }
-
         }
     }
 
     private void compareLocation() {
         if (this.currentLatitude == 0 && this.currentLongitude == 0) {
+            province = "San José";
             this.tilLocation.getEditText().setText("San José");
         } else {
             Map<String, Float> map = new HashMap<String, Float>();
             float[] results = new float[8];
 
             for (Provinces province : Provinces.values()) {
-                Location.distanceBetween(currentLatitude, currentLongitude, province.getLatitude(),
-                                         province.getLongitude(), results);
+
+                Location.distanceBetween(this.currentLatitude,
+                        this.currentLongitude,
+                        province.getLatitude(),
+                        province.getLongitude(),
+                        results);
                 map.put(province.getName(), results[0]);
             }
-            this.province = (Collections.min(map.entrySet(),
+            province = (Collections.min(map.entrySet(),
                     Map.Entry.comparingByValue()).getKey());
-            this.tilLocation.getEditText().setText(province);
+            tilLocation.getEditText().setText(province);
         }
     }
+
 
     private void getDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
@@ -231,16 +225,20 @@ public class RegistrationActivity extends AppCompatActivity {
         if (!pattern.matcher(name).matches() || name.isEmpty()) {
             this.tilName.setError("El nombre no es válido");
             return false;
+        } else {
+            tilName.setError(null);
         }
 
         this.tilName.setError(null);
         return true;
     }
 
-    private boolean validateEmail(String email) {
-        if (email.isEmpty() || !(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
-            this.tilEmail.setError("El correo electrónico no es válido");
+    private boolean validateEmail(String email){
+        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            tilEmail.setError("El correo electronico no es válido");
             return false;
+        } else {
+            tilEmail.setError(null);
         }
 
         this.tilEmail.setError(null);
@@ -277,24 +275,26 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean validName = validateName(name);
         boolean validEmail = validateEmail(email);
         boolean validBirthDate = validateBirthDate(date);
-
-        if(validBirthDate && validEmail && validName && validIdentification) {
-            // 1 means TRUE
-            User newUser = new User(identification, name, email, date, this.province, 1);
-            registerUser(newUser);
-            Toast.makeText(this, "Registro exitoso", Toast.LENGTH_LONG).show();
+        if (validBirthDate && validEmail && validName && validIdentification) {
+            User newUser = new User(identification, name,email, date,province,1); //1 means TRUE
+            showConfirmationScreen(newUser);
         }
     }
 
-    public void registerUser(User user) {
-        this.dataBase.addUser(user);
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
+    private void showConfirmationScreen(User user) {
+        String Error = this.dataBase.addUser(user);
+        if(Error.equals("Succes")){
+            Intent intent = new Intent(this, RegisterConfirmationActivity.class);
+            intent.putExtra("email", user.getEmail());
+            intent.putExtra("password", user.getPassword());
+            startActivity(intent);
+        }
+        if(Error.equals(" Esta identificación ya se encuentra en el sistema ")) {
+            tilIdentification.setError(Error);
+        }else{
+            tilEmail.setError(Error);
+        }
 
-//    private void showConfirmationScreen() {
-//        Intent intent = new Intent(this, RegisterConfirmationActivity.class);
-//        startActivity(intent);
-//    }
+
+    }
 }

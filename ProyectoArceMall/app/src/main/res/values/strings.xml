@@ -24,4 +24,5 @@
     <string name="homeTitle">Inicio</string>
     <string name="userTitle">Cuenta</string>
     <string name="cartTitle">Carrito</string>
+    <string name="buy">Comprar</string>
 </resources>

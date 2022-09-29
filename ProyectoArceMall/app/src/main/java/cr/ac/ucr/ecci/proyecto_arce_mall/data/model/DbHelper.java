@@ -65,6 +65,9 @@ public class DbHelper extends SQLiteOpenHelper {
      * @param user  The new user to add
      */
     public void addUser(User user) {
+        String error = "Succes";
+        Boolean isRegistered = false;
+        Boolean BDTRY = false;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -78,7 +81,30 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // Inserting Row
         Log.i("DATA BASE ",db.insert(TABLE_USER, null, values) + "");
+        BDTRY = db.isOpen();
+        List<User> users = this.getAllUser();
+        BDTRY = db.isOpen();
+        db = getWritableDatabase();
+
+        for (int i = 0; i<users.size(); ++i) {
+            if (user.getIdentification().equals(users.get(i).getIdentification())) {
+                isRegistered = true;
+                error = " Esta identificación ya se encuentra en el sistema ";
+            }
+
+            if(user.getEmail().equals(users.get(i).getEmail())){
+                isRegistered = true;
+                error = " Este correo ya se encuentra en el sistema ";
+            }
+        };
+
+        if (!isRegistered) {
+            // Inserting Row
+            Log.i("DATA BASE ", db.insert(TABLE_USER, null, values) + "");
+        }
+
         db.close();
+        return error;
     }
 
     /**
@@ -243,7 +269,5 @@ public class DbHelper extends SQLiteOpenHelper {
 
         return success;
     }
-
-
 }
 
