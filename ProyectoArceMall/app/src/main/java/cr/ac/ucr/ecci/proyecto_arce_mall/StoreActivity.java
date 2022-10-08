@@ -1,14 +1,17 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,6 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -39,31 +43,39 @@ public class StoreActivity extends AppCompatActivity {
 
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
+    private BottomNavigationView bottomNavigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store);
 
         buildRecycleView();
-        EditText editText = findViewById(R.id.search_bar);
+        setSearchFieldFunction();
 
-        editText.addTextChangedListener(new TextWatcher() {
+        bottomNavigationView = findViewById(R.id.nav_view);
+        bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                filter(editable.toString());
+                switch(item.getItemId())
+                {
+                    case R.id.navigation_user:
+                        startActivity(new Intent(getApplicationContext(),UserActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.navigation_home:
+                        return true;
+                    case R.id.navigation_cart:
+                        startActivity(new Intent(getApplicationContext(),CartActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
             }
         });
-
     }
 
     @Override
@@ -104,6 +116,27 @@ public class StoreActivity extends AppCompatActivity {
         );
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(myRequest);
+    }
+
+    private void setSearchFieldFunction(){
+        EditText editText = findViewById(R.id.search_bar);
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                filter(editable.toString());
+            }
+        });
     }
 
     private void filter(String text) {
