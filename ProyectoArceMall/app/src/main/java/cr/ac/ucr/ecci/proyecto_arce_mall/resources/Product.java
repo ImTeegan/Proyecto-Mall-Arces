@@ -1,5 +1,7 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall.resources;
 
+import java.util.List;
+
 public class Product {
     private int id;
     private String title;
@@ -10,7 +12,7 @@ public class Product {
     private String brand;
     private String category;
     private String thumbnail;
-    private String[] images;
+    private List<String> images;
 
     public String getTitle() {
         return title;
@@ -29,7 +31,7 @@ public class Product {
     }
 
     public String getImgid() {
-        return images[0];
+        return images.get(0);
     }
 
     public  int getId(){return id;}
@@ -86,11 +88,11 @@ public class Product {
         this.thumbnail = thumbnail;
     }
 
-    public String [] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 
