@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showLoginScreen(View view) {
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, StoreActivity.class);
         startActivity(intent);
     }
 }
