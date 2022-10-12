@@ -48,6 +48,10 @@ public class StoreActivity extends AppCompatActivity {
 
     private DbHelper dataBase;
 
+    /**
+     * Starts the activity view
+     * Sets the navigation options to the respective activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +86,10 @@ public class StoreActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Register the receiver that checks
+     * if the user has internet at every moment
+     */
     @Override
     protected void onStart() {
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -89,6 +97,10 @@ public class StoreActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    /**
+     * Unregister the receiver that checks
+     * if the user has internet at every moment
+     */
     @Override
     protected void onStop() {
         unregisterReceiver(this.networkChangeListener);
