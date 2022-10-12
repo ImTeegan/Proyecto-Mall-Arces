@@ -95,6 +95,10 @@ public class StoreActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    /**
+     * Calls the API with for the products information and creates
+     * the Recycler view
+     */
     private void buildRecycleView(){
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         productsArrayList = new ArrayList<Product>();
@@ -123,6 +127,10 @@ public class StoreActivity extends AppCompatActivity {
         requestQueue.add(myRequest);
     }
 
+    /**
+     * Set the methods for the search bar to search
+     * through the products
+     */
     private void setSearchFieldFunction(){
         EditText editText = findViewById(R.id.search_bar);
 
@@ -144,6 +152,11 @@ public class StoreActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Filter the products that matches the text
+     * in the search bar
+     * @param text the text input in the search bar
+     */
     private void filter(String text) {
         ArrayList<Product> filteredList = new ArrayList<Product>();
 
@@ -155,6 +168,9 @@ public class StoreActivity extends AppCompatActivity {
         adapter.filterList(filteredList);
     }
 
+    /**
+     * Saves the products obtain from the API to the database
+     */
     private void storeInDatabase(){
         if( this.dataBase.getAllProducts().size() == 0  && productsArrayList.size() > 0){
             for (Product product : productsArrayList){
