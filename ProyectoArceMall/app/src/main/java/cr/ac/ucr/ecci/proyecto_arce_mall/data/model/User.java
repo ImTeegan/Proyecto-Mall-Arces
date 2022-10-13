@@ -18,6 +18,7 @@ public class User implements Parcelable {
     private String province;
     private String password;
     private int firstTime;
+    private String image;
 
     public User() {
 
@@ -31,6 +32,7 @@ public class User implements Parcelable {
         this.birthday = birthday;
         this.province = province;
         this.firstTime = firstTime;
+        this.image = " ";
         this.CreatePassword();
     }
 
@@ -60,7 +62,6 @@ public class User implements Parcelable {
         int targetStringLength = 15; // Length of string
 
         Random random = new Random();
-
 
         String password = random.ints(leftLimit, rightLimit + 1)
                                 .limit(targetStringLength)

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UserActivity">
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/botton_nav_menu_style"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/botton_nav_menu" />
+
+    <LinearLayout
+        android:layout_width="278dp"
+        android:layout_height="528dp"
+        android:background="@drawable/search_field"
+        android:backgroundTint="@color/light_orange"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="39dp" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="74dp"
+            app:srcCompat="@drawable/user" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="33dp" />
+
+        <TextView
+            android:id="@+id/Name"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Name"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/Mail"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:text="Mail"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/ID"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:text="ID"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/Province"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Province"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="26dp" />
+
+        <TextView
+            android:id="@+id/BirthDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="AGE"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="57dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="142dp">
+
+            <LinearLayout
+                android:layout_width="135dp"
+                android:layout_height="90dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/ChangePass"
+                    android:layout_width="104dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/round_corners"
+                    android:elevation="10dp"
+                    android:shadowRadius="100"
+                    android:text="Cambiar Contraseña"
+                    android:textColor="@android:color/black"
+                    android:textFontWeight="900"
+                    android:textSize="16dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="88dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/Update"
+                    android:layout_width="116dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/round_corners"
+                    android:baselineAligned="false"
+                    android:elevation="10dp"
+                    android:shadowRadius="100"
+                    android:text="Actualizar"
+                    android:textColor="@android:color/black"
+                    android:textFontWeight="900"
+                    android:textSize="16dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
