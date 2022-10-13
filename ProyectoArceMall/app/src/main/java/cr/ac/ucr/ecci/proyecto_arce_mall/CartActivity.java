@@ -9,17 +9,17 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class UserActivity extends AppCompatActivity {
+public class CartActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user);
+        setContentView(R.layout.activity_cart);
 
         bottomNavigationView = findViewById(R.id.nav_view);
-        bottomNavigationView.setSelectedItemId(R.id.navigation_user);
+        bottomNavigationView.setSelectedItemId(R.id.navigation_cart);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -27,14 +27,14 @@ public class UserActivity extends AppCompatActivity {
 
                 switch(item.getItemId())
                 {
-                    case R.id.navigation_home:
-                        startActivity(new Intent(getApplicationContext(),StoreActivity.class));
+                    case R.id.navigation_user:
+                        startActivity(new Intent(getApplicationContext(),UserActivity.class));
                         overridePendingTransition(0,0);
                         return true;
-                    case R.id.navigation_user:
-                        return true;
                     case R.id.navigation_cart:
-                        startActivity(new Intent(getApplicationContext(),CartActivity.class));
+                        return true;
+                    case R.id.navigation_home:
+                        startActivity(new Intent(getApplicationContext(),StoreActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                 }

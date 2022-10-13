@@ -8,9 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.EncryptPassword;
+import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -18,10 +20,25 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Database name
-    private static final String DATABASE_NAME = "Users.db";
+    private static final String DATABASE_NAME = "Store.db";
 
     // Users table name
     private static final String TABLE_USER = "User";
+
+    // Products table name
+    private static final String TABLE_PRODUCTS = "Products";
+
+    // Product Table Columns names
+    private static final String COLUMN_PRODUCT_ID = "ID";
+    private static final String COLUMN_PRODUCT_TITLE = "Title";
+    private static final String COLUMN_PRODUCT_DESCRIPTION = "Description";
+    private static final String COLUMN_PRODUCT_PRICE = "Price";
+    private static final String COLUMN_PRODUCT_DISCOUNT_PERCENTAGE = "DiscountPercentage";
+    private static final String COLUMN_PRODUCT_STOCK = "Stock";
+    private static final String COLUMN_PRODUCT_BRAND = "Brand";
+    private static final String COLUMN_PRODUCT_CATEGORY = "Category";
+    private static final String COLUMN_PRODUCT_THUMBNAIL = "Thumbnail";
+    private static final String COLUMN_PRODUCT_IMAGE = "Images";
 
     // User Table Columns names
     private static final String COLUMN_USER_ID = "ID";
@@ -45,6 +62,22 @@ public class DbHelper extends SQLiteOpenHelper {
     // Drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
 
+    // Create table sql query
+    private final String  CREATE_PRODUCT_TABLE = "CREATE TABLE " + TABLE_PRODUCTS + "("
+            + COLUMN_PRODUCT_ID + " TEXT PRIMARY KEY ,"
+            + COLUMN_PRODUCT_TITLE + " TEXT, "
+            + COLUMN_PRODUCT_DESCRIPTION + " TEXT, "
+            + COLUMN_PRODUCT_PRICE + " INTEGER, "
+            + COLUMN_PRODUCT_DISCOUNT_PERCENTAGE + " INTEGER, "
+            + COLUMN_PRODUCT_STOCK + " INTEGER, "
+            + COLUMN_PRODUCT_BRAND + " TEXT, "
+            + COLUMN_PRODUCT_CATEGORY + " TEXT, "
+            + COLUMN_PRODUCT_THUMBNAIL + " TEXT, "
+            + COLUMN_PRODUCT_IMAGE + " TEXT " + ")";
+
+    // Drop table sql query
+    private String DROP_PRODUCT_TABLE = "DROP TABLE IF EXISTS " + TABLE_PRODUCTS;
+
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -52,12 +85,14 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USER_TABLE);
+        db.execSQL(CREATE_PRODUCT_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop User Table if exist
+        // Drop User and Product Table if exist
         db.execSQL(DROP_USER_TABLE);
+        db.execSQL(DROP_PRODUCT_TABLE);
         // Create tables again
         onCreate(db);
     }
@@ -110,6 +145,34 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Creates a new product and adds it to the database.
+     * @param product  The new product to add
+     */
+    public String addProduct(Product product) {
+        String error = "Succes";
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_PRODUCT_ID, product.getId());
+        values.put(COLUMN_PRODUCT_TITLE, product.getTitle());
+        values.put(COLUMN_PRODUCT_DESCRIPTION, product.getDescription());
+        values.put(COLUMN_PRODUCT_PRICE, product.getPrice());
+        values.put(COLUMN_PRODUCT_DISCOUNT_PERCENTAGE, product.getDiscountPercentage());
+        values.put(COLUMN_PRODUCT_STOCK, product.getStock());
+        values.put(COLUMN_PRODUCT_BRAND,product.getBrand());
+        values.put(COLUMN_PRODUCT_CATEGORY,product.getCategory());
+        values.put(COLUMN_PRODUCT_THUMBNAIL,product.getThumbnail());
+        values.put(COLUMN_PRODUCT_IMAGE,product.getImages().get(0));
+
+        // Inserting Row
+        Log.i("DATA BASE ",db.insert(TABLE_PRODUCTS, null, values) + "");
+
+        db.close();
+        return error;
+    }
+
+
+    /**
      * Updates an user in the database.
      * @param user The user to update
      */
@@ -128,6 +191,31 @@ public class DbHelper extends SQLiteOpenHelper {
         // Updating row
         db.update(TABLE_USER, values, COLUMN_USER_ID + " = ?",
                 new String[]{String.valueOf(user.getIdentification())});
+        db.close();
+    }
+
+    /**
+     * Updates a product in the database.
+     * @param product The product to update
+     */
+    public void updateProduct(Product product) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_PRODUCT_ID, product.getId());
+        values.put(COLUMN_PRODUCT_TITLE, product.getTitle());
+        values.put(COLUMN_PRODUCT_DESCRIPTION, product.getDescription());
+        values.put(COLUMN_PRODUCT_PRICE, product.getPrice());
+        values.put(COLUMN_PRODUCT_DISCOUNT_PERCENTAGE, product.getDiscountPercentage());
+        values.put(COLUMN_PRODUCT_STOCK, product.getStock());
+        values.put(COLUMN_PRODUCT_BRAND,product.getBrand());
+        values.put(COLUMN_PRODUCT_CATEGORY,product.getCategory());
+        values.put(COLUMN_PRODUCT_THUMBNAIL,product.getThumbnail());
+        values.put(COLUMN_PRODUCT_IMAGE,product.getImages().get(0));
+
+        // Updating row
+        db.update(TABLE_PRODUCTS, values, COLUMN_PRODUCT_ID + " = ?",
+                new String[]{String.valueOf(product.getId())});
         db.close();
     }
 
@@ -198,6 +286,68 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // Return user list
         return userList;
+    }
+
+    /**
+     * Returns a list of all registered products in the database.
+     * @return list of all registered products
+     */
+    public List<Product> getAllProducts() {
+        // Array of columns to fetch
+        String[] columns = {
+                COLUMN_PRODUCT_ID,
+                COLUMN_PRODUCT_TITLE,
+                COLUMN_PRODUCT_DESCRIPTION,
+                COLUMN_PRODUCT_PRICE,
+                COLUMN_PRODUCT_DISCOUNT_PERCENTAGE,
+                COLUMN_PRODUCT_STOCK,
+                COLUMN_PRODUCT_BRAND,
+                COLUMN_PRODUCT_CATEGORY,
+                COLUMN_PRODUCT_THUMBNAIL,
+                COLUMN_PRODUCT_IMAGE
+        };
+
+        // Sorting orders
+        String sortOrder = COLUMN_PRODUCT_ID + " ASC";
+        List<Product> productList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Query the user table
+        Cursor cursor = db.query(TABLE_PRODUCTS, // Table to query
+                columns,    // Columns to return
+                null,       // Columns for the WHERE clause
+                null,       // The values for the WHERE clause
+                null,       // Group the rows
+                null,       // Filter by row groups
+                sortOrder); // The sort order
+
+        // Traversing through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Product product = new Product();
+                product.setId(cursor.getInt(
+                        cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_ID)));
+                product.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_TITLE)));
+                product.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_DESCRIPTION)));
+                product.setPrice(cursor.getInt(
+                        cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_PRICE)));
+                product.setDiscountPercentage(cursor.getDouble(
+                        cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_DISCOUNT_PERCENTAGE)));
+                product.setStock(cursor.getInt(
+                        cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_STOCK)));
+                product.setBrand(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_BRAND)));
+                product.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_CATEGORY)));
+                product.setThumbnail(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_THUMBNAIL)));
+                product.setImages(Collections.singletonList(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRODUCT_IMAGE))));
+                // Adding product record to list
+                productList.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        // Return product list
+        return productList;
     }
 
     /**
