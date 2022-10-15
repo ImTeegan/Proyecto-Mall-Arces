@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.ProductAdapter;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
 import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
@@ -46,7 +45,6 @@ public class StoreActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
 
-    private DbHelper dataBase;
 
     /**
      * Starts the activity view
@@ -57,7 +55,6 @@ public class StoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store);
 
-        this.dataBase = new DbHelper(this);
         buildRecycleView();
         setSearchFieldFunction();
 
@@ -127,7 +124,6 @@ public class StoreActivity extends AppCompatActivity {
                         recyclerView.setLayoutManager(gridLayoutManager);
                         adapter = new ProductAdapter(getApplicationContext(), productsArrayList);
                         recyclerView.setAdapter(adapter);
-                        storeInDatabase();
                     }catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -180,14 +176,4 @@ public class StoreActivity extends AppCompatActivity {
         adapter.filterList(filteredList);
     }
 
-    /**
-     * Saves the products obtain from the API to the database
-     */
-    private void storeInDatabase(){
-        if( this.dataBase.getAllProducts().size() == 0  && productsArrayList.size() > 0){
-            for (Product product : productsArrayList){
-                this.dataBase.addProduct(product);
-            }
-        }
-    }
 }

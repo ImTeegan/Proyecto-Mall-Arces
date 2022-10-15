@@ -6,9 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".UserActivity">
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="10dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
@@ -21,149 +18,163 @@
         app:menu="@menu/botton_nav_menu" />
 
     <LinearLayout
-        android:layout_width="279dp"
-        android:layout_height="492dp"
-        android:background="@drawable/search_field"
+        android:id="@+id/linearLayout"
+        android:layout_width="335dp"
+        android:layout_height="488dp"
+        android:background="@drawable/user_background"
         android:backgroundTint="@color/light_orange"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.254">
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/image_user"
             android:layout_width="match_parent"
             android:layout_height="74dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="25dp"
             app:srcCompat="@drawable/user" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
 
-        <TextView
-            android:id="@+id/Name"
+        <EditText
+            android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:enabled="false"
+            android:inputType="none"
             android:text="UserName"
             android:textAlignment="center"
+            android:maxLines="1"
             android:textSize="20sp" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
 
-        <TextView
-            android:id="@+id/ID_user"
+        <EditText
+            android:id="@+id/user_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:enabled="false"
+            android:inputType="none"
             android:text="Identification"
+            android:maxLines="1"
             android:textAlignment="center"
             android:textSize="20sp" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="18dp" />
 
-        <TextView
-            android:id="@+id/EmailUser"
+        <EditText
+            android:id="@+id/email_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:enabled="false"
+            android:inputType="none"
             android:text="Email"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:maxLines="1"
+            android:textSize="12sp" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
 
-        <TextView
-            android:id="@+id/ProvinceUser"
+        <com.reginald.editspinner.EditSpinner
+            android:id="@+id/edit_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Province"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:text="Province"
+            android:paddingLeft="45dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            app:dropDownDrawable="@drawable/ic_baseline_arrow_drop_down_24"
+            app:dropDownDrawableSpacing="15dp"
+            app:dropDownDrawableWidth="25dp"
+            app:dropDownDrawableHeight="25dp"
+            />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="23dp" />
 
-        <TextView
-            android:id="@+id/EdadUser"
+        <EditText
+            android:id="@+id/age_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:text="Age"
             android:textAlignment="center"
             android:textSize="20sp" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="93dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="152dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/ChangePass"
-                    android:layout_width="141dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/round_corners"
-                    android:baselineAligned="false"
-                    android:elevation="10dp"
-                    android:shadowRadius="100"
-                    android:text="Cambiar Contraseña"
-                    android:textColor="@android:color/black"
-                    android:textFontWeight="900"
-                    android:textSize="16dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="127dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/Update"
-                    android:layout_width="115dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/round_corners"
-                    android:baselineAligned="false"
-                    android:elevation="10dp"
-                    android:shadowRadius="100"
-                    android:text="Actualizar"
-                    android:textColor="@android:color/black"
-                    android:textFontWeight="900"
-                    android:textSize="16dp" />
-
-                <Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-            </LinearLayout>
-        </LinearLayout>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/nav_view"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.702"
+        tools:layout_editor_absoluteX="0dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/change_password_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/round_corners"
+            android:baselineAligned="false"
+            android:elevation="10dp"
+            android:shadowRadius="100"
+            android:text="Cambiar Contraseña"
+            android:textColor="@android:color/black"
+            android:textFontWeight="900"
+            android:textSize="16dp" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/update_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="25dp"
+            android:layout_weight="1"
+            android:background="@drawable/round_corners"
+            android:baselineAligned="false"
+            android:elevation="10dp"
+            android:shadowRadius="100"
+            android:text="Actualizar"
+            android:textColor="@android:color/black"
+            android:textFontWeight="900"
+            android:textSize="16dp"
+            tools:layout_editor_absoluteX="155dp"
+            tools:layout_editor_absoluteY="2dp" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="60dp"
+        android:layout_height="52dp"
+        app:layout_constraintBottom_toBottomOf="@+id/nav_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.074"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01"
+        app:srcCompat="@drawable/logo_white_background" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

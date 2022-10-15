@@ -19,13 +19,14 @@ public class User implements Parcelable {
     private String password;
     private int firstTime;
     private String image;
+    private int login;
 
     public User() {
 
     }
 
     public User(String identification, String name, String email,
-                String birthday, String province, int firstTime) throws Exception {
+                String birthday, String province, int firstTime, int login) throws Exception {
         this.identification = identification ;
         this.name = name;
         this.email = email;
@@ -33,6 +34,7 @@ public class User implements Parcelable {
         this.province = province;
         this.firstTime = firstTime;
         this.image = " ";
+        this.login = login;
         this.CreatePassword();
     }
 
@@ -145,4 +147,8 @@ public class User implements Parcelable {
     public void setFirstTime(int firstTime) {
         this.firstTime = firstTime;
     }
+
+    public int getLogin() {return login;}
+
+    public void setLogin(int login) {this.login = login;}
 }

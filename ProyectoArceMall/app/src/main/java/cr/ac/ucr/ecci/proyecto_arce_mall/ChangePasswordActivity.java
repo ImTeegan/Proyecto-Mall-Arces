@@ -83,6 +83,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
     protected void savePassword(User user, String newPassword) throws Exception {
         user.setFirstTime(0);
+        user.setLogin(1);
         EncryptPassword encryptPassword = new EncryptPassword();
         user.setPassword(encryptPassword.encryptPassword(newPassword));
 
