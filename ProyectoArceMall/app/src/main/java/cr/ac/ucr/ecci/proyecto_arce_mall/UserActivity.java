@@ -6,10 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -40,6 +38,7 @@ public class UserActivity extends AppCompatActivity {
     private Button updateUserButton;
     private String newDate;
     private Button changePasswordButton;
+    private DatePickerDialog datePickerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +53,8 @@ public class UserActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.nav_view);
         bottomNavigationView.setSelectedItemId(R.id.navigation_user);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -77,7 +77,7 @@ public class UserActivity extends AppCompatActivity {
     }
 
     /**
-     * Initiate the components used in the user activity view
+     * Initiates the components used in the user activity view
      */
     private void instantiateComponents() {
         this.dataBase = new DbHelper(this);
@@ -86,13 +86,13 @@ public class UserActivity extends AppCompatActivity {
         this.userId = findViewById(R.id.user_id);
         this.userName = findViewById(R.id.user_name);
         this.userEmail = findViewById(R.id.email_user);
-        this.userAge = findViewById(R.id.age_user);
+        this.userAge = findViewById(R.id.user_age);
         this.updateUserButton = findViewById(R.id.update_button);
         this.changePasswordButton = findViewById(R.id.change_password_button);
     }
 
     /**
-     * Set the actions for the buttons update data and change password
+     * Sets the actions for the buttons update data and change password
      */
     private void setComponentActions() {
         this.updateUserButton.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +100,8 @@ public class UserActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     validateData();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
                 }
             }
         });
@@ -123,20 +123,23 @@ public class UserActivity extends AppCompatActivity {
      */
     private void setDropdownProvinces() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.provinces_array, android.R.layout.simple_spinner_item);
+                R.array.provinces_array,
+                android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        provinceSpinner.setText(this.activeUser.getProvince());
-        provinceSpinner.setAdapter(adapter);
+        
+        this.provinceSpinner.setText(this.activeUser.getProvince());
+        this.provinceSpinner.setAdapter(adapter);
     }
 
     /**
-     * Set the user information in the respective fields
+     * Sets the user information in the respective fields
      */
     private void setInformationFields(){
-        userId.setText(this.activeUser.getIdentification());
-        userName.setText(this.activeUser.getName());
-        userEmail.setText(this.activeUser.getEmail());
-        userAge.setText(getAgeFromBirthdate(this.activeUser.getBirthday()) + " años");
+        this.userId.setText(this.activeUser.getIdentification());
+        this.userName.setText(this.activeUser.getName());
+        this.userEmail.setText(this.activeUser.getEmail());
+        this.userAge.setText(getAgeFromBirthdate(this.activeUser.getBirthday()) + " años");
+
         this.userAge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,26 +150,29 @@ public class UserActivity extends AppCompatActivity {
 
     /**
      * Calculates the age based on the birth date
-     * @return age The age of the user
+     *
+     * @return The age of the user
      */
     private String getAgeFromBirthdate(String date){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
         LocalDate localDate = LocalDate.parse(date, formatter);
-        LocalDate curDate = LocalDate.now();
-        String age = String.valueOf(Period.between(localDate, curDate).getYears());
+        LocalDate currentDate = LocalDate.now();
+
+        String age = String.valueOf(Period.between(localDate, currentDate).getYears());
         return age;
     }
 
     /**
-     * Validate the birthdate is a valid date before updating the user
-     * Updates the user with the new information
+     * Updates the user with the new information if the birth date is valid.
+     *
+     * Checks if the birth date is a valid date and then updates the user information.
      * @throws ParseException
      */
     private void validateData() throws ParseException {
         String newBirthDate = this.newDate;
         String newProvince = this.provinceSpinner.getText().toString();
 
-        if (validateBirthDate(newBirthDate)){
+        if (validateBirthDate(newBirthDate)) {
             this.activeUser.setProvince(newProvince);
             this.activeUser.setBirthday(newBirthDate);
             this.dataBase.updateUser(this.activeUser);
@@ -175,9 +181,9 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
-
     /**
-     * Validate the birthdate date is a valid date
+     * Checks if birthdate is a valid date
+     *
      * @param birthDate the birthdate enter
      * @return true if is a valid date and false if is not
      * @throws ParseException
@@ -196,12 +202,13 @@ public class UserActivity extends AppCompatActivity {
             }
             return isBefore;
         }
+
         this.userAge.setError("La fecha ingresada no es válida");
         return false;
     }
 
     /**
-     * Opens the date picker dialog in order to pick a new birthdate
+     * Opens the date picker dialog in order to pick a new birth date
      */
     private void getDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
@@ -209,7 +216,7 @@ public class UserActivity extends AppCompatActivity {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
+        datePickerDialog = new DatePickerDialog(
                 UserActivity.this,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -220,15 +227,28 @@ public class UserActivity extends AppCompatActivity {
                     }
                 }, year, month, day);
 
-        datePickerDialog.show();
+        if(this != null && !this.isFinishing()) {
+            datePickerDialog.show();
+        }
+
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if (datePickerDialog != null && datePickerDialog.isShowing()) {
+            datePickerDialog.dismiss();
+        }
     }
 
     /**
-     * If the change password button is pressed, the screen to change it is shown
+     * Shows the change password screen when the change password button is pressed
      */
     private void showChangePasswordScreen() {
         Intent intent = new Intent(this, ChangePasswordActivity.class);
         intent.putExtra("user", activeUser);
+        intent.putExtra("changePassword", "changePassword");
         startActivity(intent);
+        finish();
     }
 }
