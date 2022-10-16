@@ -6,10 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -40,6 +38,7 @@ public class UserActivity extends AppCompatActivity {
     private Button updateUserButton;
     private String newDate;
     private Button changePasswordButton;
+    private DatePickerDialog datePickerDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,7 +208,7 @@ public class UserActivity extends AppCompatActivity {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
+        datePickerDialog = new DatePickerDialog(
                 UserActivity.this,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -220,7 +219,18 @@ public class UserActivity extends AppCompatActivity {
                     }
                 }, year, month, day);
 
-        datePickerDialog.show();
+        if(this != null && !this.isFinishing()) {
+            datePickerDialog.show();
+        }
+
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if (datePickerDialog != null && datePickerDialog.isShowing()) {
+            datePickerDialog.dismiss();
+        }
     }
 
     /**
@@ -229,6 +239,8 @@ public class UserActivity extends AppCompatActivity {
     private void showChangePasswordScreen() {
         Intent intent = new Intent(this, ChangePasswordActivity.class);
         intent.putExtra("user", activeUser);
+        intent.putExtra("changePassword", "changePassword");
         startActivity(intent);
+        finish();
     }
 }

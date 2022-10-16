@@ -20,14 +20,16 @@ public class JavaMailAPI extends AsyncTask<Void,Void,Void>  {
     private Session mSession;
     private String mEmail;
     private String mMessage;
+    private String mSubject;
 
     private ProgressDialog mProgressDialog;
 
 
-    public JavaMailAPI(Context mContext, String mEmail, String mMessage) {
+    public JavaMailAPI(Context mContext, String mEmail, String mMessage, String mSubject) {
         this.mContext = mContext;
         this.mEmail = mEmail;
         this.mMessage = mMessage;
+        this.mSubject = mSubject;
     }
 
     @Override
@@ -67,7 +69,7 @@ public class JavaMailAPI extends AsyncTask<Void,Void,Void>  {
             mm.setFrom(new InternetAddress(Utils.EMAIL));
 
             mm.addRecipient(Message.RecipientType.TO, new InternetAddress(mEmail));
-            mm.setSubject("Tienda Arce - Iniciar Sesión por primera vez");
+            mm.setSubject(mSubject);
             mm.setContent(mMessage, "text/html");
             Transport.send(mm);
 

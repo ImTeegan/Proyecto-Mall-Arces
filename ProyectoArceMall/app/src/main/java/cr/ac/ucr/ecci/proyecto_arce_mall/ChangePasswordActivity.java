@@ -13,6 +13,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
+import cr.ac.ucr.ecci.proyecto_arce_mall.mail.JavaMailAPI;
 import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
 public class ChangePasswordActivity extends AppCompatActivity {
@@ -22,30 +23,25 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private TextInputLayout tilNewPassword;
     private TextInputLayout tilConfirmPassword;
     private User user;
+    private String changePassword;
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
-
+        Bundle message = getIntent().getExtras();
+        if (message != null) {
+            changePassword = message.getString("changePassword");
+        }
         this.instantiateComponents();
         this.setComponentActions();
     }
 
-    @Override
-    protected void onStart() {
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(this.networkChangeListener,intentFilter);
-        super.onStart();
-    }
 
-    @Override
-    protected void onStop() {
-        unregisterReceiver(this.networkChangeListener);
-        super.onStop();
-    }
-
+    /**
+     * Initiate the components used in the change password activity view
+     */
     private void instantiateComponents() {
         this.dataBase = new DbHelper(this);
         this.loginButton = (Button) findViewById(R.id.login_button);
@@ -54,6 +50,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
         this.user = getIntent().getParcelableExtra("user");
     }
 
+    /**
+     * Set the action for the button to change the password
+     */
     private void setComponentActions() {
         this.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +66,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Change the password and validate that is a valid password
+     * @throws Exception
+     */
     protected void validatePassword() throws Exception {
         String newPassword = tilNewPassword.getEditText().getText().toString();
         String confirmPassword = tilConfirmPassword.getEditText().getText().toString();
@@ -81,6 +84,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Set the new password to the user and saves it
+     * @param user the user that is changing the password
+     * @param newPassword the new password that they chose
+     * @throws Exception
+     */
     protected void savePassword(User user, String newPassword) throws Exception {
         user.setFirstTime(0);
         user.setLogin(1);
@@ -88,9 +97,15 @@ public class ChangePasswordActivity extends AppCompatActivity {
         user.setPassword(encryptPassword.encryptPassword(newPassword));
 
         this.dataBase.updateUser(user);
-
-        Intent intent = new Intent(this, StoreActivity.class);
-        startActivity(intent);
-        finish();
+        if (this.changePassword != null){
+            Intent intent = new Intent(this, ChangePasswordConfirmationActivity.class);
+            intent.putExtra("email", user.getEmail());
+            startActivity(intent);
+            finish();
+        }else{
+            Intent intent = new Intent(this, StoreActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }
