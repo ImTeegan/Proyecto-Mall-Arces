@@ -92,6 +92,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:textAlignment="center"
+            android:editable="false"
             android:text="Province"
             android:paddingLeft="45dp"
             android:layout_marginBottom="20dp"
@@ -111,6 +112,8 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:text="Age"
+            android:editable="false"
+            android:cursorVisible="false"
             android:textAlignment="center"
             android:textSize="20sp" />
 
