@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.reginald.editspinner.EditSpinner;
@@ -31,13 +32,14 @@ public class UserActivity extends AppCompatActivity {
     private DbHelper dataBase;
     private User activeUser;
     private EditSpinner provinceSpinner;
+    private ImageView userImage;
     private EditText userName;
     private EditText userId;
     private EditText userEmail;
     private EditText userAge;
-    private Button updateUserButton;
     private String newDate;
     private Button changePasswordButton;
+    private Button updateUserButton;
     private DatePickerDialog datePickerDialog;
 
     @Override
@@ -77,12 +79,13 @@ public class UserActivity extends AppCompatActivity {
     }
 
     /**
-     * Initiates the components used in the user activity view
+     * Instantiates the components used in the user activity view
      */
     private void instantiateComponents() {
         this.dataBase = new DbHelper(this);
         this.activeUser = dataBase.getLoginUser();
         this.provinceSpinner = findViewById(R.id.edit_spinner);
+        this.userImage = findViewById(R.id.user_image);
         this.userId = findViewById(R.id.user_id);
         this.userName = findViewById(R.id.user_name);
         this.userEmail = findViewById(R.id.email_user);
@@ -119,7 +122,7 @@ public class UserActivity extends AppCompatActivity {
     }
 
     /**
-     * Set the list of provinces and set the adapter for the spinner
+     * Sets the list of provinces and set the adapter for the spinner
      */
     private void setDropdownProvinces() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,

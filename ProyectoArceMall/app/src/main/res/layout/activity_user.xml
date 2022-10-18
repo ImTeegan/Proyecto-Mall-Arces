@@ -19,8 +19,8 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="335dp"
-        android:layout_height="488dp"
+        android:layout_width="338dp"
+        android:layout_height="493dp"
         android:background="@drawable/user_background"
         android:backgroundTint="@color/light_orange"
         android:orientation="vertical"
@@ -32,13 +32,13 @@
         app:layout_constraintVertical_bias="0.254">
 
         <ImageView
-            android:id="@+id/image_user"
+            android:id="@+id/user_image"
             android:layout_width="match_parent"
             android:layout_height="74dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="25dp"
-            app:srcCompat="@drawable/user" />
-
+            app:pressedTranslationZ="0dp"
+            app:srcCompat="@drawable/user_profile" />
 
         <EditText
             android:id="@+id/user_name"
@@ -49,9 +49,9 @@
             android:layout_marginBottom="20dp"
             android:enabled="false"
             android:inputType="none"
+            android:maxLines="1"
             android:text="UserName"
             android:textAlignment="center"
-            android:maxLines="1"
             android:textSize="20sp" />
 
 
@@ -59,13 +59,13 @@
             android:id="@+id/user_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
             android:enabled="false"
             android:inputType="none"
-            android:text="Identification"
             android:maxLines="1"
+            android:text="Identification"
             android:textAlignment="center"
             android:textSize="20sp" />
 
@@ -79,9 +79,9 @@
             android:layout_marginBottom="20dp"
             android:enabled="false"
             android:inputType="none"
+            android:maxLines="1"
             android:text="Email"
             android:textAlignment="center"
-            android:maxLines="1"
             android:textSize="12sp" />
 
 
@@ -91,29 +91,28 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:textAlignment="center"
-            android:editable="false"
-            android:text="Province"
-            android:paddingLeft="45dp"
             android:layout_marginBottom="20dp"
+            android:editable="false"
             android:gravity="center"
+            android:paddingLeft="45dp"
+            android:text="Province"
+            android:textAlignment="center"
             app:dropDownDrawable="@drawable/ic_baseline_arrow_drop_down_24"
-            app:dropDownDrawableSpacing="15dp"
-            app:dropDownDrawableWidth="25dp"
             app:dropDownDrawableHeight="25dp"
-            />
+            app:dropDownDrawableSpacing="15dp"
+            app:dropDownDrawableWidth="25dp" />
 
 
         <EditText
             android:id="@+id/user_age"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:text="Age"
-            android:editable="false"
+            android:layout_marginBottom="20dp"
             android:cursorVisible="false"
+            android:editable="false"
+            android:text="Age"
             android:textAlignment="center"
             android:textSize="20sp" />
 
