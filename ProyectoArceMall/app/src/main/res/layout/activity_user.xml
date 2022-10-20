@@ -38,7 +38,7 @@
             android:layout_height="120dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="25dp"
-            android:background=""
+            android:background="@android:color/transparent"
             android:scaleType="fitXY"
             android:src="@drawable/user_profile"
             app:pressedTranslationZ="0dp" />
