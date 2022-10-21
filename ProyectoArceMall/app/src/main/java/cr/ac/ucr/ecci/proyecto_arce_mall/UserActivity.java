@@ -1,10 +1,12 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,8 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.reginald.editspinner.EditSpinner;
 
@@ -32,7 +36,7 @@ public class UserActivity extends AppCompatActivity {
     private DbHelper dataBase;
     private User activeUser;
     private EditSpinner provinceSpinner;
-    private ImageView userImage;
+    private ImageButton userImageButton;
     private EditText userName;
     private EditText userId;
     private EditText userEmail;
@@ -85,7 +89,7 @@ public class UserActivity extends AppCompatActivity {
         this.dataBase = new DbHelper(this);
         this.activeUser = dataBase.getLoginUser();
         this.provinceSpinner = findViewById(R.id.edit_spinner);
-        this.userImage = findViewById(R.id.user_image);
+        this.userImageButton = findViewById(R.id.user_image);
         this.userId = findViewById(R.id.user_id);
         this.userName = findViewById(R.id.user_name);
         this.userEmail = findViewById(R.id.email_user);
@@ -98,6 +102,18 @@ public class UserActivity extends AppCompatActivity {
      * Sets the actions for the buttons update data and change password
      */
     private void setComponentActions() {
+
+        this.userImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    pickImage();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
+        });
+
         this.updateUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,6 +135,25 @@ public class UserActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /**
+     * Allows the user to upload an image from camera or pick it from gallery.
+     */
+    private void pickImage() {
+        ImagePicker.with(this)
+                   .crop()
+                   .compress(1024)
+                   .maxResultSize(1080, 1080)
+                   .start();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Uri uri = data.getData();
+        this.userImageButton.setImageURI(uri);
     }
 
     /**
