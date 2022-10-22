@@ -6,8 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -21,6 +24,11 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.reginald.editspinner.EditSpinner;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Period;
@@ -45,6 +53,7 @@ public class UserActivity extends AppCompatActivity {
     private Button changePasswordButton;
     private Button updateUserButton;
     private DatePickerDialog datePickerDialog;
+    private byte[] userImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +62,11 @@ public class UserActivity extends AppCompatActivity {
 
         this.instantiateComponents();
         this.setDropdownProvinces();
-        this.setInformationFields();
+        try {
+            this.setInformationFields();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         this.setComponentActions();
 
         bottomNavigationView = findViewById(R.id.nav_view);
@@ -154,6 +167,24 @@ public class UserActivity extends AppCompatActivity {
 
         Uri uri = data.getData();
         this.userImageButton.setImageURI(uri);
+        try {
+            InputStream iStream =   getContentResolver().openInputStream(uri);
+            userImage = getBytes(iStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        return byteBuffer.toByteArray();
     }
 
     /**
@@ -172,10 +203,14 @@ public class UserActivity extends AppCompatActivity {
     /**
      * Sets the user information in the respective fields
      */
-    private void setInformationFields(){
+    private void setInformationFields() throws UnsupportedEncodingException {
         this.userId.setText(this.activeUser.getIdentification());
         this.userName.setText(this.activeUser.getName());
         this.userEmail.setText(this.activeUser.getEmail());
+        InputStream is = new ByteArrayInputStream(this.activeUser.getImage());
+        Bitmap bmp = BitmapFactory.decodeStream(is);
+        this.userImageButton.setImageBitmap(bmp);
+        this.userImageButton.setBackgroundResource(R.drawable.profile_image);
         this.userAge.setText(getAgeFromBirthdate(this.activeUser.getBirthday()) + " años");
 
         this.userAge.setOnClickListener(new View.OnClickListener() {
@@ -209,14 +244,18 @@ public class UserActivity extends AppCompatActivity {
     private void validateData() throws ParseException {
         String newBirthDate = this.newDate;
         String newProvince = this.provinceSpinner.getText().toString();
-
-        if (validateBirthDate(newBirthDate)) {
-            this.activeUser.setProvince(newProvince);
-            this.activeUser.setBirthday(newBirthDate);
-            this.dataBase.updateUser(this.activeUser);
-            Intent intent = new Intent(this, StoreActivity.class);
-            startActivity(intent);
+        if (!this.activeUser.getBirthday().equals(this.newDate) && newDate != null){
+            if (validateBirthDate(newBirthDate)){
+                this.activeUser.setBirthday(newBirthDate);
+            }
         }
+        this.activeUser.setProvince(newProvince);
+        Intent intent = new Intent(this, StoreActivity.class);
+        startActivity(intent);
+        if(userImage != null){
+            this.activeUser.setImage(userImage);
+        }
+        this.dataBase.updateUser(this.activeUser);
     }
 
     /**

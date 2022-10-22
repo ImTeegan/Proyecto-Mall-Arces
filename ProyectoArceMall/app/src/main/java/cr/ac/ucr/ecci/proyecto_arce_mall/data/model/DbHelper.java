@@ -50,13 +50,18 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_USER_PROVINCE + " TEXT, "
             + COLUMN_USER_BIRTHDAY + " TEXT, "
             + COLUMN_USER_PASSWORD + " TEXT, "
-            + COLUMN_USER_FIRST + " INTEGER " + ")";
+            + COLUMN_USER_FIRST + " INTEGER "   
+            + COLUMN_USER_FIRST + " INTEGER, "
+            + COLUMN_USER_LOGIN + " INTEGER, "
+            + COLUMN_USER_IMAGE + " BLOB "
+            + ")";
 
     private final String  CREATE_CART_TABLE = "CREATE TABLE " + TABLE_CART + "("
             + COLUMN_CART_ID + " TEXT PRIMARY KEY ,"
             + COLUMN_CART_NAME + " TEXT, "
             + COLUMN_CART_PRICE + " INT, "
             + COLUMN_CART_QUANTITY + " INT " + ")";
+          
 
     // Drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
@@ -168,6 +173,8 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USER_BIRTHDAY, user.getBirthday());
         values.put(COLUMN_USER_PASSWORD, user.getPassword());
         values.put(COLUMN_USER_FIRST,user.getFirstTime());
+        values.put(COLUMN_USER_LOGIN, user.getLogin());
+        values.put(COLUMN_USER_IMAGE, user.getImage());
 
         // Updating row
         db.update(TABLE_USER, values, COLUMN_USER_ID + " = ?",
@@ -200,7 +207,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 COLUMN_USER_PROVINCE,
                 COLUMN_USER_BIRTHDAY,
                 COLUMN_USER_PASSWORD,
-                COLUMN_USER_FIRST
+                COLUMN_USER_FIRST,
+                COLUMN_USER_LOGIN,
+                COLUMN_USER_IMAGE,
+
         };
 
         // Sorting orders
@@ -316,6 +326,121 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         return success;
+    }
+
+
+    /**
+     * Gets the user by the id in the parameter
+     * @param userId The id of the user
+     * @return The user that has the id sent in the parameter
+     */
+    public User getUser(int userId) {
+        // Array of columns to fetch
+        String[] columns = {
+                COLUMN_USER_ID,
+                COLUMN_USER_NAME,
+                COLUMN_USER_EMAIL,
+                COLUMN_USER_PROVINCE,
+                COLUMN_USER_BIRTHDAY,
+                COLUMN_USER_PASSWORD,
+                COLUMN_USER_FIRST,
+                COLUMN_USER_LOGIN,
+                COLUMN_USER_IMAGE
+        };
+
+        String selection = COLUMN_USER_ID + " = ?";
+        String[] selectionArgs = {String.valueOf(userId)};
+        SQLiteDatabase db = this.getReadableDatabase();
+        User user = new User();
+        // Query the user table
+        Cursor cursor = db.query(TABLE_USER, // Table to query
+                columns,    // Columns to return
+                selection,       // Columns for the WHERE clause
+                selectionArgs,       // The values for the WHERE clause
+                null,       // Group the rows
+                null,       // Filter by row groups
+                null); // The sort order
+
+        // Traversing through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                user.setIdentification(cursor.getString(
+                        cursor.getColumnIndexOrThrow(COLUMN_USER_ID)));
+                user.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_NAME)));
+                user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_EMAIL)));
+                user.setProvince(cursor.getString(
+                        cursor.getColumnIndexOrThrow(COLUMN_USER_PROVINCE)));
+                user.setBirthday(cursor.getString(
+                        cursor.getColumnIndexOrThrow(COLUMN_USER_BIRTHDAY)));
+                user.setPassword(cursor.getString(
+                        cursor.getColumnIndexOrThrow(COLUMN_USER_PASSWORD)));
+                user.setFirstTime(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_FIRST)));
+                user.setLogin(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_LOGIN)));
+                user.setImage(cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_USER_IMAGE)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        // Return user list
+        return user;
+    }
+
+
+    /**
+     * Gets the user that is currently login into the app
+     * @return the user information
+     */
+    public User getLoginUser() {
+        // Array of columns to fetch
+        String[] columns = {
+                COLUMN_USER_ID,
+                COLUMN_USER_NAME,
+                COLUMN_USER_EMAIL,
+                COLUMN_USER_PROVINCE,
+                COLUMN_USER_BIRTHDAY,
+                COLUMN_USER_PASSWORD,
+                COLUMN_USER_FIRST,
+                COLUMN_USER_LOGIN,
+                COLUMN_USER_IMAGE
+        };
+
+        String selection = COLUMN_USER_LOGIN + " = ?";
+        String[] selectionArgs = {String.valueOf(1)};
+        SQLiteDatabase db = this.getReadableDatabase();
+        User user = new User();
+        // Query the user table
+        Cursor cursor = db.query(TABLE_USER, // Table to query
+                columns,    // Columns to return
+                selection,       // Columns for the WHERE clause
+                selectionArgs,       // The values for the WHERE clause
+                null,       // Group the rows
+                null,       // Filter by row groups
+                null); // The sort order
+
+        // Traversing through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                user.setIdentification(cursor.getString(
+                        cursor.getColumnIndexOrThrow(COLUMN_USER_ID)));
+                user.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_NAME)));
+                user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_EMAIL)));
+                user.setProvince(cursor.getString(
+                        cursor.getColumnIndexOrThrow(COLUMN_USER_PROVINCE)));
+                user.setBirthday(cursor.getString(
+                        cursor.getColumnIndexOrThrow(COLUMN_USER_BIRTHDAY)));
+                user.setPassword(cursor.getString(
+                        cursor.getColumnIndexOrThrow(COLUMN_USER_PASSWORD)));
+                user.setFirstTime(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_FIRST)));
+                user.setLogin(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_LOGIN)));
+                user.setImage(cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_USER_IMAGE)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        // Return user list
+        return user;
     }
 
 }
