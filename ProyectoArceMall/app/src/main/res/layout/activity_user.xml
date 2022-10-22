@@ -40,7 +40,7 @@
             android:layout_marginBottom="25dp"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
-            android:src="@drawable/user_profile"
+            android:src="@drawable/profile_image"
             app:pressedTranslationZ="0dp" />
 
         <EditText
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="15dp"
             android:enabled="false"
             android:inputType="none"
             android:maxLines="1"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="15dp"
             android:enabled="false"
             android:inputType="none"
             android:maxLines="1"
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="15dp"
             android:enabled="false"
             android:inputType="none"
             android:maxLines="1"
@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="15dp"
             android:editable="false"
             android:gravity="center"
             android:paddingLeft="45dp"
@@ -178,7 +178,7 @@
         app:layout_constraintHorizontal_bias="0.074"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.01"
+        app:layout_constraintVertical_bias="0.001"
         app:srcCompat="@drawable/logo_white_background" />
 
 

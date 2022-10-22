@@ -11,6 +11,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -25,6 +28,7 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -288,8 +292,13 @@ public class RegistrationActivity extends AppCompatActivity {
     private void showConfirmationScreen(User user) throws Exception {
         String firstPassword = user.getPassword();
         EncryptPassword encryptPassword = new EncryptPassword();
-
         user.setPassword(encryptPassword.encryptPassword(user.getPassword()));
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] imageData = stream.toByteArray();
+        user.setImage(imageData);
         this.dataBase.addUser(user);
 
         Intent intent = new Intent(this, RegisterConfirmationActivity.class);

@@ -16,7 +16,6 @@ public class User implements Parcelable {
     private String province;
     private String password;
     private int firstTime;
-    //private String image;
     private int login;
     private Bitmap image;
 
@@ -32,8 +31,8 @@ public class User implements Parcelable {
         this.birthday = birthday;
         this.province = province;
         this.firstTime = firstTime;
-        this.image = image;
         this.login = login;
+        this.image = image;
         this.CreatePassword();
     }
 
@@ -165,7 +164,6 @@ public class User implements Parcelable {
     public byte[] getImage(){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.PNG, 0, stream);
-        //stream.close;
         return stream.toByteArray();
     }
 
