@@ -109,7 +109,7 @@ public class StoreActivity extends AppCompatActivity {
      * the Recycler view
      */
     private void buildRecycleView(){
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerCart);
         productsArrayList = new ArrayList<Product>();
         StringRequest myRequest = new StringRequest(Request.Method.GET,
                 storeAPI,

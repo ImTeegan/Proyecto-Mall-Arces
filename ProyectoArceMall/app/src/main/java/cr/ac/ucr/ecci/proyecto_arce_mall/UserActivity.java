@@ -87,7 +87,7 @@ public class UserActivity extends AppCompatActivity {
      */
     private void instantiateComponents() {
         this.dataBase = new DbHelper(this);
-        this.activeUser = dataBase.getLoginUser();
+        //this.activeUser = dataBase.getLoginUser();
         this.provinceSpinner = findViewById(R.id.edit_spinner);
         this.userImageButton = findViewById(R.id.user_image);
         this.userId = findViewById(R.id.user_id);

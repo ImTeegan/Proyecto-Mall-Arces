@@ -28,7 +28,7 @@
         app:layout_constraintVertical_bias="0.006" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recyclerCart"
         android:layout_width="390dp"
         android:layout_height="562dp"
         android:layout_centerHorizontal="true"

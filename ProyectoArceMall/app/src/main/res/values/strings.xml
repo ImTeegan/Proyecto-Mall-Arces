@@ -28,4 +28,7 @@
     <string name="buy">Comprar</string>
     <string name="quantity">Cantidad:</string>
     <string name="forgotPassword">¿Olvidó la contraseña?</string>
+    <string name="Pay">Pagar</string>
+    <string name="cancell">Cancelar</string>
+    <string name="History">Historial</string>
 </resources>

@@ -280,8 +280,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
         if (validBirthDate && validEmail && validName && validIdentification) {
             // 1 means TRUE
-            User newUser = new User(identification, name, email, date, province,1,0,null);
-            showConfirmationScreen(newUser);
+            //User newUser = new User(identification, name, email, date, province,1,0,null);
+            //showConfirmationScreen(newUser);
         }
     }
 

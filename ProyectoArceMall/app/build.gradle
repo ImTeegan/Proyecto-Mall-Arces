@@ -25,6 +25,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'cr.ac.ucr.ecci.proyecto_arce_mall'
 }
 
 dependencies {
