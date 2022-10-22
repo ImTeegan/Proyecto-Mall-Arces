@@ -32,6 +32,8 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String COLUMN_USER_PROVINCE = "Province";
     private static final String COLUMN_USER_BIRTHDAY = "Birthday"; //FORMAT YYY MM DD ISO 8601,
     private static final String COLUMN_USER_FIRST = "FirstTime";
+    private static final String COLUMN_USER_LOGIN = "Login";
+    private static final String COLUMN_USER_IMAGE = "Image";
 
     // Cart table name
     private static final String TABLE_CART = "Cart";
@@ -50,7 +52,6 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_USER_PROVINCE + " TEXT, "
             + COLUMN_USER_BIRTHDAY + " TEXT, "
             + COLUMN_USER_PASSWORD + " TEXT, "
-            + COLUMN_USER_FIRST + " INTEGER "   
             + COLUMN_USER_FIRST + " INTEGER, "
             + COLUMN_USER_LOGIN + " INTEGER, "
             + COLUMN_USER_IMAGE + " BLOB "

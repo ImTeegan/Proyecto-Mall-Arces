@@ -129,7 +129,7 @@
             android:layout_width="117dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            tools:srcCompat="@tools:sample/avatars" />
+            tools:srcCompat="@drawable/profile_image" />
 
         <TextView
             android:id="@+id/userName"

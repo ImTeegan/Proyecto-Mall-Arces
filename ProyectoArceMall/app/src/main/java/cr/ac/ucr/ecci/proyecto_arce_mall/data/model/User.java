@@ -1,14 +1,12 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall.data.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
-import com.google.android.material.internal.ParcelableSparseArray;
-
+import java.io.ByteArrayOutputStream;
 import java.util.Random;
-
-import cr.ac.ucr.ecci.proyecto_arce_mall.EncryptPassword;
 
 public class User implements Parcelable {
     private String identification;
@@ -26,7 +24,7 @@ public class User implements Parcelable {
     }
 
     public User(String identification, String name, String email,
-                String birthday, String province, int firstTime) throws Exception {
+                String birthday, String province, int firstTime, int login, Bitmap image) throws Exception {
         this.identification = identification ;
         this.name = name;
         this.email = email;
@@ -65,13 +63,12 @@ public class User implements Parcelable {
 
         Random random = new Random();
 
-
         String password = random.ints(leftLimit, rightLimit + 1)
-                                .limit(targetStringLength)
-                                .collect(StringBuilder::new,
-                                         StringBuilder::appendCodePoint,
-                                         StringBuilder::append)
-                                .toString();
+                .limit(targetStringLength)
+                .collect(StringBuilder::new,
+                        StringBuilder::appendCodePoint,
+                        StringBuilder::append)
+                .toString();
 
         this.setPassword(password);
     }
@@ -149,7 +146,16 @@ public class User implements Parcelable {
         this.firstTime = firstTime;
     }
 
-    public void setLogin(int i) {
+    public int getLogin() {return login;}
+
+    public void setLogin(int login) {this.login = login;}
+
+    /*
+    Converts a byte array in bitmap, and assign it to image
+    @param byte[]
+     */
+    public void setImage(byte[] img){
+        this.image = BitmapFactory.decodeByteArray(img, 0, img.length);
     }
 
     /*
