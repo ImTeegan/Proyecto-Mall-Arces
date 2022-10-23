@@ -16,15 +16,20 @@ import java.util.List;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.ProductActivity;
 import cr.ac.ucr.ecci.proyecto_arce_mall.R;
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 
 public class ProductAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     private Context context;
-    List<Product> products;
-
+    private  List<Product> products;
+    private DbHelper dataBase;
+    private User userActive;
     public ProductAdapter(Context context, List<Product> products) {
         this.context = context;
         this.products = products;
+        dataBase = new DbHelper(context);
+        userActive = dataBase.getLoginUser();
     }
 
     @NonNull

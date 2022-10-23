@@ -74,25 +74,25 @@ public class UserActivity extends AppCompatActivity {
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                switch(item.getItemId())
-                {
-                    case R.id.navigation_home:
-                        startActivity(new Intent(getApplicationContext(),StoreActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.navigation_user:
-                        return true;
-                    case R.id.navigation_cart:
-                        startActivity(new Intent(getApplicationContext(),CartActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                }
-                return false;
-            }
-        });
+                        switch(item.getItemId())
+                        {
+                            case R.id.navigation_home:
+                                startActivity(new Intent(getApplicationContext(),StoreActivity.class));
+                                overridePendingTransition(0,0);
+                                return true;
+                            case R.id.navigation_user:
+                                return true;
+                            case R.id.navigation_cart:
+                                startActivity(new Intent(getApplicationContext(),CartActivity.class));
+                                overridePendingTransition(0,0);
+                                return true;
+                        }
+                        return false;
+                    }
+                });
     }
 
     /**
@@ -100,7 +100,7 @@ public class UserActivity extends AppCompatActivity {
      */
     private void instantiateComponents() {
         this.dataBase = new DbHelper(this);
-        //this.activeUser = dataBase.getLoginUser();
+        this.activeUser = dataBase.getLoginUser();
         this.provinceSpinner = findViewById(R.id.edit_spinner);
         this.userImageButton = findViewById(R.id.user_image);
         this.userId = findViewById(R.id.user_id);
@@ -155,10 +155,10 @@ public class UserActivity extends AppCompatActivity {
      */
     private void pickImage() {
         ImagePicker.with(this)
-                   .crop()
-                   .compress(1024)
-                   .maxResultSize(1080, 1080)
-                   .start();
+                .crop()
+                .compress(1024)
+                .maxResultSize(1080, 1080)
+                .start();
     }
 
     @Override
@@ -195,7 +195,7 @@ public class UserActivity extends AppCompatActivity {
                 R.array.provinces_array,
                 android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        
+
         this.provinceSpinner.setText(this.activeUser.getProvince());
         this.provinceSpinner.setAdapter(adapter);
     }

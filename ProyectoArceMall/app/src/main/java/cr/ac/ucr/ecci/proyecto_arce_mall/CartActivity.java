@@ -6,8 +6,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.ProductAdapter;
 
@@ -32,14 +39,17 @@ public class CartActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
     private RecyclerView recycler;
+    private ImageView userIcon;
+    private TextView userName;
     private ArrayList<Product> productList;
     private DbHelper database;
-
+    private User activeUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        database = new DbHelper(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
-
+        initiateComponents();
         bottomNavigationView = findViewById(R.id.nav_view);
         bottomNavigationView.setSelectedItemId(R.id.navigation_cart);
 
@@ -63,6 +73,18 @@ public class CartActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    /**
+     * Initiate all components of the activity
+     */
+    private void initiateComponents(){
+        activeUser = database.getLoginUser();
+        userName = findViewById(R.id.userName);
+        userIcon = findViewById(R.id.userImageC);
+        userName.setText(activeUser.getName());
+        Bitmap bitmap = BitmapFactory.decodeByteArray(activeUser.getImage(), 0, activeUser.getImage().length);
+        userIcon.setImageBitmap(bitmap);
     }
 
     /**

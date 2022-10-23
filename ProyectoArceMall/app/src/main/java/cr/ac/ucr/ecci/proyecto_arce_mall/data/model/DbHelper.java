@@ -43,6 +43,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String COLUMN_CART_NAME = "Name";
     private static final String COLUMN_CART_PRICE = "Price";
     private static final String COLUMN_CART_QUANTITY = "Quantity";
+    private static final String COLUMN_CART_IMAGE = "Image";
 
     // Create table sql query
     private final String  CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
@@ -58,11 +59,11 @@ public class DbHelper extends SQLiteOpenHelper {
             + ")";
 
     private final String  CREATE_CART_TABLE = "CREATE TABLE " + TABLE_CART + "("
-            + COLUMN_CART_ID + " TEXT PRIMARY KEY ,"
-            + COLUMN_CART_NAME + " TEXT, "
+            + COLUMN_CART_ID + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+            + COLUMN_CART_NAME + " TEXT , "
             + COLUMN_CART_PRICE + " INT, "
-            + COLUMN_CART_QUANTITY + " INT " + ")";
-          
+            + COLUMN_CART_QUANTITY + " INT, "
+            + COLUMN_CART_IMAGE + ")";
 
     // Drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
@@ -141,16 +142,15 @@ public class DbHelper extends SQLiteOpenHelper {
      * Creates a product to  and adds it to the database for shopping cart.
      * @param product  The new product to add
      */
-    public String addProduct(Product product) {
+    public String addProduct(Product product , int quantity) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-
         values.put(COLUMN_CART_NAME,product.getTitle());
-        values.put(COLUMN_CART_ID, product.getId());
+        //values.put(COLUMN_CART_ID, product.getId());
         values.put(COLUMN_CART_PRICE,product.getPrice());
-        values.put(COLUMN_CART_QUANTITY, 0 );
-
+        values.put(COLUMN_CART_QUANTITY, quantity);
+        values.put(COLUMN_CART_IMAGE,product.getImages().get(0));
         // Inserting Row
         Log.i("DATA BASE ",db.insert(TABLE_CART, null, values) + "");
         db = getWritableDatabase();
