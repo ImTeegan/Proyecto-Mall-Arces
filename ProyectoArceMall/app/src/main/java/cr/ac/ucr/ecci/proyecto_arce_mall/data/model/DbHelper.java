@@ -46,7 +46,7 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_USER_PASSWORD + " TEXT, "
             + COLUMN_USER_FIRST + " INTEGER, "
             + COLUMN_USER_LOGIN + " INTEGER, "
-            + COLUMN_USER_IMAGE + "BLOB"
+            + COLUMN_USER_IMAGE + " BLOB "
             + ")";
 
     // Drop table sql query
@@ -134,6 +134,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USER_PASSWORD, user.getPassword());
         values.put(COLUMN_USER_FIRST,user.getFirstTime());
         values.put(COLUMN_USER_LOGIN, user.getLogin());
+        values.put(COLUMN_USER_IMAGE, user.getImage());
 
         // Updating row
         db.update(TABLE_USER, values, COLUMN_USER_ID + " = ?",
@@ -167,7 +168,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 COLUMN_USER_BIRTHDAY,
                 COLUMN_USER_PASSWORD,
                 COLUMN_USER_FIRST,
-                COLUMN_USER_LOGIN
+                COLUMN_USER_LOGIN,
+                COLUMN_USER_IMAGE,
+
         };
 
         // Sorting orders
@@ -311,7 +314,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 COLUMN_USER_BIRTHDAY,
                 COLUMN_USER_PASSWORD,
                 COLUMN_USER_FIRST,
-                COLUMN_USER_LOGIN
+                COLUMN_USER_LOGIN,
+                COLUMN_USER_IMAGE
         };
 
         String selection = COLUMN_USER_ID + " = ?";
@@ -342,6 +346,7 @@ public class DbHelper extends SQLiteOpenHelper {
                         cursor.getColumnIndexOrThrow(COLUMN_USER_PASSWORD)));
                 user.setFirstTime(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_FIRST)));
                 user.setLogin(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_LOGIN)));
+                user.setImage(cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_USER_IMAGE)));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -366,7 +371,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 COLUMN_USER_BIRTHDAY,
                 COLUMN_USER_PASSWORD,
                 COLUMN_USER_FIRST,
-                COLUMN_USER_LOGIN
+                COLUMN_USER_LOGIN,
+                COLUMN_USER_IMAGE
         };
 
         String selection = COLUMN_USER_LOGIN + " = ?";
@@ -397,6 +403,7 @@ public class DbHelper extends SQLiteOpenHelper {
                         cursor.getColumnIndexOrThrow(COLUMN_USER_PASSWORD)));
                 user.setFirstTime(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_FIRST)));
                 user.setLogin(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_LOGIN)));
+                user.setImage(cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_USER_IMAGE)));
             } while (cursor.moveToNext());
         }
         cursor.close();
