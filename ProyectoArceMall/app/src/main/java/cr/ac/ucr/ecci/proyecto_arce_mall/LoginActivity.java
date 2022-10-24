@@ -10,6 +10,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout tilEmail;
     private TextInputLayout tilPassword;
     private Button loginButton;
+    private TextView tvForgotPassword;
     private DbHelper database;
     private List<User> users;
     private User user;
@@ -57,17 +59,9 @@ public class LoginActivity extends AppCompatActivity {
         this.tilEmail = (TextInputLayout) findViewById(R.id.til_email);
         this.tilPassword = (TextInputLayout) findViewById(R.id.til_password);
         this.loginButton = (Button) findViewById(R.id.login_button);
+        this.tvForgotPassword = (TextView) findViewById(R.id.forgot_password);
         this.database = new DbHelper(this);
-
-        // The following code is only for testing.
         this.users = this.database.getAllUser();
-
-        for (int index = 0; index < this.users.size(); ++index) {
-            User current = this.users.get(index);
-            Log.i("e-mail: ", current.getEmail());
-            Log.i("Password: ", current.getPassword());
-            Log.i("First time: ", String.valueOf(current.getFirstTime()));
-        }
     }
 
     /**
@@ -82,6 +76,13 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
+            }
+        });
+
+        this.tvForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showForgotPasswordScreen();
             }
         });
     }
@@ -135,5 +136,10 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, StoreActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void showForgotPasswordScreen() {
+        Intent intent = new Intent(this, EmailInputActivity.class);
+        startActivity(intent);
     }
 }
