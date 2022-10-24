@@ -27,7 +27,7 @@
             android:textSize="20sp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_email"
+            android:id="@+id/til_code"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
             android:layout_marginEnd="100dp"
             android:ems="10" >
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/email_field"
+                android:id="@+id/code_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/textinput_bg"
@@ -54,6 +54,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginStart="100dp"
             android:layout_marginEnd="100dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/blue_round_corners"
             android:text="@string/accept"
             android:textColor="@android:color/black" />
