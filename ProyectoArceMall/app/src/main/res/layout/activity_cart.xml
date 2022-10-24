@@ -78,8 +78,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerCart"
-        android:layout_width="300dp"
-        android:layout_height="286dp"
+        android:layout_width="366dp"
+        android:layout_height="298dp"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:foregroundGravity="center"

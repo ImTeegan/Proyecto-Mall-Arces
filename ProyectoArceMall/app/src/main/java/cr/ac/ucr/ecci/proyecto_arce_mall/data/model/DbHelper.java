@@ -44,6 +44,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String COLUMN_CART_PRICE = "Price";
     private static final String COLUMN_CART_QUANTITY = "Quantity";
     private static final String COLUMN_CART_IMAGE = "Image";
+    private static final String COLUMN_CART_ID_USER = "UserId";
 
     // Create table sql query
     private final String  CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
@@ -59,7 +60,8 @@ public class DbHelper extends SQLiteOpenHelper {
             + ")";
 
     private final String  CREATE_CART_TABLE = "CREATE TABLE " + TABLE_CART + "("
-            + COLUMN_CART_ID + " INTEGER PRIMARY KEY AUTOINCREMENT ,"
+            + COLUMN_CART_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + COLUMN_CART_ID_USER + " TEXT, "
             + COLUMN_CART_NAME + " TEXT , "
             + COLUMN_CART_PRICE + " INT, "
             + COLUMN_CART_QUANTITY + " INT, "
@@ -147,11 +149,13 @@ public class DbHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_CART_NAME,product.getTitle());
+        values.put(COLUMN_CART_ID_USER, getLoginUser().getIdentification());
         //values.put(COLUMN_CART_ID, product.getId());
         values.put(COLUMN_CART_PRICE,product.getPrice());
         values.put(COLUMN_CART_QUANTITY, quantity);
         values.put(COLUMN_CART_IMAGE,product.getImages().get(0));
         // Inserting Row
+        db = this.getWritableDatabase();
         Log.i("DATA BASE ",db.insert(TABLE_CART, null, values) + "");
         db = getWritableDatabase();
 
@@ -243,6 +247,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 user.setPassword(cursor.getString(
                                  cursor.getColumnIndexOrThrow(COLUMN_USER_PASSWORD)));
                 user.setFirstTime(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_FIRST)));
+                user.setLogin(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_LOGIN)));
 
                 // Adding user record to list
                 userList.add(user);
@@ -254,6 +259,56 @@ public class DbHelper extends SQLiteOpenHelper {
         // Return user list
         return userList;
     }
+
+    /**
+     * Returns a list of all registered users in the database.
+     * @return list of all registered users
+     */
+    public List<Product> getProductsCart() {
+        // Array of columns to fetch
+        String[] columns = {
+                COLUMN_CART_NAME,
+                COLUMN_CART_PRICE,
+                COLUMN_CART_QUANTITY,
+                COLUMN_CART_IMAGE
+
+        };
+
+        // Sorting orders
+        String sortOrder = COLUMN_CART_NAME + " ASC";
+        List<Product> userList = new ArrayList<Product>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        // Query the user table
+        Cursor cursor = db.query(TABLE_CART, // Table to query
+                columns,    // Columns to return
+                null,       // Columns for the WHERE clause
+                null,       // The values for the WHERE clause
+                null,       // Group the rows
+                null,       // Filter by row groups
+                sortOrder); // The sort order
+
+        // Traversing through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Product product = new Product();
+                product.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CART_NAME)));
+                product.setPrice(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CART_PRICE)));
+                product.setQuantity(cursor.getInt(
+                        cursor.getColumnIndexOrThrow(COLUMN_CART_QUANTITY)));
+                product.setImgid(cursor.getString(
+                        cursor.getColumnIndexOrThrow(COLUMN_CART_IMAGE)));
+
+                // Adding user record to list
+                userList.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        // Return user list
+        return userList;
+    }
+
 
     /**
      * Checks if an user is logging in for the first time.

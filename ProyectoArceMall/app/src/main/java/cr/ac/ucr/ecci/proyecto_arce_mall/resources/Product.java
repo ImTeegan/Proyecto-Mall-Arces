@@ -1,5 +1,6 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall.resources;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Product {
@@ -12,6 +13,7 @@ public class Product {
     private String brand;
     private String category;
     private String thumbnail;
+    private int quantity;
     private List<String> images;
 
     public String getTitle() {
@@ -32,6 +34,11 @@ public class Product {
 
     public String getImgid() {
         return images.get(0);
+    }
+
+    public void setImgid(String imgid) {
+        images = new ArrayList<>();
+        images.add(imgid);
     }
 
     public  int getId(){return id;}
@@ -94,6 +101,14 @@ public class Product {
 
     public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     @Override

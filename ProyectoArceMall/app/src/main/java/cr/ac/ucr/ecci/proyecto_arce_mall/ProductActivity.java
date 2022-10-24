@@ -124,6 +124,7 @@ public class ProductActivity extends AppCompatActivity {
         addCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Todo: ponerlo en un metodo aparte
                 Product product = new Product();
                 product.setTitle(name.getText().toString());
                 String Price = price.getText().toString();

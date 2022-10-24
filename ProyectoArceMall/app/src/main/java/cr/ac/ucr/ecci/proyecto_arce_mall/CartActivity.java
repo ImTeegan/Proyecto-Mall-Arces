@@ -12,6 +12,8 @@ import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,30 +31,34 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.ProductAdapter;
+import cr.ac.ucr.ecci.proyecto_arce_mall.resources.ProductCartAdapter;
 
 public class CartActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
-    private RecyclerView recycler;
     private ImageView userIcon;
     private TextView userName;
-    private ArrayList<Product> productList;
     private DbHelper database;
     private User activeUser;
+    private ProductCartAdapter adapter;
+    private List<Product> cartProducts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        database = new DbHelper(this);
+        this.database = new DbHelper(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
         initiateComponents();
         bottomNavigationView = findViewById(R.id.nav_view);
         bottomNavigationView.setSelectedItemId(R.id.navigation_cart);
 
+        cartProducts = this.database.getProductsCart();
+        buildRecycleView();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -88,15 +94,13 @@ public class CartActivity extends AppCompatActivity {
     }
 
     /**
-     * Calls the API with for the products information and creates
-     * the Recycler view
+     * Creates the Recycler view with the products list
      */
     private void buildRecycleView(){
-        RecyclerView recyclerView = findViewById(R.id.recyclerCart);
-        productList = new ArrayList<Product>();
-
-
+        RecyclerView recycler = findViewById(R.id.recyclerCart);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,false);
+        recycler.setLayoutManager(gridLayoutManager);
+        adapter = new ProductCartAdapter(getApplicationContext(), this.cartProducts);
+        recycler.setAdapter(adapter);
     }
-
-
 }
