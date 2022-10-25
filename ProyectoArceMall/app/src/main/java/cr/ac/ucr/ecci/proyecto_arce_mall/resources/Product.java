@@ -8,6 +8,7 @@ public class Product {
     private String title;
     private String description;
     private int price;
+    private int totalPrice;
     private double discountPercentage;
     private int stock;
     private String brand;
@@ -30,6 +31,18 @@ public class Product {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getTotalPrice() {
+        return String.valueOf(totalPrice);
+    }
+
+    public int getTotalPriceValue(){
+        return totalPrice;
+    }
+
+    public void setTotalPrice(int price) {
+        this.totalPrice = price;
     }
 
     public String getImgid() {

@@ -10,7 +10,7 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat"
-        android:layout_width="413dp"
+        android:layout_width="match_parent"
         android:layout_height="559dp"
         android:background="@drawable/search_field"
         app:layout_constraintBottom_toBottomOf="parent"

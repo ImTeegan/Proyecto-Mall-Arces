@@ -8,35 +8,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
-import cr.ac.ucr.ecci.proyecto_arce_mall.resources.ProductAdapter;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.ProductCartAdapter;
 
 public class CartActivity extends AppCompatActivity {
@@ -48,6 +29,8 @@ public class CartActivity extends AppCompatActivity {
     private User activeUser;
     private ProductCartAdapter adapter;
     private List<Product> cartProducts;
+    private TextView totalPrice;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.database = new DbHelper(this);
@@ -59,6 +42,7 @@ public class CartActivity extends AppCompatActivity {
 
         cartProducts = this.database.getProductsCart();
         buildRecycleView();
+        getTotalPurchasePrice();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -89,6 +73,7 @@ public class CartActivity extends AppCompatActivity {
         userName = findViewById(R.id.userName);
         userIcon = findViewById(R.id.userImageC);
         userName.setText(activeUser.getName());
+        totalPrice = findViewById(R.id.total_price);
         Bitmap bitmap = BitmapFactory.decodeByteArray(activeUser.getImage(), 0, activeUser.getImage().length);
         userIcon.setImageBitmap(bitmap);
     }
@@ -100,7 +85,16 @@ public class CartActivity extends AppCompatActivity {
         RecyclerView recycler = findViewById(R.id.recyclerCart);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,false);
         recycler.setLayoutManager(gridLayoutManager);
-        adapter = new ProductCartAdapter(getApplicationContext(), this.cartProducts);
+        this.database = new DbHelper(this);
+        adapter = new ProductCartAdapter(getApplicationContext(), this.cartProducts, this.database);
         recycler.setAdapter(adapter);
+    }
+
+    /**
+     * Calculates the total price of the order
+     */
+    private void getTotalPurchasePrice(){
+        int sum =this.cartProducts.stream().map(Product::getTotalPriceValue).reduce(0, Integer::sum);
+        totalPrice.setText("Precio total: $" + sum);
     }
 }

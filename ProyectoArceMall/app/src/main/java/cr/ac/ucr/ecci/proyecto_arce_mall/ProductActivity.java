@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -52,6 +51,7 @@ public class ProductActivity extends AppCompatActivity {
     private List<CarouselItem> carouselList;
     private List<String> Images;
     private DbHelper dataBase;
+    private Product product;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +90,7 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     private void instantiateComponents() {
+        product = new Product();
         dataBase = new DbHelper(this);
         name = findViewById(R.id.product_name);
         price = findViewById(R.id.product_price);
@@ -124,14 +125,9 @@ public class ProductActivity extends AppCompatActivity {
         addCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Todo: ponerlo en un metodo aparte
-                Product product = new Product();
-                product.setTitle(name.getText().toString());
-                String Price = price.getText().toString();
-                Price = Price.replace("$","");
-                product.setPrice(Integer.parseInt(Price));
-                product.setImages(Images);
-                dataBase.addProduct(product,Integer.parseInt(quantity.getText().toString()));
+                Product productCart = product;
+                productCart.setTotalPrice(Integer.parseInt(product.getPrice()) *  Integer.parseInt(quantity.getText().toString()));
+                dataBase.addProduct(productCart,Integer.parseInt(quantity.getText().toString()));
             }
         });
     }
@@ -145,7 +141,7 @@ public class ProductActivity extends AppCompatActivity {
                     try {
                         JSONObject myJsonObject = new JSONObject(response.toString());
                         Gson gson = new Gson();
-                        Product product = gson.fromJson(String.valueOf(myJsonObject), Product.class);
+                        product = gson.fromJson(String.valueOf(myJsonObject), Product.class);
                         name.setText(product.getTitle());
                         price.setText("$"+product.getPrice());
                         description.setText(product.getDescription());
@@ -178,10 +174,6 @@ public class ProductActivity extends AppCompatActivity {
         }
     }
 
-    private void addProductCart(){
-
-
-    }
 
     @Override
     protected void onStart() {
