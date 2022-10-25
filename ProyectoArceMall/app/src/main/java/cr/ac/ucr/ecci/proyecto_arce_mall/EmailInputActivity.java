@@ -15,7 +15,10 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.util.Random;
+
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.mail.JavaMailApi;
 
 public class EmailInputActivity extends AppCompatActivity {
@@ -73,7 +76,7 @@ public class EmailInputActivity extends AppCompatActivity {
         } else {
             this.tilEmail.setError(null);
             this.sendEmailWithCode(email);
-            this.showCodeInputDialog();
+            this.showCodeInputDialog(email);
         }
     }
 
@@ -95,8 +98,9 @@ public class EmailInputActivity extends AppCompatActivity {
 
     /**
      * Shows a dialog to enter the code sent by e-mail
+     * @param email The e-mail of the user
      */
-    private void showCodeInputDialog() {
+    private void showCodeInputDialog(String email) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         View view = LayoutInflater.from(this).inflate(R.layout.input_code_dialog, null);
         dialogBuilder.setView(view);
@@ -111,7 +115,7 @@ public class EmailInputActivity extends AppCompatActivity {
         this.codeInputButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                validateCode();
+                validateCode(dialog, email);
             }
         });
     }
@@ -119,18 +123,63 @@ public class EmailInputActivity extends AppCompatActivity {
     /**
      * Checks if the inserted code matches with the e-mail sent
      */
-    private void validateCode() {
+    private void validateCode(AlertDialog dialog, String email) {
         final String insertedCode = this.tilCode.getEditText().getText().toString();
 
         if (insertedCode.equals(this.digitCode)) {
             this.tilCode.setError(null);
-            this.sendEmailWithNewPassword();
+            dialog.dismiss();
+
+            try {
+                this.sendEmailWithNewPassword(email);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+
         } else {
             this.tilCode.setError("El código no es correcto");
         }
     }
 
-    private void sendEmailWithNewPassword() {
-        // TODO: Change user info in database.
+    /**
+     * Sends an e-mail with a new password to the user with the given e-mail
+     * @param email e-mail of user
+     * @throws Exception
+     */
+    private void sendEmailWithNewPassword(String email) throws Exception {
+        User user = this.database.getUserByEmail(email);
+
+        final String newPassword = createNewPassword();
+        final EncryptPassword passwordEncrypter = new EncryptPassword();
+        user.setPassword(passwordEncrypter.encryptPassword(newPassword));
+        user.setFirstTime(1);
+
+        this.database.updateUser(user);
+
+        final String subject = "Tienda Arce - Nueva contraseña";
+
+        String message = "<h2>Se ha generado una nueva contraseña temporal para Tienda Arce.</h2>";
+        message += "<h3>Para ingresar, ingrese la siguiente contraseña temporal:</h3>";
+        message += "<h4><font color=red>" + newPassword + "</font></h4>";
+
+        JavaMailApi javaMailApi = new JavaMailApi(this, email, message, subject);
+        javaMailApi.execute();
+    }
+
+    private String createNewPassword() {
+        final int leftLimit = 97;
+        final int rightLimit = 122;
+        final int targetStringLength = 15; // Length of string
+
+        Random random = new Random();
+
+        final String password = random.ints(leftLimit, rightLimit + 1)
+                                      .limit(targetStringLength)
+                                      .collect(StringBuilder::new,
+                                               StringBuilder::appendCodePoint,
+                                               StringBuilder::append)
+                                      .toString();
+
+        return password;
     }
 }
