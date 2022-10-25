@@ -166,6 +166,10 @@ public class EmailInputActivity extends AppCompatActivity {
         javaMailApi.execute();
     }
 
+    /**
+     * Creates a new random-generated password
+     * @return the generated password
+     */
     private String createNewPassword() {
         final int leftLimit = 97;
         final int rightLimit = 122;
