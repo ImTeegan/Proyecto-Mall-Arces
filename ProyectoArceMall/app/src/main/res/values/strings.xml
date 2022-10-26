@@ -27,4 +27,6 @@
     <string name="cartTitle">Carrito</string>
     <string name="buy">Comprar</string>
     <string name="quantity">Cantidad:</string>
+    <string name="forgotPassword">¿Olvidó la contraseña?</string>
+    <string name="forgot_password_title">Olvido de Contraseña</string>
 </resources>

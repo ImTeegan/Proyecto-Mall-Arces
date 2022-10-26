@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_orange"
+    tools:context=".EmailInputActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="375dp"
+        android:layout_height="600dp"
+        android:background="@drawable/border"
+        android:backgroundTint="@color/light_orange"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.48"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.254">
+
+        <TextView
+            android:id="@+id/forgot_pass_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/carrois_gothic"
+            android:text="@string/forgot_password_title"
+            android:textColor="@color/dark_blue"
+            android:textFontWeight="650"
+            android:textSize="32sp" />
+
+        <ImageView
+            android:id="@+id/logo_image"
+            android:layout_width="136dp"
+            android:layout_height="289dp"
+            android:layout_marginTop="25dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/logo_transparent_background" />
+
+        <TextView
+            android:id="@+id/enter_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/carrois_gothic"
+            android:text="@string/enter_email"
+            android:textColor="@color/dark_blue"
+            android:textFontWeight="650"
+            android:textSize="20sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_passrec_email"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:ems="10" >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/textinput_bg"
+                android:ems="10"
+                android:fontFamily="@font/carrois_gothic"
+                android:inputType="text"
+                android:textColor="@android:color/black"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/accept_pr_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/round_corners"
+            android:shadowRadius="50"
+            android:text="@string/accept"
+            android:textColor="@android:color/black"
+            android:textFontWeight="800"
+            android:textSize="18dp" />
+
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
