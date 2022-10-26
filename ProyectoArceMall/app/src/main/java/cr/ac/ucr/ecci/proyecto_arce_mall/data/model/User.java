@@ -64,11 +64,11 @@ public class User implements Parcelable {
         Random random = new Random();
 
         String password = random.ints(leftLimit, rightLimit + 1)
-                                .limit(targetStringLength)
-                                .collect(StringBuilder::new,
-                                         StringBuilder::appendCodePoint,
-                                         StringBuilder::append)
-                                .toString();
+                .limit(targetStringLength)
+                .collect(StringBuilder::new,
+                        StringBuilder::appendCodePoint,
+                        StringBuilder::append)
+                .toString();
 
         this.setPassword(password);
     }

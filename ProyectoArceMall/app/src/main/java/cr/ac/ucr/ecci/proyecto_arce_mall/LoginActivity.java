@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(this.networkChangeListener,intentFilter);
+        registerReceiver(this.networkChangeListener, intentFilter);
         super.onStart();
     }
 
@@ -93,7 +93,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @throws ParseException
      */
     private void validateData() throws Exception {

@@ -10,17 +10,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.R;
 
-public class MyViewHolder extends RecyclerView.ViewHolder {
+public class CartViewHolder extends RecyclerView.ViewHolder {
     TextView productName;
     TextView productPrice;
     ImageView productImage;
-    Button buyButton;
+    Button addButton;
+    Button lessButton;
+    int productQuant;
+    TextView Quantity;
+    int productTotal;
 
-    public MyViewHolder(@NonNull View itemView) {
+
+    public CartViewHolder(@NonNull View itemView) {
         super(itemView);
         productName = itemView.findViewById(R.id.cartproductName);
-        productPrice = itemView.findViewById(R.id.productPrice);
+        productPrice = itemView.findViewById(R.id.cartproductPrice);
         productImage = itemView.findViewById(R.id.productImage);
-        buyButton = itemView.findViewById(R.id.buyButton);
+        addButton = itemView.findViewById(R.id.add_button);
+        lessButton = itemView.findViewById(R.id.less_button);
+        Quantity = itemView.findViewById(R.id.quantity_number);
     }
 }

@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.EncryptPassword;
@@ -20,7 +19,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Database name
-    private static final String DATABASE_NAME = "Store.db";
+    private static final String DATABASE_NAME = "Users.db";
 
     // Users table name
     private static final String TABLE_USER = "User";
@@ -36,6 +35,18 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String COLUMN_USER_LOGIN = "Login";
     private static final String COLUMN_USER_IMAGE = "Image";
 
+    // Cart table name
+    private static final String TABLE_CART = "Cart";
+
+    // Cart Table Columns names
+    private static final String COLUMN_CART_ID = "ID";
+    private static final String COLUMN_CART_NAME = "Name";
+    private static final String COLUMN_CART_PRICE = "Price";
+    private static final String COLUMN_CART_PRICE_TOTAL = "TotalPrice";
+    private static final String COLUMN_CART_QUANTITY = "Quantity";
+    private static final String COLUMN_CART_IMAGE = "Image";
+    private static final String COLUMN_CART_ID_USER = "UserId";
+
     // Create table sql query
     private final String  CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " TEXT PRIMARY KEY ,"
@@ -49,8 +60,20 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_USER_IMAGE + " BLOB "
             + ")";
 
+    private final String  CREATE_CART_TABLE = "CREATE TABLE " + TABLE_CART + "("
+            + COLUMN_CART_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + COLUMN_CART_ID_USER + " TEXT, "
+            + COLUMN_CART_NAME + " TEXT , "
+            + COLUMN_CART_PRICE + " INT, "
+            + COLUMN_CART_PRICE_TOTAL + " INT, "
+            + COLUMN_CART_QUANTITY + " INT, "
+            + COLUMN_CART_IMAGE + ")";
+
     // Drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
+
+    // Drop table sql query
+    private String DROP_CART_TABLE = "DROP TABLE IF EXISTS " + TABLE_CART;
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -59,12 +82,15 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USER_TABLE);
+        db.execSQL(CREATE_CART_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop User and Product Table if exist
+        // Drop User Table if exist
         db.execSQL(DROP_USER_TABLE);
+        //Drop Cart Table if exist
+        db.execSQL(DROP_CART_TABLE);
         // Create tables again
         onCreate(db);
     }
@@ -87,8 +113,6 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USER_BIRTHDAY, user.getBirthday());
         values.put(COLUMN_USER_PASSWORD, user.getPassword());
         values.put(COLUMN_USER_FIRST,user.getFirstTime());
-        values.put(COLUMN_USER_LOGIN, user.getLogin());
-        values.put(COLUMN_USER_IMAGE, user.getImage());
 
         // Inserting Row
         Log.i("DATA BASE ",db.insert(TABLE_USER, null, values) + "");
@@ -119,6 +143,29 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Creates a product to  and adds it to the database for shopping cart.
+     * @param product  The new product to add
+     */
+    public String addProduct(Product product , int quantity) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CART_NAME,product.getTitle());
+        values.put(COLUMN_CART_ID_USER, getLoginUser().getIdentification());
+        values.put(COLUMN_CART_ID, product.getId());
+        values.put(COLUMN_CART_PRICE,product.getPrice());
+        values.put(COLUMN_CART_PRICE_TOTAL,product.getTotalPrice());
+        values.put(COLUMN_CART_QUANTITY, quantity);
+        values.put(COLUMN_CART_IMAGE,product.getImages().get(0));
+        // Inserting Row
+        db = this.getWritableDatabase();
+        Log.i("DATA BASE ",db.insert(TABLE_CART, null, values) + "");
+        db = getWritableDatabase();
+
+        db.close();
+        return "TRUE";
+    }
+
+    /**
      * Updates an user in the database.
      * @param user The user to update
      */
@@ -143,6 +190,23 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Updates a product in the database.
+     * @param product The product to update
+     */
+    public void updateProductCart(Product product, int totalPrice) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_CART_PRICE_TOTAL, totalPrice);
+        values.put(COLUMN_CART_QUANTITY, product.getQuantity());
+
+        // Updating row
+        db.update(TABLE_CART, values, COLUMN_CART_ID + " = ?",
+                new String[]{String.valueOf(product.getId())});
+        db.close();
+    }
+
+    /**
      * Deletes an user from the database.
      * @param user The user to delete
      */
@@ -151,6 +215,18 @@ public class DbHelper extends SQLiteOpenHelper {
         // Delete user record by id.
         db.delete(TABLE_USER, COLUMN_USER_ID + " = ?",
                   new String[]{String.valueOf(user.getIdentification())});
+        db.close();
+    }
+
+    /**
+     * Deletes an product from the database.
+     * @param product The product to delete
+     */
+    public void deleteProductCart(Product product) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Delete product record by id.
+        db.delete(TABLE_CART, COLUMN_CART_ID + " = ?",
+                new String[]{String.valueOf(product.getId())});
         db.close();
     }
 
@@ -203,7 +279,6 @@ public class DbHelper extends SQLiteOpenHelper {
                                  cursor.getColumnIndexOrThrow(COLUMN_USER_PASSWORD)));
                 user.setFirstTime(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_FIRST)));
                 user.setLogin(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_LOGIN)));
-                user.setImage(cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_USER_IMAGE)));
 
                 // Adding user record to list
                 userList.add(user);
@@ -214,6 +289,58 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // Return user list
         return userList;
+    }
+
+    /**
+     * Returns a list of the products in the cart in the database.
+     * @return list of the products in the cart
+     */
+    public List<Product> getProductsCart() {
+        // Array of columns to fetch
+        String[] columns = {
+                COLUMN_CART_ID,
+                COLUMN_CART_NAME,
+                COLUMN_CART_PRICE,
+                COLUMN_CART_PRICE_TOTAL,
+                COLUMN_CART_QUANTITY,
+                COLUMN_CART_IMAGE,
+
+        };
+
+        // Sorting orders
+        String sortOrder = COLUMN_CART_NAME + " ASC";
+        List<Product> productList = new ArrayList<Product>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        // Query the product table
+        Cursor cursor = db.query(TABLE_CART, // Table to query
+                columns,    // Columns to return
+                null,       // Columns for the WHERE clause
+                null,       // The values for the WHERE clause
+                null,       // Group the rows
+                null,       // Filter by row groups
+                sortOrder); // The sort order
+
+        // Traversing through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Product product = new Product();
+                product.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CART_ID)));
+                product.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CART_NAME)));
+                product.setPrice(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CART_PRICE)));
+                product.setTotalPrice(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CART_PRICE_TOTAL)));
+                product.setQuantity(cursor.getInt(
+                        cursor.getColumnIndexOrThrow(COLUMN_CART_QUANTITY)));
+                product.setImgid(cursor.getString(
+                        cursor.getColumnIndexOrThrow(COLUMN_CART_IMAGE)));
+
+                productList.add(product);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        // Return product list
+        return productList;
     }
 
 
@@ -281,17 +408,10 @@ public class DbHelper extends SQLiteOpenHelper {
                                  null);             // The sort order
 
         int cursorCount = cursor.getCount();
-        int id = -1;
-        if (cursor.moveToFirst()) {
-            id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_ID));
-        }
         cursor.close();
         db.close();
 
         if (cursorCount > 0) {
-            User user = getUser(id);
-            user.setLogin(1);
-            updateUser(user);
             success = true;
         }
 

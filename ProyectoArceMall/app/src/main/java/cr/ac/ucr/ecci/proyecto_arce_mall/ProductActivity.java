@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
 import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
@@ -42,11 +43,15 @@ public class ProductActivity extends AppCompatActivity {
     private TextView description;
     private Button addButton;
     private Button lessButton;
+    private Button addCart;
     private TextView quantity;
     private TextView category;
     private ImageCarousel carousel;
     private BottomNavigationView bottomNavigationView;
     private List<CarouselItem> carouselList;
+    private List<String> Images;
+    private DbHelper dataBase;
+    private Product product;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,17 +90,46 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     private void instantiateComponents() {
+        product = new Product();
+        dataBase = new DbHelper(this);
         name = findViewById(R.id.product_name);
         price = findViewById(R.id.product_price);
         description = findViewById(R.id.product_descrption);
+        addCart = findViewById(R.id.buy_Button);
         addButton = findViewById(R.id.add_button);
         lessButton = findViewById(R.id.less_button);
+        addMethodButtons();
         quantity = findViewById(R.id.quantity_number);
         category = findViewById(R.id.product_category);
         quantity.setText(productQuant + "");
         carousel = findViewById(R.id.carousel);
         carousel.registerLifecycle(getLifecycle());
         carouselList = new ArrayList<>();
+    }
+
+    private void  addMethodButtons(){
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addProduct();
+                quantity.setText(productQuant +"");
+            }
+        });
+        lessButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lessProduct();
+                quantity.setText(productQuant + "");
+            }
+        });
+        addCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Product productCart = product;
+                productCart.setTotalPrice(Integer.parseInt(product.getPrice()) *  Integer.parseInt(quantity.getText().toString()));
+                dataBase.addProduct(productCart,Integer.parseInt(quantity.getText().toString()));
+            }
+        });
     }
 
     private void buildProductView(){
@@ -107,31 +141,16 @@ public class ProductActivity extends AppCompatActivity {
                     try {
                         JSONObject myJsonObject = new JSONObject(response.toString());
                         Gson gson = new Gson();
-                        Product product = gson.fromJson(String.valueOf(myJsonObject), Product.class);
+                        product = gson.fromJson(String.valueOf(myJsonObject), Product.class);
                         name.setText(product.getTitle());
                         price.setText("$"+product.getPrice());
                         description.setText(product.getDescription());
                         category.setText("Categoría: " + product.getCategory());
-                        List<String> images = product.getImages();
-                        for(String image : images){
+                        Images = product.getImages();
+                        for(String image : Images){
                             carouselList.add(new CarouselItem(image));
                         }
                         carousel.addData(carouselList);
-                        //TODO: Put this methods in a separate method
-                        addButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                addProduct();
-                                quantity.setText(productQuant +"");
-                            }
-                        });
-                        lessButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                lessProduct();
-                                quantity.setText(productQuant + "");
-                            }
-                        });
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -154,6 +173,7 @@ public class ProductActivity extends AppCompatActivity {
             productQuant--;
         }
     }
+
 
     @Override
     protected void onStart() {

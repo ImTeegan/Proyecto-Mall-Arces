@@ -4,19 +4,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
     tools:context=".CartActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="CARRITO"
-        android:textSize="50sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/nav_view"
+    <ImageView
+        android:id="@+id/image_view2"
+        android:layout_width="76dp"
+        android:layout_height="59dp"
+        app:layout_constraintBottom_toBottomOf="@+id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.007"
+        app:srcCompat="@drawable/logo_white_background" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancel_Button2"
+        android:layout_width="154dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="28dp"
+        android:layout_weight="1"
+        android:background="@drawable/round_corners"
+        android:shadowRadius="50"
+        android:text="@string/History"
+        android:textColor="@android:color/black"
+        android:textFontWeight="800"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.894" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancel_Button"
+        android:layout_width="154dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="28dp"
+        android:layout_weight="1"
+        android:background="@drawable/round_corners"
+        android:shadowRadius="50"
+        android:text="@string/cancell"
+        android:textColor="@android:color/black"
+        android:textFontWeight="800"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.883"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.798" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/pay_Button"
+        android:layout_width="154dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="28dp"
+        android:layout_weight="1"
+        android:background="@drawable/round_corners"
+        android:shadowRadius="50"
+        android:text="@string/Pay"
+        android:textColor="@android:color/black"
+        android:textFontWeight="800"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.167"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.798" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerCart"
+        android:layout_width="365dp"
+        android:layout_height="369dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:foregroundGravity="center"
+        android:horizontalSpacing="30dp"
+        android:verticalSpacing="85dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.347"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.353"
+        app:spanCount="2"
+        tools:ignore="MissingConstraints" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
@@ -30,6 +107,54 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
         app:menu="@menu/botton_nav_menu" />
+
+    <LinearLayout
+        android:id="@+id/Frame"
+        android:layout_width="258dp"
+        android:layout_height="90dp"
+        android:background="@drawable/botton_nav_menu_style"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.04">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/userImageC"
+            android:layout_width="117dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:srcCompat="@drawable/profile_image" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="180dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:text="Name"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/total_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/carrois_gothic"
+        app:layout_constraintBottom_toTopOf="@+id/cancel_Button2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerCart"
+        app:layout_constraintVertical_bias="0.142" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
