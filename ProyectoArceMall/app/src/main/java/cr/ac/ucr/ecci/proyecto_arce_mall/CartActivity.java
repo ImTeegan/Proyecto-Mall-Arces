@@ -25,22 +25,22 @@ public class CartActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private ImageView userIcon;
     private TextView userName;
-    private DbHelper database;
+    private DbHelper dataBase;
     private User activeUser;
-    private ProductCartAdapter adapter;
+    private ProductCartAdapter Adapter;
     private List<Product> cartProducts;
     private TextView totalPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        this.database = new DbHelper(this);
+        this.dataBase = new DbHelper(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
         initiateComponents();
         bottomNavigationView = findViewById(R.id.nav_view);
         bottomNavigationView.setSelectedItemId(R.id.navigation_cart);
 
-        cartProducts = this.database.getProductsCart();
+        cartProducts = this.dataBase.getProductsCart();
         buildRecycleView();
         getTotalPurchasePrice();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -69,7 +69,7 @@ public class CartActivity extends AppCompatActivity {
      * Initiate all components of the activity
      */
     private void initiateComponents(){
-        activeUser = database.getLoginUser();
+        activeUser = dataBase.getLoginUser();
         userName = findViewById(R.id.userName);
         userIcon = findViewById(R.id.userImageC);
         userName.setText(activeUser.getName());
@@ -85,9 +85,9 @@ public class CartActivity extends AppCompatActivity {
         RecyclerView recycler = findViewById(R.id.recyclerCart);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,false);
         recycler.setLayoutManager(gridLayoutManager);
-        this.database = new DbHelper(this);
-        adapter = new ProductCartAdapter(getApplicationContext(), this.cartProducts, this.database);
-        recycler.setAdapter(adapter);
+        this.dataBase = new DbHelper(this);
+        Adapter = new ProductCartAdapter(getApplicationContext(), this.cartProducts, this.dataBase);
+        recycler.setAdapter(Adapter);
     }
 
     /**

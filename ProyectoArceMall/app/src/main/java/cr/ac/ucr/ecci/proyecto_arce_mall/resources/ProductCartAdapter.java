@@ -18,20 +18,20 @@ import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 
 public class ProductCartAdapter extends RecyclerView.Adapter<CartViewHolder> {
 
-    private Context context;
+    private Context Context;
     List<Product> products;
-    private DbHelper database;
+    private DbHelper dataBase;
 
     public ProductCartAdapter(Context context, List<Product> products,  DbHelper database) {
-        this.context = context;
+        this.Context = context;
         this.products = products;
-        this.database = database;
+        this.dataBase = database;
     }
 
     @NonNull
     @Override
     public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new CartViewHolder(LayoutInflater.from(context).inflate(R.layout.cart_item, parent, false));
+        return new CartViewHolder(LayoutInflater.from(Context).inflate(R.layout.cart_item, parent, false));
     }
 
     @Override
@@ -41,14 +41,14 @@ public class ProductCartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         holder.productPrice.setText("Precio: $" + holder.productTotal);
         Picasso.get().load(products.get(position).getImgid()).into(holder.productImage);
         holder.productQuant = products.get(position).getQuantity();
-        holder.quantity.setText(holder.productQuant +"");
+        holder.Quantity.setText(holder.productQuant +"");
         holder.addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 holder.productQuant++;
                 holder.productTotal += Integer.parseInt(products.get(position).getPrice());
                 holder.productPrice.setText("Precio: $" + holder.productTotal);
-                holder.quantity.setText(holder.productQuant +"");
+                holder.Quantity.setText(holder.productQuant +"");
                 updateProductCart(products.get(position),holder.productTotal, holder.productQuant);
             }
         });
@@ -62,7 +62,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<CartViewHolder> {
                     holder.productTotal -= Integer.parseInt(products.get(position).getPrice());
                     holder.productPrice.setText("Precio: $" + holder.productTotal);
                     holder.productQuant--;
-                    holder.quantity.setText(holder.productQuant + "");
+                    holder.Quantity.setText(holder.productQuant + "");
                     updateProductCart(products.get(position),holder.productTotal, holder.productQuant);
                 }
 
@@ -84,7 +84,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<CartViewHolder> {
     private void updateProductCart(Product product, int price, int quantity){
         Product updatedProduct = product;
         updatedProduct.setQuantity(quantity);
-        database.updateProductCart(updatedProduct, price);
+        dataBase.updateProductCart(updatedProduct, price);
     }
 
     /**
@@ -93,7 +93,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<CartViewHolder> {
      * @param position The position of the product in the array
      */
     private void deleteProductCart(Product product, int position){
-        database.deleteProductCart(product);
+        dataBase.deleteProductCart(product);
         products.remove(position);
         notifyItemRemoved(position);
     }

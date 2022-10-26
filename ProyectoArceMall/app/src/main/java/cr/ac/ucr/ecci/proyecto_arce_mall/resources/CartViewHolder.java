@@ -17,7 +17,7 @@ public class CartViewHolder extends RecyclerView.ViewHolder {
     Button addButton;
     Button lessButton;
     int productQuant;
-    TextView quantity;
+    TextView Quantity;
     int productTotal;
 
 
@@ -28,6 +28,6 @@ public class CartViewHolder extends RecyclerView.ViewHolder {
         productImage = itemView.findViewById(R.id.productImage);
         addButton = itemView.findViewById(R.id.add_button);
         lessButton = itemView.findViewById(R.id.less_button);
-        quantity = itemView.findViewById(R.id.quantity_number);
+        Quantity = itemView.findViewById(R.id.quantity_number);
     }
 }
