@@ -33,7 +33,7 @@ public class User implements Parcelable {
         this.firstTime = firstTime;
         this.login = login;
         this.image = image;
-        this.CreatePassword();
+        this.createPassword();
     }
 
     protected User(Parcel in) {
@@ -56,7 +56,7 @@ public class User implements Parcelable {
     /**
      * Creates a random password for a new user.
      */
-    private void CreatePassword() throws Exception {
+    private void createPassword() throws Exception {
         int leftLimit = 97;
         int rightLimit = 122;
         int targetStringLength = 15; // Length of string

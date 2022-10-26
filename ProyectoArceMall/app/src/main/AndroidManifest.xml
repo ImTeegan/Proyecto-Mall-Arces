@@ -18,6 +18,13 @@
         android:theme="@style/Theme.ProyectoArceMall"
         tools:targetApi="31">
         <activity
+            android:name=".EmailInputActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ChangePasswordConfirmationActivity"
             android:exported="false" />
         <activity

@@ -94,8 +94,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
             // Save new password.
             savePassword(user, newPassword);
         } else {
-            this.tilConfirmPassword.setError("Las contraseñas deben ser igual y" +
-                                             "tener un minimo de 8 caracteres");
+            this.tilConfirmPassword.setError("Las contraseñas deben ser iguales y " +
+                                             "tener un mínimo de 8 caracteres");
+            this.tilConfirmPassword.setErrorIconDrawable(null);
         }
     }
 
