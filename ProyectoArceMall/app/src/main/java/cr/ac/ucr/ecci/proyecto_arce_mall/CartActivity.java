@@ -138,14 +138,15 @@ public class CartActivity extends AppCompatActivity {
                     "    <table role=\"presentation\" style=\"width:100%;border-collapse:collapse;border:0;border-spacing:0;background:#ffffff;\">\n" +
                     "        <tr>\n" +
                     "            <td align=\"center\" style=\"padding:0;\">\n" +
-                    "                <img src=\"" +this.cartProducts.get(index).getImgid() + " \" width=\"150\" height=\"100\">\n" +
+                    "                <img src=\"" +this.cartProducts.get(index).getImgid() + " \" width=\"120\" height=\"80\">\n" +
                     "            </td>\n" +
                     "            <td align=\"center\" style=\"padding:0;\">\n" +
-                    "               <h4> Nombre del producto: </h4>\n" +
-                    "            </td>\n" + this.cartProducts.get(index).getTitle() +
+                    //"               <h4> Nombre del producto: </h4>\n" +
+                     this.cartProducts.get(index).getTitle() +
+                    "            </td>\n" +
                     "            <td align=\"center\" style=\"padding:0;\">\n" +
-                    "               <h4> Precio del producto: </h4>\n" +
-                    "            </td>\n" + this.cartProducts.get(index).getPrice() +
+                    //"               <h4> Precio del producto: </h4>\n" +
+                    "            </td>\n" +"$"+ this.cartProducts.get(index).getPrice() +
                     "        </tr>\n" +
                     "    </table>\n" +
                     "</body>";
