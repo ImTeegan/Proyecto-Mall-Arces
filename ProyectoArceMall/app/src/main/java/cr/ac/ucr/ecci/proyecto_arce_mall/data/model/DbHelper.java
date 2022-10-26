@@ -200,9 +200,11 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(COLUMN_CART_PRICE_TOTAL, totalPrice);
         values.put(COLUMN_CART_QUANTITY, product.getQuantity());
 
+        String userId = getLoginUser().getIdentification();
+
         // Updating row
-        db.update(TABLE_CART, values, COLUMN_CART_ID + " = ?",
-                new String[]{String.valueOf(product.getId())});
+        db.update(TABLE_CART, values, COLUMN_CART_ID + " = ? AND " + COLUMN_CART_ID_USER + " = ?",
+                new String[]{String.valueOf(product.getId()), userId});
         db.close();
     }
 
@@ -225,8 +227,20 @@ public class DbHelper extends SQLiteOpenHelper {
     public void deleteProductCart(Product product) {
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete product record by id.
-        db.delete(TABLE_CART, COLUMN_CART_ID + " = ?",
-                new String[]{String.valueOf(product.getId())});
+        String userId = getLoginUser().getIdentification();
+        db.delete(TABLE_CART, COLUMN_CART_ID + " = ? AND " + COLUMN_CART_ID_USER + " = ?",
+                new String[]{String.valueOf(product.getId()), userId});
+        db.close();
+    }
+
+    /**
+     * Deletes all the products in the cart from the database.
+     */
+    public void deleteAllProductCart(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Delete product record by id.
+        db.delete(TABLE_CART, COLUMN_CART_ID_USER + " = ?",
+                new String[]{id});
         db.close();
     }
 
@@ -295,7 +309,7 @@ public class DbHelper extends SQLiteOpenHelper {
      * Returns a list of the products in the cart in the database.
      * @return list of the products in the cart
      */
-    public List<Product> getProductsCart() {
+    public List<Product> getProductsCart(String userId) {
         // Array of columns to fetch
         String[] columns = {
                 COLUMN_CART_ID,
@@ -310,12 +324,14 @@ public class DbHelper extends SQLiteOpenHelper {
         // Sorting orders
         String sortOrder = COLUMN_CART_NAME + " ASC";
         List<Product> productList = new ArrayList<Product>();
+        String selection = COLUMN_CART_ID_USER + " = ?";
+        String[] selectionArgs = { userId };
         SQLiteDatabase db = this.getReadableDatabase();
         // Query the product table
         Cursor cursor = db.query(TABLE_CART, // Table to query
                 columns,    // Columns to return
-                null,       // Columns for the WHERE clause
-                null,       // The values for the WHERE clause
+                selection,       // Columns for the WHERE clause
+                selectionArgs,       // The values for the WHERE clause
                 null,       // Group the rows
                 null,       // Filter by row groups
                 sortOrder); // The sort order
@@ -616,7 +632,6 @@ public class DbHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
 
         // Return user list
         return user;

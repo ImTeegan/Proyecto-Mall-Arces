@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,9 +29,10 @@ public class CartActivity extends AppCompatActivity {
     private TextView userName;
     private DbHelper dataBase;
     private User activeUser;
-    private ProductCartAdapter Adapter;
+    private ProductCartAdapter adapter;
     private List<Product> cartProducts;
     private TextView totalPrice;
+    private Button payButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +40,10 @@ public class CartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
         initiateComponents();
+        setComponentActions();
         bottomNavigationView = findViewById(R.id.nav_view);
         bottomNavigationView.setSelectedItemId(R.id.navigation_cart);
 
-        cartProducts = this.dataBase.getProductsCart();
         buildRecycleView();
         getTotalPurchasePrice();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -70,24 +73,49 @@ public class CartActivity extends AppCompatActivity {
      */
     private void initiateComponents(){
         activeUser = dataBase.getLoginUser();
-        userName = findViewById(R.id.userName);
-        userIcon = findViewById(R.id.userImageC);
+        userName = findViewById(R.id.user_name);
+        userIcon = findViewById(R.id.user_image_cart);
         userName.setText(activeUser.getName());
+        payButton = findViewById(R.id.pay_button);
         totalPrice = findViewById(R.id.total_price);
         Bitmap bitmap = BitmapFactory.decodeByteArray(activeUser.getImage(), 0, activeUser.getImage().length);
         userIcon.setImageBitmap(bitmap);
     }
 
     /**
+     * Sets the action for the button to pay for the products
+     */
+    private void setComponentActions() {
+        this.payButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cleanStoreCart();
+            }
+        });
+    }
+
+    /**
+     * Clean the products cart
+     */
+    private void cleanStoreCart(){
+        if(this.cartProducts.size() > 0){
+            this.dataBase.deleteAllProductCart(activeUser.getIdentification());
+            buildRecycleView();
+            getTotalPurchasePrice();
+        }
+    }
+
+    /**
      * Creates the Recycler view with the products list
      */
     private void buildRecycleView(){
+        cartProducts = this.dataBase.getProductsCart(this.activeUser.getIdentification());
         RecyclerView recycler = findViewById(R.id.recyclerCart);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,false);
         recycler.setLayoutManager(gridLayoutManager);
         this.dataBase = new DbHelper(this);
-        Adapter = new ProductCartAdapter(getApplicationContext(), this.cartProducts, this.dataBase);
-        recycler.setAdapter(Adapter);
+        adapter = new ProductCartAdapter(getApplicationContext(), this.cartProducts, this.dataBase);
+        recycler.setAdapter(adapter);
     }
 
     /**
