@@ -1,10 +1,5 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,14 +9,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.List;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
+import cr.ac.ucr.ecci.proyecto_arce_mall.mail.JavaMailApi;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.ProductCartAdapter;
-import cr.ac.ucr.ecci.proyecto_arce_mall.mail.JavaMailApi;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.PurchaseHistory;
 
 public class CartActivity extends AppCompatActivity {
@@ -31,11 +33,11 @@ public class CartActivity extends AppCompatActivity {
     private TextView userName;
     private DbHelper dataBase;
     private User activeUser;
-    private ProductCartAdapter adapter;
+    private ProductCartAdapter Adapter;
     private List<Product> cartProducts;
     private TextView totalPrice;
     private Button payButton;
-    private String email;
+    private String Email;
     private Button cancelButton;
 
     @Override
@@ -85,7 +87,7 @@ public class CartActivity extends AppCompatActivity {
         totalPrice = findViewById(R.id.total_price);
         Bitmap bitmap = BitmapFactory.decodeByteArray(activeUser.getImage(), 0, activeUser.getImage().length);
         userIcon.setImageBitmap(bitmap);
-        email = activeUser.getEmail();
+        Email = activeUser.getEmail();
     }
 
     /**
@@ -190,7 +192,7 @@ public class CartActivity extends AppCompatActivity {
                 "    </table>\n" +
                 "</body>";
 
-        JavaMailApi javaMailApi = new JavaMailApi(this, email, message, subject);
+        JavaMailApi javaMailApi = new JavaMailApi(this, Email, message, subject);
         javaMailApi.execute();
     }
 
@@ -203,16 +205,16 @@ public class CartActivity extends AppCompatActivity {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,false);
         recycler.setLayoutManager(gridLayoutManager);
         this.dataBase = new DbHelper(this);
-        adapter = new ProductCartAdapter(getApplicationContext(), this.cartProducts, this.dataBase);
-        recycler.setAdapter(adapter);
+        Adapter = new ProductCartAdapter(getApplicationContext(), this.cartProducts, this.dataBase);
+        recycler.setAdapter(Adapter);
     }
 
     /**
      * Calculates the total price of the order
      */
     private int getTotalPurchasePrice(){
-        int sum =this.cartProducts.stream().map(Product::getTotalPriceValue).reduce(0, Integer::sum);
-        totalPrice.setText("Precio total: $" + sum);
-        return sum;
+        int Sum =this.cartProducts.stream().map(Product::getTotalPriceValue).reduce(0, Integer::sum);
+        totalPrice.setText("Precio total: $" + Sum);
+        return Sum;
     }
 }
