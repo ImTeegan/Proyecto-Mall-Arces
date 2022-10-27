@@ -1,16 +1,21 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall.resources;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Product {
     private int id;
     private String title;
     private String description;
     private int price;
+    private int totalPrice;
     private double discountPercentage;
     private int stock;
     private String brand;
     private String category;
     private String thumbnail;
-    private String[] images;
+    private int quantity;
+    private List<String> images;
 
     public String getTitle() {
         return title;
@@ -28,8 +33,25 @@ public class Product {
         this.price = price;
     }
 
+    public String getTotalPrice() {
+        return String.valueOf(totalPrice);
+    }
+
+    public int getTotalPriceValue(){
+        return totalPrice;
+    }
+
+    public void setTotalPrice(int price) {
+        this.totalPrice = price;
+    }
+
     public String getImgid() {
-        return images[0];
+        return images.get(0);
+    }
+
+    public void setImgid(String imgid) {
+        images = new ArrayList<>();
+        images.add(imgid);
     }
 
     public  int getId(){return id;}
@@ -86,12 +108,20 @@ public class Product {
         this.thumbnail = thumbnail;
     }
 
-    public String [] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     @Override

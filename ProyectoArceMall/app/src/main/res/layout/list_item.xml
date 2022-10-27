@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="160dp"
     android:layout_height="265dp"
     android:layout_gravity="center"
@@ -27,32 +28,34 @@
             android:src="@mipmap/ic_launcher" />
 
         <TextView
-            android:id="@+id/productName"
+            android:id="@+id/cartproductName"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:fontFamily="@font/carrois_gothic"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textFontWeight="650"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="10sp"
-            android:layout_marginTop="5dp"
-            android:autoSizeMaxTextSize="15sp"
-            android:layout_marginBottom="5dp"
-            android:maxLines="2"
             android:layout_marginLeft="10dp"
-            android:text="@string/app_name"/>
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:autoSizeMaxTextSize="15sp"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="@font/carrois_gothic"
+            android:maxLines="2"
+            android:text="@string/app_name"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textFontWeight="650"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/productPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/carrois_gothic"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textFontWeight="650"
             android:layout_marginLeft="10dp"
-            android:text="@string/app_name"/>
+            android:fontFamily="@font/carrois_gothic"
+            android:text="@string/app_name"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textFontWeight="650"
+            android:textSize="15sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buyButton"
@@ -66,6 +69,7 @@
             android:textFontWeight="900"
             android:textSize="14dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

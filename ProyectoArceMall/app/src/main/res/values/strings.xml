@@ -14,6 +14,7 @@
     <string name="enter_password">Ingrese su contraseña</string>
     <string name="login_button">Ingresar</string>
     <string name="register_confirmation">Se envió un correo a la cuenta registrada con la contraseña para iniciar sesión</string>
+    <string name="change_confirmation">Se envió un correo a la cuenta registrada confirmando el cambio de contraseña</string>
     <string name="change_password_title">Cambio de contraseña</string>
     <string name="enter_code">Ingrese el código que se envió a su correo electrónico</string>
     <string name="accept">Aceptar</string>
@@ -25,4 +26,10 @@
     <string name="userTitle">Cuenta</string>
     <string name="cartTitle">Carrito</string>
     <string name="buy">Comprar</string>
+    <string name="quantity">Cantidad:</string>
+    <string name="forgotPassword">¿Olvidó la contraseña?</string>
+    <string name="forgot_password_title">Olvido de Contraseña</string>
+    <string name="pay">Pagar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="history">Historial</string>
 </resources>

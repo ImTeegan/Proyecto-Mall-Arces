@@ -17,18 +17,22 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
 public class MainActivity extends AppCompatActivity {
 
     private LocationManager locationManager;
     private static final int REQUEST_LOCATION = 1;
+    private DbHelper dataBase;
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        dataBase = new DbHelper(this);
 
         this.locationManager = (LocationManager)
                                 getSystemService(Context.LOCATION_SERVICE);
@@ -37,6 +41,13 @@ public class MainActivity extends AppCompatActivity {
             this.showEnableGpsDialog();
         } else {
             this.getLocation();
+        }
+        //init all app if there is a logged user
+       User user =  dataBase.getLoginUser();
+        if(user.getEmail() != null){
+            Intent intent = new Intent(this, StoreActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 

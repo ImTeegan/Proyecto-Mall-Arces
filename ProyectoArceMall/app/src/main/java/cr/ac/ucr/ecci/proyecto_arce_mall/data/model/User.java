@@ -1,14 +1,12 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall.data.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
-import com.google.android.material.internal.ParcelableSparseArray;
-
+import java.io.ByteArrayOutputStream;
 import java.util.Random;
-
-import cr.ac.ucr.ecci.proyecto_arce_mall.EncryptPassword;
 
 public class User implements Parcelable {
     private String identification;
@@ -18,20 +16,24 @@ public class User implements Parcelable {
     private String province;
     private String password;
     private int firstTime;
+    private int login;
+    private Bitmap image;
 
     public User() {
 
     }
 
     public User(String identification, String name, String email,
-                String birthday, String province, int firstTime) throws Exception {
+                String birthday, String province, int firstTime, int login, Bitmap image) throws Exception {
         this.identification = identification ;
         this.name = name;
         this.email = email;
         this.birthday = birthday;
         this.province = province;
         this.firstTime = firstTime;
-        this.CreatePassword();
+        this.login = login;
+        this.image = image;
+        this.createPassword();
     }
 
     protected User(Parcel in) {
@@ -54,20 +56,19 @@ public class User implements Parcelable {
     /**
      * Creates a random password for a new user.
      */
-    private void CreatePassword() throws Exception {
+    private void createPassword() throws Exception {
         int leftLimit = 97;
         int rightLimit = 122;
         int targetStringLength = 15; // Length of string
 
         Random random = new Random();
 
-
         String password = random.ints(leftLimit, rightLimit + 1)
-                                .limit(targetStringLength)
-                                .collect(StringBuilder::new,
-                                         StringBuilder::appendCodePoint,
-                                         StringBuilder::append)
-                                .toString();
+                .limit(targetStringLength)
+                .collect(StringBuilder::new,
+                        StringBuilder::appendCodePoint,
+                        StringBuilder::append)
+                .toString();
 
         this.setPassword(password);
     }
@@ -144,4 +145,27 @@ public class User implements Parcelable {
     public void setFirstTime(int firstTime) {
         this.firstTime = firstTime;
     }
+
+    public int getLogin() {return login;}
+
+    public void setLogin(int login) {this.login = login;}
+
+    /*
+    Converts a byte array in bitmap, and assign it to image
+    @param byte[]
+     */
+    public void setImage(byte[] img){
+        this.image = BitmapFactory.decodeByteArray(img, 0, img.length);
+    }
+
+    /*
+    Converts bitmap into byte array
+     */
+    public byte[] getImage(){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        return stream.toByteArray();
+    }
+
+
 }

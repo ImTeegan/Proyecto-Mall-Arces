@@ -11,6 +11,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -25,6 +28,7 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -68,7 +72,7 @@ public class RegistrationActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(this.networkChangeListener,intentFilter);
+        registerReceiver(this.networkChangeListener, intentFilter);
         super.onStart();
     }
 
@@ -81,7 +85,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private void instantiateComponents() {
         this.tilLocation = (TextInputLayout) findViewById(R.id.til_location);
         this.locationManager = (LocationManager)
-                                getSystemService(Context.LOCATION_SERVICE);
+                getSystemService(Context.LOCATION_SERVICE);
         this.birthDate = findViewById(R.id.birth_date_field);
         this.tilBirthDate = findViewById(R.id.til_birth_date);
         this.tilIdentification = findViewById(R.id.til_identification);
@@ -121,22 +125,22 @@ public class RegistrationActivity extends AppCompatActivity {
         final Builder builder = new Builder(this);
 
         builder.setMessage("Enable GPS")
-               .setCancelable(false)
-               .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
 
-             }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
 
-        });
+                });
 
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
@@ -156,12 +160,12 @@ public class RegistrationActivity extends AppCompatActivity {
                 && (approxLocationPermission != PackageManager.PERMISSION_GRANTED)) {
 
             ActivityCompat.requestPermissions(this,
-                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_LOCATION);
         } else {
 
             Location locationGps = this.locationManager.getLastKnownLocation(LocationManager
-                                                                             .GPS_PROVIDER);
+                    .GPS_PROVIDER);
 
             if (locationGps != null) {
                 this.currentLatitude = locationGps.getLatitude();
@@ -181,10 +185,10 @@ public class RegistrationActivity extends AppCompatActivity {
             for (Provinces province : Provinces.values()) {
 
                 Location.distanceBetween(this.currentLatitude,
-                                         this.currentLongitude,
-                                         province.getLatitude(),
-                                         province.getLongitude(),
-                                         results);
+                        this.currentLongitude,
+                        province.getLatitude(),
+                        province.getLongitude(),
+                        results);
                 map.put(province.getName(), results[0]);
             }
             province = (Collections.min(map.entrySet(),
@@ -201,14 +205,14 @@ public class RegistrationActivity extends AppCompatActivity {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
-            RegistrationActivity.this,
-            new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-                    birthDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                }
-            }, year, month, day);
+                RegistrationActivity.this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        birthDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                    }
+                }, year, month, day);
 
         datePickerDialog.show();
     }
@@ -280,7 +284,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         if (validBirthDate && validEmail && validName && validIdentification) {
             // 1 means TRUE
-            User newUser = new User(identification, name, email, date, province,1);
+            User newUser = new User(identification, name, email, date, province, 1, 0, null);
             showConfirmationScreen(newUser);
         }
     }
@@ -288,8 +292,13 @@ public class RegistrationActivity extends AppCompatActivity {
     private void showConfirmationScreen(User user) throws Exception {
         String firstPassword = user.getPassword();
         EncryptPassword encryptPassword = new EncryptPassword();
-
         user.setPassword(encryptPassword.encryptPassword(user.getPassword()));
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] imageData = stream.toByteArray();
+        user.setImage(imageData);
         this.dataBase.addUser(user);
 
         Intent intent = new Intent(this, RegisterConfirmationActivity.class);

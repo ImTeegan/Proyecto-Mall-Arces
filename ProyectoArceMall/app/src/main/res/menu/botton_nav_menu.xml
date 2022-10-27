@@ -6,11 +6,11 @@
         android:title="@string/homeTitle"
         android:color="@color/black"/>
     <item
-        android:id="@+id/navigation_api"
+        android:id="@+id/navigation_user"
         android:icon="@drawable/user"
         android:title="@string/userTitle" />
     <item
-        android:id="@+id/navigation_gps"
+        android:id="@+id/navigation_cart"
         android:icon="@drawable/shopping_cart"
         android:title="@string/cartTitle" />
 </menu>
