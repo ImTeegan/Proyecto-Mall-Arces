@@ -22,7 +22,9 @@ public class NetworkChangeListener extends BroadcastReceiver {
 
         if(!Common.isConnectedToInternet(context)) {
             DbHelper dataBase = new DbHelper(context);
-            dataBase.deleteUserLogged();
+            if(dataBase.getLoginUser().getEmail() != null ){
+                dataBase.deleteUserLogged();
+            }
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             View view = LayoutInflater.from(context)
                     .inflate(R.layout.no_internet_connection, null);
