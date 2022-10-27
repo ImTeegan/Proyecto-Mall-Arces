@@ -227,7 +227,7 @@ public class UserActivity extends AppCompatActivity {
      * @return The age of the user
      */
     private String getAgeFromBirthdate(String date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
         LocalDate localDate = LocalDate.parse(date, formatter);
         LocalDate currentDate = LocalDate.now();
 
