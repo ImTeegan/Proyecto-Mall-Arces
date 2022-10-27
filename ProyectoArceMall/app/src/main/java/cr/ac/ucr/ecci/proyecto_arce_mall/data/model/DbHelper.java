@@ -12,6 +12,7 @@ import java.util.List;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.EncryptPassword;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
+import cr.ac.ucr.ecci.proyecto_arce_mall.resources.PurchaseHistory;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -47,6 +48,15 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String COLUMN_CART_IMAGE = "Image";
     private static final String COLUMN_CART_ID_USER = "UserId";
 
+    // Cart table name
+    private static final String TABLE_PURCHASE_HISTORY = "PurchaseHistory";
+
+    // History purchase table columns names
+    private static final String COLUMN_PURCHASE_ID = "ID";
+    private static final String COLUMN_PURCHASE_ITEMS_ID = "ItemsId";
+    private static final String COLUMN_PURCHASE_TOTAL_PRICE = "TotalPrice";
+    private static final String COLUMN_PURCHASE_ID_USER = "UserId";
+
     // Create table sql query
     private final String  CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " TEXT PRIMARY KEY ,"
@@ -69,11 +79,20 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_CART_QUANTITY + " INT, "
             + COLUMN_CART_IMAGE + ")";
 
+    private final String  CREATE_TABLE_PURCHASE_HISTORY = "CREATE TABLE " + TABLE_PURCHASE_HISTORY + "("
+            + COLUMN_PURCHASE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + COLUMN_PURCHASE_ID_USER + " TEXT, "
+            + COLUMN_PURCHASE_ITEMS_ID + " TEXT, "
+            + COLUMN_PURCHASE_TOTAL_PRICE + " INT " + ")";
+
     // Drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
 
     // Drop table sql query
     private String DROP_CART_TABLE = "DROP TABLE IF EXISTS " + TABLE_CART;
+
+    // Drop table sql query
+    private String DROP_TABLE_PURCHASE_HISTORY = "DROP TABLE IF EXISTS " + TABLE_PURCHASE_HISTORY;
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -83,6 +102,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USER_TABLE);
         db.execSQL(CREATE_CART_TABLE);
+        db.execSQL(CREATE_TABLE_PURCHASE_HISTORY);
     }
 
     @Override
@@ -91,6 +111,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DROP_USER_TABLE);
         //Drop Cart Table if exist
         db.execSQL(DROP_CART_TABLE);
+        //Drop Cart Table if exist
+        db.execSQL(DROP_TABLE_PURCHASE_HISTORY);
         // Create tables again
         onCreate(db);
     }
@@ -159,6 +181,24 @@ public class DbHelper extends SQLiteOpenHelper {
         // Inserting Row
         db = this.getWritableDatabase();
         Log.i("DATA BASE ",db.insert(TABLE_CART, null, values) + "");
+        db = getWritableDatabase();
+
+        db.close();
+        return "TRUE";
+    }
+
+    /**
+     * Creates a purchase history and adds it to the database for the purchase history.
+     * @param purchaseHistory  The new product to add
+     */
+    public String addPurchase(PurchaseHistory purchaseHistory) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PURCHASE_ID_USER, purchaseHistory.getUserId());
+        values.put(COLUMN_PURCHASE_TOTAL_PRICE, purchaseHistory.getTotalPrice());
+        values.put(COLUMN_PURCHASE_ITEMS_ID,purchaseHistory.getItemsId());
+        // Inserting Row
+        Log.i("DATA BASE ",db.insert(TABLE_PURCHASE_HISTORY, null, values) + "");
         db = getWritableDatabase();
 
         db.close();

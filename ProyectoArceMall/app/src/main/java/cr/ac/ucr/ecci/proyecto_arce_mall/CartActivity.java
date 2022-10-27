@@ -22,6 +22,7 @@ import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.ProductCartAdapter;
 import cr.ac.ucr.ecci.proyecto_arce_mall.mail.JavaMailApi;
+import cr.ac.ucr.ecci.proyecto_arce_mall.resources.PurchaseHistory;
 
 public class CartActivity extends AppCompatActivity {
 
@@ -35,6 +36,7 @@ public class CartActivity extends AppCompatActivity {
     private TextView totalPrice;
     private Button payButton;
     private String email;
+    private Button cancelButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,7 @@ public class CartActivity extends AppCompatActivity {
         userIcon = findViewById(R.id.user_image_cart);
         userName.setText(activeUser.getName());
         payButton = findViewById(R.id.pay_button);
+        cancelButton = findViewById(R.id.cancel_button);
         totalPrice = findViewById(R.id.total_price);
         Bitmap bitmap = BitmapFactory.decodeByteArray(activeUser.getImage(), 0, activeUser.getImage().length);
         userIcon.setImageBitmap(bitmap);
@@ -92,16 +95,36 @@ public class CartActivity extends AppCompatActivity {
         this.payButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(cartProducts.size() > 0){
+                    savePurchase();
+                    sendOrderDetailEmail();
+                    cleanStoreCart();
+                }
+            }
+        });
+        this.cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 cleanStoreCart();
             }
         });
     }
 
     /**
+     * Saves the purchase to the database
+     */
+    private void savePurchase() {
+        PurchaseHistory purchaseHistory = new PurchaseHistory();
+        purchaseHistory.setUserId(this.activeUser.getIdentification());
+        purchaseHistory.setTotalPrice(getTotalPurchasePrice());
+        purchaseHistory.setItemsId(this.cartProducts.toString());
+        this.dataBase.addPurchase(purchaseHistory);
+    }
+
+    /**
      * Clean the products cart
      */
     private void cleanStoreCart(){
-        sendOrderDetailEmail();
         if(this.cartProducts.size() > 0){
             this.dataBase.deleteAllProductCart(activeUser.getIdentification());
             buildRecycleView();
@@ -187,8 +210,9 @@ public class CartActivity extends AppCompatActivity {
     /**
      * Calculates the total price of the order
      */
-    private void getTotalPurchasePrice(){
+    private int getTotalPurchasePrice(){
         int sum =this.cartProducts.stream().map(Product::getTotalPriceValue).reduce(0, Integer::sum);
         totalPrice.setText("Precio total: $" + sum);
+        return sum;
     }
 }
