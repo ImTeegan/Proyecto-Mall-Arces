@@ -111,8 +111,12 @@ public class ProductActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addProduct();
-                quantity.setText(productQuant +"");
+                if (productQuant < 10){
+                    addProduct();
+                    quantity.setText(productQuant +"");
+                }else{
+                    Toast.makeText(ProductActivity.this, "No puede agregar más de 10 productos", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         lessButton.setOnClickListener(new View.OnClickListener() {
@@ -125,11 +129,28 @@ public class ProductActivity extends AppCompatActivity {
         addCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Product productCart = product;
-                productCart.setTotalPrice(Integer.parseInt(product.getPrice()) *  Integer.parseInt(quantity.getText().toString()));
-                dataBase.addProduct(productCart,Integer.parseInt(quantity.getText().toString()));
+                if(hasStock() && productQuant > 0){
+                    Product productCart = product;
+                    productCart.setTotalPrice(Integer.parseInt(product.getPrice()) *  Integer.parseInt(quantity.getText().toString()));
+                    dataBase.addProduct(productCart,Integer.parseInt(quantity.getText().toString()));
+                    Toast.makeText(ProductActivity.this, "Producto agregado con éxito", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(ProductActivity.this, "La cantidad del producto no puede exceder el stock ni ser 0", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
+    }
+
+    /**
+     * Checks the product stock
+     * @return true if the produch has enough stock
+     */
+    private Boolean hasStock(){
+        if (product.getStock() >= productQuant){
+            return true;
+        }
+        return false;
     }
 
     private void buildProductView(){
@@ -166,11 +187,15 @@ public class ProductActivity extends AppCompatActivity {
 
     private void addProduct(){
         productQuant++;
+        product.setTotalPrice(Integer.parseInt(product.getPrice()) *  Integer.parseInt(quantity.getText().toString()));
+        price.setText("$" + product.getTotalPrice());
     }
 
     private void lessProduct(){
         if (productQuant>0) {
             productQuant--;
+            product.setTotalPrice(Integer.parseInt(product.getTotalPrice()) - Integer.parseInt(product.getPrice()));
+            price.setText("$" + product.getTotalPrice());
         }
     }
 

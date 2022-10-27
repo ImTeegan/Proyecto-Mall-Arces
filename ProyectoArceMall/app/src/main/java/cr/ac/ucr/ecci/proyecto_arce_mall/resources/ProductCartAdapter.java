@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,11 +46,15 @@ public class ProductCartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         holder.addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.productQuant++;
-                holder.productTotal += Integer.parseInt(products.get(position).getPrice());
-                holder.productPrice.setText("Precio: $" + holder.productTotal);
-                holder.Quantity.setText(holder.productQuant +"");
-                updateProductCart(products.get(position),holder.productTotal, holder.productQuant);
+                if (holder.productQuant < 10 && holder.productQuant < products.get(position).getStock()){
+                    holder.productQuant++;
+                    holder.productTotal += Integer.parseInt(products.get(position).getPrice());
+                    holder.productPrice.setText("Precio: $" + holder.productTotal);
+                    holder.Quantity.setText(holder.productQuant +"");
+                    updateProductCart(products.get(position),holder.productTotal, holder.productQuant);
+                }else{
+                    Toast.makeText(Context.getApplicationContext(), "No se puede agregar más de 10 productos ni exceder el stock del producto", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         holder.lessButton.setOnClickListener(new View.OnClickListener() {

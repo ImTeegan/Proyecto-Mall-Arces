@@ -198,7 +198,7 @@ public class CartActivity extends AppCompatActivity {
      * Creates the Recycler view with the products list
      */
     private void buildRecycleView(){
-        cartProducts = this.dataBase.getProductsCart(this.activeUser.getIdentification());
+        cartProducts = this.dataBase.getProductsCart();
         RecyclerView recycler = findViewById(R.id.recyclerCart);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,false);
         recycler.setLayoutManager(gridLayoutManager);

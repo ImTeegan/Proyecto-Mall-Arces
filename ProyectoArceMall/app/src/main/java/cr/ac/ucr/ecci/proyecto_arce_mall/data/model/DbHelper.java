@@ -43,6 +43,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String COLUMN_CART_ID = "ID";
     private static final String COLUMN_CART_NAME = "Name";
     private static final String COLUMN_CART_PRICE = "Price";
+    private static final String COLUMN_CART_STOCK = "Stock";
     private static final String COLUMN_CART_PRICE_TOTAL = "TotalPrice";
     private static final String COLUMN_CART_QUANTITY = "Quantity";
     private static final String COLUMN_CART_IMAGE = "Image";
@@ -77,6 +78,7 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_CART_PRICE + " INT, "
             + COLUMN_CART_PRICE_TOTAL + " INT, "
             + COLUMN_CART_QUANTITY + " INT, "
+            + COLUMN_CART_STOCK + " INT, "
             + COLUMN_CART_IMAGE + ")";
 
     private final String  CREATE_TABLE_PURCHASE_HISTORY = "CREATE TABLE " + TABLE_PURCHASE_HISTORY + "("
@@ -177,6 +179,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(COLUMN_CART_PRICE,product.getPrice());
         values.put(COLUMN_CART_PRICE_TOTAL,product.getTotalPrice());
         values.put(COLUMN_CART_QUANTITY, quantity);
+        values.put(COLUMN_CART_STOCK, product.getStock());
         values.put(COLUMN_CART_IMAGE,product.getImages().get(0));
         // Inserting Row
         db = this.getWritableDatabase();
@@ -349,7 +352,7 @@ public class DbHelper extends SQLiteOpenHelper {
      * Returns a list of the products in the cart in the database.
      * @return list of the products in the cart
      */
-    public List<Product> getProductsCart(String userId) {
+    public List<Product> getProductsCart() {
         // Array of columns to fetch
         String[] columns = {
                 COLUMN_CART_ID,
@@ -357,10 +360,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 COLUMN_CART_PRICE,
                 COLUMN_CART_PRICE_TOTAL,
                 COLUMN_CART_QUANTITY,
+                COLUMN_CART_STOCK,
                 COLUMN_CART_IMAGE,
 
         };
-
+        String userId = getLoginUser().getIdentification();
         // Sorting orders
         String sortOrder = COLUMN_CART_NAME + " ASC";
         List<Product> productList = new ArrayList<Product>();
@@ -386,6 +390,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 product.setTotalPrice(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CART_PRICE_TOTAL)));
                 product.setQuantity(cursor.getInt(
                         cursor.getColumnIndexOrThrow(COLUMN_CART_QUANTITY)));
+                product.setStock(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CART_STOCK)));
                 product.setImgid(cursor.getString(
                         cursor.getColumnIndexOrThrow(COLUMN_CART_IMAGE)));
 
