@@ -13,6 +13,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.MainActivity;
 import cr.ac.ucr.ecci.proyecto_arce_mall.R;
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 
 public class NetworkChangeListener extends BroadcastReceiver {
 
@@ -20,7 +21,8 @@ public class NetworkChangeListener extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         if(!Common.isConnectedToInternet(context)) {
-
+            DbHelper dataBase = new DbHelper(context);
+            dataBase.deleteUserLogged();
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             View view = LayoutInflater.from(context)
                     .inflate(R.layout.no_internet_connection, null);

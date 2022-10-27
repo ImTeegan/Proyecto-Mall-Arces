@@ -219,6 +219,17 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Update the user logged from the database.
+     */
+    public void deleteUserLogged() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        User user = this.getLoginUser();
+        user.setLogin(0);
+        updateUser(user);
+        db.close();
+    }
+
+    /**
      * Deletes an product from the database.
      * @param product The product to delete
      */
