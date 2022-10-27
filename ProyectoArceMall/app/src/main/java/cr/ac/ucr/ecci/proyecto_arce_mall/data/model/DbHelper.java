@@ -12,6 +12,7 @@ import java.util.List;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.EncryptPassword;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
+import cr.ac.ucr.ecci.proyecto_arce_mall.resources.PurchaseHistory;
 
 public class DbHelper extends SQLiteOpenHelper {
 
@@ -42,10 +43,20 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String COLUMN_CART_ID = "ID";
     private static final String COLUMN_CART_NAME = "Name";
     private static final String COLUMN_CART_PRICE = "Price";
+    private static final String COLUMN_CART_STOCK = "Stock";
     private static final String COLUMN_CART_PRICE_TOTAL = "TotalPrice";
     private static final String COLUMN_CART_QUANTITY = "Quantity";
     private static final String COLUMN_CART_IMAGE = "Image";
     private static final String COLUMN_CART_ID_USER = "UserId";
+
+    // Cart table name
+    private static final String TABLE_PURCHASE_HISTORY = "PurchaseHistory";
+
+    // History purchase table columns names
+    private static final String COLUMN_PURCHASE_ID = "ID";
+    private static final String COLUMN_PURCHASE_ITEMS_ID = "ItemsId";
+    private static final String COLUMN_PURCHASE_TOTAL_PRICE = "TotalPrice";
+    private static final String COLUMN_PURCHASE_ID_USER = "UserId";
 
     // Create table sql query
     private final String  CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
@@ -67,13 +78,23 @@ public class DbHelper extends SQLiteOpenHelper {
             + COLUMN_CART_PRICE + " INT, "
             + COLUMN_CART_PRICE_TOTAL + " INT, "
             + COLUMN_CART_QUANTITY + " INT, "
+            + COLUMN_CART_STOCK + " INT, "
             + COLUMN_CART_IMAGE + ")";
+
+    private final String  CREATE_TABLE_PURCHASE_HISTORY = "CREATE TABLE " + TABLE_PURCHASE_HISTORY + "("
+            + COLUMN_PURCHASE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + COLUMN_PURCHASE_ID_USER + " TEXT, "
+            + COLUMN_PURCHASE_ITEMS_ID + " TEXT, "
+            + COLUMN_PURCHASE_TOTAL_PRICE + " INT " + ")";
 
     // Drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
 
     // Drop table sql query
     private String DROP_CART_TABLE = "DROP TABLE IF EXISTS " + TABLE_CART;
+
+    // Drop table sql query
+    private String DROP_TABLE_PURCHASE_HISTORY = "DROP TABLE IF EXISTS " + TABLE_PURCHASE_HISTORY;
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -83,6 +104,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USER_TABLE);
         db.execSQL(CREATE_CART_TABLE);
+        db.execSQL(CREATE_TABLE_PURCHASE_HISTORY);
     }
 
     @Override
@@ -91,6 +113,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(DROP_USER_TABLE);
         //Drop Cart Table if exist
         db.execSQL(DROP_CART_TABLE);
+        //Drop Cart Table if exist
+        db.execSQL(DROP_TABLE_PURCHASE_HISTORY);
         // Create tables again
         onCreate(db);
     }
@@ -155,10 +179,29 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(COLUMN_CART_PRICE,product.getPrice());
         values.put(COLUMN_CART_PRICE_TOTAL,product.getTotalPrice());
         values.put(COLUMN_CART_QUANTITY, quantity);
+        values.put(COLUMN_CART_STOCK, product.getStock());
         values.put(COLUMN_CART_IMAGE,product.getImages().get(0));
         // Inserting Row
         db = this.getWritableDatabase();
         Log.i("DATA BASE ",db.insert(TABLE_CART, null, values) + "");
+        db = getWritableDatabase();
+
+        db.close();
+        return "TRUE";
+    }
+
+    /**
+     * Creates a purchase history and adds it to the database for the purchase history.
+     * @param purchaseHistory  The new product to add
+     */
+    public String addPurchase(PurchaseHistory purchaseHistory) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PURCHASE_ID_USER, purchaseHistory.getUserId());
+        values.put(COLUMN_PURCHASE_TOTAL_PRICE, purchaseHistory.getTotalPrice());
+        values.put(COLUMN_PURCHASE_ITEMS_ID,purchaseHistory.getItemsId());
+        // Inserting Row
+        Log.i("DATA BASE ",db.insert(TABLE_PURCHASE_HISTORY, null, values) + "");
         db = getWritableDatabase();
 
         db.close();
@@ -200,9 +243,11 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(COLUMN_CART_PRICE_TOTAL, totalPrice);
         values.put(COLUMN_CART_QUANTITY, product.getQuantity());
 
+        String userId = getLoginUser().getIdentification();
+
         // Updating row
-        db.update(TABLE_CART, values, COLUMN_CART_ID + " = ?",
-                new String[]{String.valueOf(product.getId())});
+        db.update(TABLE_CART, values, COLUMN_CART_ID + " = ? AND " + COLUMN_CART_ID_USER + " = ?",
+                new String[]{String.valueOf(product.getId()), userId});
         db.close();
     }
 
@@ -225,8 +270,20 @@ public class DbHelper extends SQLiteOpenHelper {
     public void deleteProductCart(Product product) {
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete product record by id.
-        db.delete(TABLE_CART, COLUMN_CART_ID + " = ?",
-                new String[]{String.valueOf(product.getId())});
+        String userId = getLoginUser().getIdentification();
+        db.delete(TABLE_CART, COLUMN_CART_ID + " = ? AND " + COLUMN_CART_ID_USER + " = ?",
+                new String[]{String.valueOf(product.getId()), userId});
+        db.close();
+    }
+
+    /**
+     * Deletes all the products in the cart from the database.
+     */
+    public void deleteAllProductCart(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        // Delete product record by id.
+        db.delete(TABLE_CART, COLUMN_CART_ID_USER + " = ?",
+                new String[]{id});
         db.close();
     }
 
@@ -303,19 +360,22 @@ public class DbHelper extends SQLiteOpenHelper {
                 COLUMN_CART_PRICE,
                 COLUMN_CART_PRICE_TOTAL,
                 COLUMN_CART_QUANTITY,
+                COLUMN_CART_STOCK,
                 COLUMN_CART_IMAGE,
 
         };
-
+        String userId = getLoginUser().getIdentification();
         // Sorting orders
         String sortOrder = COLUMN_CART_NAME + " ASC";
         List<Product> productList = new ArrayList<Product>();
+        String selection = COLUMN_CART_ID_USER + " = ?";
+        String[] selectionArgs = { userId };
         SQLiteDatabase db = this.getReadableDatabase();
         // Query the product table
         Cursor cursor = db.query(TABLE_CART, // Table to query
                 columns,    // Columns to return
-                null,       // Columns for the WHERE clause
-                null,       // The values for the WHERE clause
+                selection,       // Columns for the WHERE clause
+                selectionArgs,       // The values for the WHERE clause
                 null,       // Group the rows
                 null,       // Filter by row groups
                 sortOrder); // The sort order
@@ -330,6 +390,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 product.setTotalPrice(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CART_PRICE_TOTAL)));
                 product.setQuantity(cursor.getInt(
                         cursor.getColumnIndexOrThrow(COLUMN_CART_QUANTITY)));
+                product.setStock(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_CART_STOCK)));
                 product.setImgid(cursor.getString(
                         cursor.getColumnIndexOrThrow(COLUMN_CART_IMAGE)));
 
@@ -616,7 +677,6 @@ public class DbHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
 
         // Return user list
         return user;

@@ -29,7 +29,7 @@
     <string name="quantity">Cantidad:</string>
     <string name="forgotPassword">¿Olvidó la contraseña?</string>
     <string name="forgot_password_title">Olvido de Contraseña</string>
-    <string name="Pay">Pagar</string>
-    <string name="cancell">Cancelar</string>
-    <string name="History">Historial</string>
+    <string name="pay">Pagar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="history">Historial</string>
 </resources>

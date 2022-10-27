@@ -8,7 +8,7 @@
     tools:context=".CartActivity">
 
     <ImageView
-        android:id="@+id/image_view2"
+        android:id="@+id/logo"
         android:layout_width="76dp"
         android:layout_height="59dp"
         app:layout_constraintBottom_toBottomOf="@+id/nav_view"
@@ -20,14 +20,14 @@
         app:srcCompat="@drawable/logo_white_background" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/cancel_Button2"
+        android:id="@+id/history_button"
         android:layout_width="154dp"
         android:layout_height="48dp"
         android:layout_marginTop="28dp"
         android:layout_weight="1"
         android:background="@drawable/round_corners"
         android:shadowRadius="50"
-        android:text="@string/History"
+        android:text="@string/history"
         android:textColor="@android:color/black"
         android:textFontWeight="800"
         android:textSize="18dp"
@@ -39,14 +39,14 @@
         app:layout_constraintVertical_bias="0.894" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/cancel_Button"
+        android:id="@+id/cancel_button"
         android:layout_width="154dp"
         android:layout_height="48dp"
         android:layout_marginTop="28dp"
         android:layout_weight="1"
         android:background="@drawable/round_corners"
         android:shadowRadius="50"
-        android:text="@string/cancell"
+        android:text="@string/cancel"
         android:textColor="@android:color/black"
         android:textFontWeight="800"
         android:textSize="18dp"
@@ -58,14 +58,14 @@
         app:layout_constraintVertical_bias="0.798" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/pay_Button"
+        android:id="@+id/pay_button"
         android:layout_width="154dp"
         android:layout_height="48dp"
         android:layout_marginTop="28dp"
         android:layout_weight="1"
         android:background="@drawable/round_corners"
         android:shadowRadius="50"
-        android:text="@string/Pay"
+        android:text="@string/pay"
         android:textColor="@android:color/black"
         android:textFontWeight="800"
         android:textSize="18dp"
@@ -125,20 +125,19 @@
             android:layout_weight="1" />
 
         <ImageView
-            android:id="@+id/userImageC"
+            android:id="@+id/user_image_cart"
             android:layout_width="117dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             tools:srcCompat="@drawable/profile_image" />
 
         <TextView
-            android:id="@+id/userName"
+            android:id="@+id/user_name"
             android:layout_width="180dp"
             android:layout_height="match_parent"
             android:layout_marginTop="15dp"
-            android:text="Name"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:paddingLeft="10dp"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
@@ -149,7 +148,7 @@
         android:textSize="24sp"
         android:textColor="@color/black"
         android:fontFamily="@font/carrois_gothic"
-        app:layout_constraintBottom_toTopOf="@+id/cancel_Button2"
+        app:layout_constraintBottom_toTopOf="@+id/history_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
