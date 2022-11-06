@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "991446230024",
+    "firebase_url": "https://equipo-2-f186a-default-rtdb.firebaseio.com",
+    "project_id": "equipo-2-f186a",
+    "storage_bucket": "equipo-2-f186a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991446230024:android:53ec3e65d7274310609dbd",
+        "android_client_info": {
+          "package_name": "cr.ac.ucr.ecci.proyecto_arce_mall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "991446230024-hate7p4rssvtulovcgn2ofab5ppksep8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDg7OtJjL8HslJXroGCUOSPYoQFMUPBTMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "991446230024-hate7p4rssvtulovcgn2ofab5ppksep8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
