@@ -1,10 +1,8 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,20 +11,26 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.os.Bundle;
-import android.provider.Settings;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
@@ -37,9 +41,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.UserFB;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Provinces;
 import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
@@ -64,7 +68,6 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
         this.instantiateComponents();
         this.setComponentActions();
     }
@@ -94,6 +97,7 @@ public class RegistrationActivity extends AppCompatActivity {
         this.registrationButton = (Button) findViewById(R.id.registration_button);
         this.dataBase = new DbHelper(this);
     }
+
 
     private void setComponentActions() {
         this.getLocation();
@@ -299,7 +303,20 @@ public class RegistrationActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] imageData = stream.toByteArray();
         user.setImage(imageData);
-        this.dataBase.addUser(user);
+
+
+        UserFB newUser = new UserFB(user.getIdentification(), user.getName(),
+                user.getEmail(), user.getBirthday(),user.getProvince(), 1, 0);
+
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference();
+        databaseReference = firebaseDatabase.getReference();
+        databaseReference.child("User").child(user.getIdentification()).setValue(newUser);
+
+
+       // dataBase.addUserFB(newUser);
+       // this.dataBase.addUser(user);
 
         Intent intent = new Intent(this, RegisterConfirmationActivity.class);
         intent.putExtra("email", user.getEmail());

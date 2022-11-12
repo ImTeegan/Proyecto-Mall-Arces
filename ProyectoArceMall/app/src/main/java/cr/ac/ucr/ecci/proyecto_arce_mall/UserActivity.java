@@ -323,7 +323,7 @@ public class UserActivity extends AppCompatActivity {
      */
     private void showChangePasswordScreen() {
         Intent intent = new Intent(this, ChangePasswordActivity.class);
-        intent.putExtra("user", activeUser);
+        intent.putExtra("user", (CharSequence) activeUser);
         intent.putExtra("changePassword", "changePassword");
         startActivity(intent);
         finish();

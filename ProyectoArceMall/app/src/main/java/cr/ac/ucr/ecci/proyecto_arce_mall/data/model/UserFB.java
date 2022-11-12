@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import java.io.ByteArrayOutputStream;
 import java.util.Random;
 
-public class User {
+public class UserFB {
     private String identification;
     private String name;
     private String email;
@@ -15,22 +15,21 @@ public class User {
     private String password;
     private int firstTime;
     private int login;
-    private Bitmap image;
 
-    public User() {
+
+    public UserFB() {
 
     }
 
-    public User(String identification, String name, String email,
-                String birthday, String province, int firstTime, int login, Bitmap image) throws Exception {
-        this.identification = identification ;
+    public UserFB(String identification, String name, String email,
+                String birthday, String province, int firstTime, int login) throws Exception {
+        this.identification = identification;
         this.name = name;
         this.email = email;
         this.birthday = birthday;
         this.province = province;
         this.firstTime = firstTime;
         this.login = login;
-        this.image = image;
         this.createPassword();
     }
 
@@ -110,26 +109,16 @@ public class User {
         this.firstTime = firstTime;
     }
 
-    public int getLogin() {return login;}
-
-    public void setLogin(int login) {this.login = login;}
-
-    /*
-    Converts a byte array in bitmap, and assign it to image
-    @param byte[]
-     */
-    public void setImage(byte[] img){
-        this.image = BitmapFactory.decodeByteArray(img, 0, img.length);
+    public int getLogin() {
+        return login;
     }
 
-    /*
-    Converts bitmap into byte array
-     */
-    public byte[] getImage(){
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 0, stream);
-        return stream.toByteArray();
+    public void setLogin(int login) {
+        this.login = login;
     }
+
+
+
 
 
 }

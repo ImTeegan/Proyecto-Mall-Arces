@@ -130,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
     private void showChangePasswordScreen(String email) {
         user = users.stream().filter(user -> user.getEmail().equals(email)).findFirst().get();
         Intent intent = new Intent(this, ChangePasswordActivity.class);
-        intent.putExtra("user", user);
+        intent.putExtra("user", (CharSequence) user);
         startActivity(intent);
         finish();
     }

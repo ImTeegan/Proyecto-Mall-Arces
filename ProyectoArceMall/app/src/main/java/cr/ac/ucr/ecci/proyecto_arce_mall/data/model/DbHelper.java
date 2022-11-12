@@ -7,6 +7,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.common.net.InternetDomainName;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +26,14 @@ import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.PurchaseHistory;
 
 public class DbHelper extends SQLiteOpenHelper {
+
+    //Variables to use FireBase as Database provider
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
+
+
 
     // Database version
     private static final int DATABASE_VERSION = 1;
@@ -105,6 +124,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_USER_TABLE);
         db.execSQL(CREATE_CART_TABLE);
         db.execSQL(CREATE_TABLE_PURCHASE_HISTORY);
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReferenceFromUrl("gs://equipo-2-f186a.appspot.com");
     }
 
     @Override
@@ -119,7 +140,17 @@ public class DbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+
+
+    public void uploadPicture(){
+
+
+    }
+
+
+
     /**
+     * SQLITE
      * Creates a new user and adds it to the database.
      * @param user  The new user to add
      */

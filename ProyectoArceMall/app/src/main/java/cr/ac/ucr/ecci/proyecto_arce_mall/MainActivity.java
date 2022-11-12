@@ -17,6 +17,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
+import com.google.firebase.FirebaseApp;
+
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
@@ -49,7 +51,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+        initFirebase();
     }
+
+    //method to initialize firebase app;
+    private void initFirebase(){
+        FirebaseApp.initializeApp(this);
+    }
+
 
     // TODO: Test with a cell phone that has GPS disabled from the start
     private void showEnableGpsDialog() {
