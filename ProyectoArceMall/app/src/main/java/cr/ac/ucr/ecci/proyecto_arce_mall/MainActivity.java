@@ -44,12 +44,12 @@ public class MainActivity extends AppCompatActivity {
             this.getLocation();
         }
         //init all app if there is a logged user
-       User user =  dataBase.getLoginUser();
-        if(user.getEmail() != null){
-            Intent intent = new Intent(this, StoreActivity.class);
-            startActivity(intent);
-            finish();
-        }
+       //User user =  dataBase.getLoginUser();
+//        if(user.getEmail() != null){
+//            Intent intent = new Intent(this, StoreActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }
         initFirebase();
     }
 

@@ -156,9 +156,7 @@ public class DbHelper extends SQLiteOpenHelper {
     * Store the new user on FireBase
     * @param : The New User
     * */
-    public String addUserFb(User user,Uri image){
-        String error = "";
-
+    public void addUserFb(User user,Uri image){
         //Firebase can´t serialize bitmap attribute of User
         UserDataHolder userFB = new UserDataHolder(user);
 
@@ -173,59 +171,17 @@ public class DbHelper extends SQLiteOpenHelper {
                                     .setValue(userFB);
 
                             uploadImage(image);
+                        }else{
+                            try {
+                                throw task.getException();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 });
-        return error;
-    };
-
-    /**
-     * SQLITE
-     * Creates a new user and adds it to the database.
-     * @param user  The new user to add
-     */
-    public String addUser(User user) {
-        String error = "Succes";
-        Boolean isRegistered = false;
-        Boolean BDTRY = false;
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        values.put(COLUMN_USER_ID, user.getIdentification());
-        values.put(COLUMN_USER_NAME, user.getName());
-        values.put(COLUMN_USER_EMAIL, user.getEmail());
-        values.put(COLUMN_USER_PROVINCE, user.getProvince());
-        values.put(COLUMN_USER_BIRTHDAY, user.getBirthday());
-        values.put(COLUMN_USER_PASSWORD, user.getPassword());
-        values.put(COLUMN_USER_FIRST,user.getFirstTime());
-
-        // Inserting Row
-        Log.i("DATA BASE ",db.insert(TABLE_USER, null, values) + "");
-        BDTRY = db.isOpen();
-        List<User> users = this.getAllUser();
-        BDTRY = db.isOpen();
-        db = getWritableDatabase();
-
-        for (int i = 0; i<users.size(); ++i) {
-            if (user.getIdentification().equals(users.get(i).getIdentification())) {
-                isRegistered = true;
-                error = " Esta identificación ya se encuentra en el sistema ";
-            }
-
-            if(user.getEmail().equals(users.get(i).getEmail())){
-                isRegistered = true;
-                error = " Este correo ya se encuentra en el sistema ";
-            }
-        };
-
-        if (!isRegistered) {
-            // Inserting Row
-            Log.i("DATA BASE ", db.insert(TABLE_USER, null, values) + "");
-        }
-
-        db.close();
-        return error;
     }
+
 
     /**
      * Creates a product to  and adds it to the database for shopping cart.
