@@ -14,7 +14,6 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.FirebaseApp;
@@ -54,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
         initFirebase();
     }
 
-    //method to initialize firebase app;
+    /**
+     * Method to initialize firebase app
+     */
     private void initFirebase(){
         FirebaseApp.initializeApp(this);
     }
