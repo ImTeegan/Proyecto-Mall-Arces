@@ -14,7 +14,9 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Patterns;
 import android.view.View;
@@ -26,9 +28,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -43,7 +45,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
-import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.UserFB;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Provinces;
 import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
@@ -293,32 +294,20 @@ public class RegistrationActivity extends AppCompatActivity {
         }
     }
 
+
+
     private void showConfirmationScreen(User user) throws Exception {
         String firstPassword = user.getPassword();
         EncryptPassword encryptPassword = new EncryptPassword();
         user.setPassword(encryptPassword.encryptPassword(user.getPassword()));
-
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+        Uri image = Uri.parse("android.resource://cr.ac.ucr.ecci.proyecto_arce_mall/drawable/profile_image");
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] imageData = stream.toByteArray();
-        user.setImage(imageData);
-
-
-        UserFB newUser = new UserFB(user.getIdentification(), user.getName(),
-                user.getEmail(), user.getBirthday(),user.getProvince(), 1, 0);
-
-
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference();
-        databaseReference = firebaseDatabase.getReference();
-        databaseReference.child("User").child(user.getIdentification()).setValue(newUser);
-
-
-       // dataBase.addUserFB(newUser);
-       // this.dataBase.addUser(user);
-
-        Intent intent = new Intent(this, RegisterConfirmationActivity.class);
+        //user.setImage(imageData);
+        dataBase.addUserFb(user,image);
+        Intent intent = new Intent(  this, RegisterConfirmationActivity.class);
         intent.putExtra("email", user.getEmail());
         intent.putExtra("password", firstPassword);
         startActivity(intent);

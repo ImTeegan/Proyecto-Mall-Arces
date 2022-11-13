@@ -5,19 +5,31 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.common.net.InternetDomainName;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +40,8 @@ import cr.ac.ucr.ecci.proyecto_arce_mall.resources.PurchaseHistory;
 public class DbHelper extends SQLiteOpenHelper {
 
     //Variables to use FireBase as Database provider
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
+    private FirebaseAuth fAuth;
+    private FirebaseUser fUser;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
 
@@ -124,8 +136,6 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_USER_TABLE);
         db.execSQL(CREATE_CART_TABLE);
         db.execSQL(CREATE_TABLE_PURCHASE_HISTORY);
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReferenceFromUrl("gs://equipo-2-f186a.appspot.com");
     }
 
     @Override
@@ -140,14 +150,44 @@ public class DbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-
-
-    public void uploadPicture(){
-
-
+    /**
+     * Upload an image to firestore bucket of the app
+     * @param image uri where image is store
+     */
+    public void uploadImage(Uri image){
+        fUser = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
+        StorageReference ref = storageReference.child("Users/" + fAuth.getCurrentUser().getUid());
+        UploadTask uploadTask = ref.putFile(image);
     }
 
+    /**
+    * Store the new user on FireBase
+    * @param : The New User
+    * */
+    public String addUserFb(User user,Uri image){
+        String error = "";
 
+        //Firebase can´t serialize bitmap attribute of User
+        UserDataHolder userFB = new UserDataHolder(user);
+
+        fAuth = FirebaseAuth.getInstance();
+        fAuth.createUserWithEmailAndPassword(user.getEmail(),user.getPassword())
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            FirebaseDatabase.getInstance().getReference("Users")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .setValue(userFB);
+
+                            uploadImage(image);
+                        }
+                    }
+                });
+        return error;
+    };
 
     /**
      * SQLITE

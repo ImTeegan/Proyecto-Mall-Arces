@@ -131,5 +131,8 @@ public class User {
         return stream.toByteArray();
     }
 
+    public Bitmap getBitImage(){
+        return this.image;
+    }
 
 }
