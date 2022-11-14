@@ -2,6 +2,7 @@ package cr.ac.ucr.ecci.proyecto_arce_mall.data.model;
 
 public class UserDataHolder {
     private String identification;
+    private String uid;
     private String name;
     private String email;
     private String birthday;
@@ -10,7 +11,7 @@ public class UserDataHolder {
     private int firstTime;
     private int login;
 
-    UserDataHolder(User user) {
+    UserDataHolder(User user, String uid) {
         setIdentification(user.getIdentification());
         setName(user.getName());
         setEmail(user.getEmail());
@@ -19,6 +20,7 @@ public class UserDataHolder {
         setPassword(user.getPassword());
         setFirstTime(user.getFirstTime());
         setLogin(user.getLogin());
+        setUid(uid);
     }
 
 
@@ -84,5 +86,13 @@ public class UserDataHolder {
 
     public void setLogin(int login) {
         this.login = login;
+    }
+
+    public String getUid(){
+        return uid;
+    }
+
+    public void setUid(String uid){
+        this.uid = uid;
     }
 }
