@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -160,13 +161,14 @@ public class DbHelper extends SQLiteOpenHelper {
         //Firebase can´t serialize bitmap attribute of Use
         fAuth = FirebaseAuth.getInstance();
         FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        CollectionReference userCollection = dataBase.collection("Users");
         fAuth.createUserWithEmailAndPassword(user.getEmail(),user.getPassword())
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             UserDataHolder userFB = new UserDataHolder(user, FirebaseAuth.getInstance().getUid());
-                            dataBase.collection("Users").add(userFB);
+                            userCollection.document(userFB.getUid()).set(userFB);
                             uploadImage(image);
                         }else{
                             try {
