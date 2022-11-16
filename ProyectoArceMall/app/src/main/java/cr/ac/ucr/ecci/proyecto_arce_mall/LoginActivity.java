@@ -1,5 +1,6 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,13 +12,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
-import java.util.List;
 
-import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
-import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.UserDataHolder;
 import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
 public class LoginActivity extends AppCompatActivity {
@@ -26,9 +34,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout tilPassword;
     private Button loginButton;
     private TextView tvForgotPassword;
-    private DbHelper database;
-    private List<User> users;
-    private User user;
+    private FirebaseAuth fAuth;
+    private CollectionReference usersCollection;
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     @Override
@@ -60,8 +67,8 @@ public class LoginActivity extends AppCompatActivity {
         this.tilPassword = (TextInputLayout) findViewById(R.id.til_password);
         this.loginButton = (Button) findViewById(R.id.login_button);
         this.tvForgotPassword = (TextView) findViewById(R.id.forgot_password);
-        this.database = new DbHelper(this);
-        this.users = this.database.getAllUser();
+        this.fAuth = FirebaseAuth.getInstance();
+        this.usersCollection = FirebaseFirestore.getInstance().collection("Users");
     }
 
     /**
@@ -99,11 +106,11 @@ public class LoginActivity extends AppCompatActivity {
         boolean validated = this.validateEmailAndPassword(email, password);
 
         if (validated) {
-            if (this.database.isFirstTime(email)) {
-                this.showChangePasswordScreen(email);
-            } else {
-                this.showStore();
-            }
+            EncryptPassword encryptPassword = new EncryptPassword();
+            String newPassword = encryptPassword.encryptPassword(password);
+
+            signInUser(email, newPassword);
+
         }
 
     }
@@ -113,22 +120,46 @@ public class LoginActivity extends AppCompatActivity {
             this.tilEmail.setError("El correo electrónico no es válido");
             return false;
         }
-
-        if (!database.checkUser(email, password)) {
-            this.tilEmail.setError("Correo o contraseña incorrectos");
-            this.tilPassword.setError("Correo o contraseña incorrectos");
-            this.tilPassword.setErrorIconDrawable(null);
-            return false;
-        }
-
         this.tilEmail.setError(null);
         return true;
     }
 
-    private void showChangePasswordScreen(String email) {
-        user = users.stream().filter(user -> user.getEmail().equals(email)).findFirst().get();
+    private void signInUser(String email, String password){
+        fAuth.signInWithEmailAndPassword(email,password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            DocumentReference dataRef = usersCollection.document(userId);
+                            dataRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    UserDataHolder user = documentSnapshot.toObject(UserDataHolder.class);
+                                    if (user.getFirstTime() == 1){
+                                        showChangePasswordScreen();
+                                    }else{
+                                        showStore();
+                                    }
+                                }
+                            });
+                        }else{
+                            addErrorToFields();
+                        }
+                    }
+                });
+    }
+
+
+
+    private void addErrorToFields(){
+        this.tilEmail.setError("Correo o contraseña incorrectos");
+        this.tilPassword.setError("Correo o contraseña incorrectos");
+        this.tilPassword.setErrorIconDrawable(null);
+    }
+
+    private void showChangePasswordScreen() {
         Intent intent = new Intent(this, ChangePasswordActivity.class);
-        intent.putExtra("user", (CharSequence) user);
         startActivity(intent);
         finish();
     }

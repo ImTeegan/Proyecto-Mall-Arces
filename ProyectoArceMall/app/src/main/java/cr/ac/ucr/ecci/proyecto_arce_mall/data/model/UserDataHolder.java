@@ -11,6 +11,10 @@ public class UserDataHolder {
     private int firstTime;
     private int login;
 
+    public UserDataHolder(){
+
+    }
+
     UserDataHolder(User user, String uid) {
         setIdentification(user.getIdentification());
         setName(user.getName());

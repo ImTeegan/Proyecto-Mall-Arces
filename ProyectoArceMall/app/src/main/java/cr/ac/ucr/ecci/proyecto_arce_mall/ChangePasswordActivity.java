@@ -12,11 +12,13 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
-import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
 public class ChangePasswordActivity extends AppCompatActivity {
@@ -25,8 +27,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private DbHelper dataBase;
     private TextInputLayout tilNewPassword;
     private TextInputLayout tilConfirmPassword;
-    private User user;
     private String changePassword;
+    private String userEmail;
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     @Override
@@ -58,11 +60,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
         this.loginButton = (Button) findViewById(R.id.login_button);
         this.tilNewPassword = findViewById(R.id.til_new_password);
         this.tilConfirmPassword = findViewById(R.id.til_confirm_password);
-        this.user = getIntent().getParcelableExtra("user");
 
         Bundle message = getIntent().getExtras();
         if (message != null) {
             this.changePassword = message.getString("changePassword");
+            this.userEmail = message.getString("userEmail");
         }
     }
 
@@ -92,7 +94,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         if (newPassword.equals(confirmPassword) && newPassword.length() > 8) {
             // Save new password.
-            savePassword(user, newPassword);
+            savePassword(newPassword);
         } else {
             this.tilConfirmPassword.setError("Las contraseñas deben ser iguales y " +
                                              "tener un mínimo de 8 caracteres");
@@ -103,26 +105,28 @@ public class ChangePasswordActivity extends AppCompatActivity {
     /**
      * Encrypts the new password and saves it in the database
      *
-     * @param user The user whose password is changed
      * @param newPassword The user's new password
      * @throws Exception
      */
-    protected void savePassword(User user, String newPassword) throws Exception {
-        user.setFirstTime(0);
-        user.setLogin(1);
-        EncryptPassword encryptPassword = new EncryptPassword();
-        user.setPassword(encryptPassword.encryptPassword(newPassword));
+    protected void savePassword(String newPassword) throws Exception {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userId= user.getUid();
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] imageData = stream.toByteArray();
-        user.setImage(imageData);
-        this.dataBase.updateUser(user);
+        dataBase.collection("Users").document(userId).update("firstTime", 0);
+
+        EncryptPassword encryptPassword = new EncryptPassword();
+        user.updatePassword(encryptPassword.encryptPassword(newPassword));
+
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//        byte[] imageData = stream.toByteArray();
+//        user.setImage(imageData);
 
         if (this.changePassword != null) {
             Intent intent = new Intent(this, ChangePasswordConfirmationActivity.class);
-            intent.putExtra("email", user.getEmail());
+            intent.putExtra("email", this.userEmail);
             startActivity(intent);
             finish();
         } else {

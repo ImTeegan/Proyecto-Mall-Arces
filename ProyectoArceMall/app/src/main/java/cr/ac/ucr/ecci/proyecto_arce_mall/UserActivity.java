@@ -19,10 +19,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.reginald.editspinner.EditSpinner;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,13 +39,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
-import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.UserDataHolder;
 
 public class UserActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
     private DbHelper dataBase;
-    private User activeUser;
+    private UserDataHolder activeUser;
     private EditSpinner provinceSpinner;
     private ImageButton userImageButton;
     private EditText userName;
@@ -51,6 +56,7 @@ public class UserActivity extends AppCompatActivity {
     private Button changePasswordButton;
     private Button updateUserButton;
     private DatePickerDialog datePickerDialog;
+    private CollectionReference usersCollection;
     private byte[] userImage;
 
     @Override
@@ -58,14 +64,8 @@ public class UserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-        this.instantiateComponents();
-        this.setDropdownProvinces();
-        try {
-            this.setInformationFields();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        this.setComponentActions();
+        instantiateComponents();
+        getActiveUser();
 
         bottomNavigationView = findViewById(R.id.nav_view);
         bottomNavigationView.setSelectedItemId(R.id.navigation_user);
@@ -93,12 +93,31 @@ public class UserActivity extends AppCompatActivity {
                 });
     }
 
+    private void getActiveUser(){
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DocumentReference dataRef = usersCollection.document(userId);
+
+        dataRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                activeUser = documentSnapshot.toObject(UserDataHolder.class);
+                setDropdownProvinces();
+                try {
+                    setInformationFields();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                setComponentActions();
+
+            }
+        });
+    }
+
     /**
      * Instantiates the components used in the user activity view
      */
     private void instantiateComponents() {
         this.dataBase = new DbHelper(this);
-        this.activeUser = dataBase.getLoginUser();
         this.provinceSpinner = findViewById(R.id.edit_spinner);
         this.userImageButton = findViewById(R.id.user_image);
         this.userId = findViewById(R.id.user_id);
@@ -107,6 +126,7 @@ public class UserActivity extends AppCompatActivity {
         this.userAge = findViewById(R.id.user_age);
         this.updateUserButton = findViewById(R.id.update_button);
         this.changePasswordButton = findViewById(R.id.change_password_button);
+        this.usersCollection = FirebaseFirestore.getInstance().collection("Users");
     }
 
     /**
@@ -205,10 +225,10 @@ public class UserActivity extends AppCompatActivity {
         this.userId.setText(this.activeUser.getIdentification());
         this.userName.setText(this.activeUser.getName());
         this.userEmail.setText(this.activeUser.getEmail());
-        InputStream is = new ByteArrayInputStream(this.activeUser.getImage());
-        Bitmap bmp = BitmapFactory.decodeStream(is);
-        this.userImageButton.setImageBitmap(bmp);
-        this.userImageButton.setBackgroundResource(R.drawable.profile_image);
+        //InputStream is = new ByteArrayInputStream(this.activeUser.getImage());
+        //Bitmap bmp = BitmapFactory.decodeStream(is);
+        //this.userImageButton.setImageBitmap(bmp);
+        //this.userImageButton.setBackgroundResource(R.drawable.profile_image);
         this.userAge.setText(getAgeFromBirthdate(this.activeUser.getBirthday()) + " años");
 
         this.userAge.setOnClickListener(new View.OnClickListener() {
@@ -244,16 +264,16 @@ public class UserActivity extends AppCompatActivity {
         String newProvince = this.provinceSpinner.getText().toString();
         if (!this.activeUser.getBirthday().equals(this.newDate) && newDate != null){
             if (validateBirthDate(newBirthDate)){
-                this.activeUser.setBirthday(newBirthDate);
+                usersCollection.document(this.activeUser.getUid()).update("birthday", newBirthDate);
             }
         }
-        this.activeUser.setProvince(newProvince);
+        usersCollection.document(this.activeUser.getUid()).update("province", newProvince);
         Intent intent = new Intent(this, StoreActivity.class);
         startActivity(intent);
-        if(userImage != null){
-            this.activeUser.setImage(userImage);
-        }
-        this.dataBase.updateUser(this.activeUser);
+//        if(userImage != null){
+//            this.activeUser.setImage(userImage);
+//        }
+        usersCollection.document(this.activeUser.getUid()).update("firstTime", 0);
     }
 
     /**
@@ -321,7 +341,7 @@ public class UserActivity extends AppCompatActivity {
      */
     private void showChangePasswordScreen() {
         Intent intent = new Intent(this, ChangePasswordActivity.class);
-        intent.putExtra("user", (CharSequence) activeUser);
+        intent.putExtra("userEmail", this.activeUser.getEmail());
         intent.putExtra("changePassword", "changePassword");
         startActivity(intent);
         finish();

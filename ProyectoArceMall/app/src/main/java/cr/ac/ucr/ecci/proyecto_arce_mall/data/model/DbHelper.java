@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -267,17 +268,6 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    /**
-     * Deletes an user from the database.
-     * @param user The user to delete
-     */
-    public void deleteUser(User user) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        // Delete user record by id.
-        db.delete(TABLE_USER, COLUMN_USER_ID + " = ?",
-                  new String[]{String.valueOf(user.getIdentification())});
-        db.close();
-    }
 
     /**
      * Update the user logged from the database.
@@ -314,66 +304,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    /**
-     * Returns a list of all registered users in the database.
-     * @return list of all registered users
-     */
-    public List<User> getAllUser() {
-        // Array of columns to fetch
-        String[] columns = {
-                COLUMN_USER_ID,
-                COLUMN_USER_NAME,
-                COLUMN_USER_EMAIL,
-                COLUMN_USER_PROVINCE,
-                COLUMN_USER_BIRTHDAY,
-                COLUMN_USER_PASSWORD,
-                COLUMN_USER_FIRST,
-                COLUMN_USER_LOGIN,
-                COLUMN_USER_IMAGE,
 
-        };
-
-        // Sorting orders
-        String sortOrder = COLUMN_USER_NAME + " ASC";
-        List<User> userList = new ArrayList<User>();
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        // Query the user table
-        Cursor cursor = db.query(TABLE_USER, // Table to query
-                                 columns,    // Columns to return
-                                 null,       // Columns for the WHERE clause
-                                 null,       // The values for the WHERE clause
-                                 null,       // Group the rows
-                                 null,       // Filter by row groups
-                                 sortOrder); // The sort order
-
-        // Traversing through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                User user = new User();
-                user.setIdentification(cursor.getString(
-                                       cursor.getColumnIndexOrThrow(COLUMN_USER_ID)));
-                user.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_NAME)));
-                user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_EMAIL)));
-                user.setProvince(cursor.getString(
-                                 cursor.getColumnIndexOrThrow(COLUMN_USER_PROVINCE)));
-                user.setBirthday(cursor.getString(
-                                 cursor.getColumnIndexOrThrow(COLUMN_USER_BIRTHDAY)));
-                user.setPassword(cursor.getString(
-                                 cursor.getColumnIndexOrThrow(COLUMN_USER_PASSWORD)));
-                user.setFirstTime(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_FIRST)));
-                user.setLogin(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_LOGIN)));
-
-                // Adding user record to list
-                userList.add(user);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-
-        // Return user list
-        return userList;
-    }
 
     /**
      * Returns a list of the products in the cart in the database.
@@ -433,80 +364,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
     /**
-     * Checks if an user is logging in for the first time.
-     * @param email The e-mail of the user that logs in
-     * @return true if the user logs for the first time; false otherwise
-     */
-    public boolean isFirstTime(String email) {
-        boolean firstTime = false;
-        int value = -1;
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns = {
-                COLUMN_USER_FIRST
-        };
-        String selection = COLUMN_USER_EMAIL + " = ?";
-        String[] selectionArgs = { email };
-
-        Cursor cursor = db.query(TABLE_USER,        // Table to query
-                                 columns,           // Columns to return
-                                 selection,         // Columns for the WHERE clause
-                                 selectionArgs,     // The values for the WHERE clause
-                                 null,              // Group the rows
-                                 null,              // Filter by row groups
-                                 null);             // The sort order
-
-        if (cursor.moveToFirst()) {
-            value = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_FIRST));
-        }
-
-        cursor.close();
-        db.close();
-
-        if (value == 1) {
-            firstTime = true;
-        }
-
-        return firstTime;
-    }
-
-    /**
-     * Checks if a given e-mail matches with a given password.
-     * @param email     The e-mail of an user
-     * @param password  The password of an user
-     * @return true if the parameters match; false otherwise
-     */
-    public boolean checkUser(String email, String password) throws Exception {
-        boolean success = false;
-        EncryptPassword encryptPassword = new EncryptPassword();
-        password = encryptPassword.encryptPassword(password);
-
-        String[] columns = {
-                COLUMN_USER_ID
-        };
-        SQLiteDatabase db = this.getReadableDatabase();
-        String selection = COLUMN_USER_EMAIL + " = ?" + " AND " + COLUMN_USER_PASSWORD + " = ?";
-        String[] selectionArgs = { email, password };
-        Cursor cursor = db.query(TABLE_USER,        // Table to query
-                                 columns,           // Columns to return
-                                 selection,         // Columns for the WHERE clause
-                                 selectionArgs,     // The values for the WHERE clause
-                                 null,              // Group the rows
-                                 null,              // Filter by row groups
-                                 null);             // The sort order
-
-        int cursorCount = cursor.getCount();
-        cursor.close();
-        db.close();
-
-        if (cursorCount > 0) {
-            success = true;
-        }
-
-        return success;
-    }
-
-    /**
      * Checks if a user is registered by a given e-mail.
      * @param email The e-mail of an user
      * @return true if the user is registered; false otherwise
@@ -539,62 +396,6 @@ public class DbHelper extends SQLiteOpenHelper {
         return registered;
     }
 
-    /**
-     * Gets the user by the id in the parameter
-     * @param userId The id of the user
-     * @return The user that has the id sent in the parameter
-     */
-    public User getUser(int userId) {
-        // Array of columns to fetch
-        String[] columns = {
-                COLUMN_USER_ID,
-                COLUMN_USER_NAME,
-                COLUMN_USER_EMAIL,
-                COLUMN_USER_PROVINCE,
-                COLUMN_USER_BIRTHDAY,
-                COLUMN_USER_PASSWORD,
-                COLUMN_USER_FIRST,
-                COLUMN_USER_LOGIN,
-                COLUMN_USER_IMAGE
-        };
-
-        String selection = COLUMN_USER_ID + " = ?";
-        String[] selectionArgs = {String.valueOf(userId)};
-        SQLiteDatabase db = this.getReadableDatabase();
-        User user = new User();
-        // Query the user table
-        Cursor cursor = db.query(TABLE_USER, // Table to query
-                columns,    // Columns to return
-                selection,       // Columns for the WHERE clause
-                selectionArgs,       // The values for the WHERE clause
-                null,       // Group the rows
-                null,       // Filter by row groups
-                null); // The sort order
-
-        // Traversing through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                user.setIdentification(cursor.getString(
-                        cursor.getColumnIndexOrThrow(COLUMN_USER_ID)));
-                user.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_NAME)));
-                user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_EMAIL)));
-                user.setProvince(cursor.getString(
-                        cursor.getColumnIndexOrThrow(COLUMN_USER_PROVINCE)));
-                user.setBirthday(cursor.getString(
-                        cursor.getColumnIndexOrThrow(COLUMN_USER_BIRTHDAY)));
-                user.setPassword(cursor.getString(
-                        cursor.getColumnIndexOrThrow(COLUMN_USER_PASSWORD)));
-                user.setFirstTime(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_FIRST)));
-                user.setLogin(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_LOGIN)));
-                user.setImage(cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_USER_IMAGE)));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-
-        // Return user list
-        return user;
-    }
 
     /**
      * Gets the user by a given e-mail
