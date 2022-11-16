@@ -5,7 +5,21 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +29,14 @@ import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.PurchaseHistory;
 
 public class DbHelper extends SQLiteOpenHelper {
+
+    //Variables to use FireBase as Database provider
+    private FirebaseAuth fAuth;
+    private FirebaseUser fUser;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
+
+
 
     // Database version
     private static final int DATABASE_VERSION = 1;
@@ -120,51 +142,45 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Creates a new user and adds it to the database.
-     * @param user  The new user to add
+     * Upload an image to firestore bucket of the app
+     * @param image uri where image is store
      */
-    public String addUser(User user) {
-        String error = "Succes";
-        Boolean isRegistered = false;
-        Boolean BDTRY = false;
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        values.put(COLUMN_USER_ID, user.getIdentification());
-        values.put(COLUMN_USER_NAME, user.getName());
-        values.put(COLUMN_USER_EMAIL, user.getEmail());
-        values.put(COLUMN_USER_PROVINCE, user.getProvince());
-        values.put(COLUMN_USER_BIRTHDAY, user.getBirthday());
-        values.put(COLUMN_USER_PASSWORD, user.getPassword());
-        values.put(COLUMN_USER_FIRST,user.getFirstTime());
-
-        // Inserting Row
-        Log.i("DATA BASE ",db.insert(TABLE_USER, null, values) + "");
-        BDTRY = db.isOpen();
-        List<User> users = this.getAllUser();
-        BDTRY = db.isOpen();
-        db = getWritableDatabase();
-
-        for (int i = 0; i<users.size(); ++i) {
-            if (user.getIdentification().equals(users.get(i).getIdentification())) {
-                isRegistered = true;
-                error = " Esta identificación ya se encuentra en el sistema ";
-            }
-
-            if(user.getEmail().equals(users.get(i).getEmail())){
-                isRegistered = true;
-                error = " Este correo ya se encuentra en el sistema ";
-            }
-        };
-
-        if (!isRegistered) {
-            // Inserting Row
-            Log.i("DATA BASE ", db.insert(TABLE_USER, null, values) + "");
-        }
-
-        db.close();
-        return error;
+    public void uploadImage(Uri image){
+        fUser = FirebaseAuth.getInstance().getCurrentUser();
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
+        StorageReference ref = storageReference.child("Users/" + fAuth.getCurrentUser().getUid());
+        UploadTask uploadTask = ref.putFile(image);
     }
+
+    /**
+    * Store the new user on FireBase
+    * @param : The New User
+    * */
+    public void addUserFb(User user,Uri image){
+        //Firebase can´t serialize bitmap attribute of Use
+        fAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        CollectionReference userCollection = dataBase.collection("Users");
+        fAuth.createUserWithEmailAndPassword(user.getEmail(),user.getPassword())
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            UserDataHolder userFB = new UserDataHolder(user, FirebaseAuth.getInstance().getUid());
+                            userCollection.document(userFB.getUid()).set(userFB);
+                            uploadImage(image);
+                        }else{
+                            try {
+                                throw task.getException();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+    }
+
 
     /**
      * Creates a product to  and adds it to the database for shopping cart.

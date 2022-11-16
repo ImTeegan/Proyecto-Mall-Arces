@@ -2,13 +2,11 @@ package cr.ac.ucr.ecci.proyecto_arce_mall.data.model;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Random;
 
-public class User implements Parcelable {
+public class User {
     private String identification;
     private String name;
     private String email;
@@ -36,23 +34,6 @@ public class User implements Parcelable {
         this.createPassword();
     }
 
-    protected User(Parcel in) {
-        this.identification = in.readString();
-        this.name = in.readString();
-        this.email = in.readString();
-        this.birthday = in.readString();
-        this.province = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.identification);
-        dest.writeString(this.name);
-        dest.writeString(this.email);
-        dest.writeString(this.birthday);
-        dest.writeString(this.province);
-    }
-
     /**
      * Creates a random password for a new user.
      */
@@ -72,23 +53,6 @@ public class User implements Parcelable {
 
         this.setPassword(password);
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 
     public String getIdentification() {
         return this.identification;
@@ -167,5 +131,8 @@ public class User implements Parcelable {
         return stream.toByteArray();
     }
 
+    public Bitmap getBitImage(){
+        return this.image;
+    }
 
 }

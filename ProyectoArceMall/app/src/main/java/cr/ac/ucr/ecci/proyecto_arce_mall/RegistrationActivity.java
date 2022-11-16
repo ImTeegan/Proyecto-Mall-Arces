@@ -1,10 +1,8 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,18 +11,20 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.os.Bundle;
-import android.provider.Settings;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -37,7 +37,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Provinces;
@@ -64,7 +63,6 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
         this.instantiateComponents();
         this.setComponentActions();
     }
@@ -94,6 +92,7 @@ public class RegistrationActivity extends AppCompatActivity {
         this.registrationButton = (Button) findViewById(R.id.registration_button);
         this.dataBase = new DbHelper(this);
     }
+
 
     private void setComponentActions() {
         this.getLocation();
@@ -289,19 +288,20 @@ public class RegistrationActivity extends AppCompatActivity {
         }
     }
 
+
+
     private void showConfirmationScreen(User user) throws Exception {
         String firstPassword = user.getPassword();
         EncryptPassword encryptPassword = new EncryptPassword();
         user.setPassword(encryptPassword.encryptPassword(user.getPassword()));
-
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+        Uri image = Uri.parse("android.resource://cr.ac.ucr.ecci.proyecto_arce_mall/drawable/profile_image");
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] imageData = stream.toByteArray();
-        user.setImage(imageData);
-        this.dataBase.addUser(user);
-
-        Intent intent = new Intent(this, RegisterConfirmationActivity.class);
+        //user.setImage(imageData);
+        dataBase.addUserFb(user,image);
+        Intent intent = new Intent(  this, RegisterConfirmationActivity.class);
         intent.putExtra("email", user.getEmail());
         intent.putExtra("password", firstPassword);
         startActivity(intent);

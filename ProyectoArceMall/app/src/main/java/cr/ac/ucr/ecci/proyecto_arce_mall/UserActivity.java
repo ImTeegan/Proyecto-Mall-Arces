@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,7 +17,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -323,7 +321,7 @@ public class UserActivity extends AppCompatActivity {
      */
     private void showChangePasswordScreen() {
         Intent intent = new Intent(this, ChangePasswordActivity.class);
-        intent.putExtra("user", activeUser);
+        intent.putExtra("user", (CharSequence) activeUser);
         intent.putExtra("changePassword", "changePassword");
         startActivity(intent);
         finish();

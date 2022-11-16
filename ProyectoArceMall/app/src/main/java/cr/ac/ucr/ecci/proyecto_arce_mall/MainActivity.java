@@ -14,8 +14,9 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
+
+import com.google.firebase.FirebaseApp;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
@@ -43,13 +44,22 @@ public class MainActivity extends AppCompatActivity {
             this.getLocation();
         }
         //init all app if there is a logged user
-       User user =  dataBase.getLoginUser();
-        if(user.getEmail() != null){
-            Intent intent = new Intent(this, StoreActivity.class);
-            startActivity(intent);
-            finish();
-        }
+       //User user =  dataBase.getLoginUser();
+//        if(user.getEmail() != null){
+//            Intent intent = new Intent(this, StoreActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }
+        initFirebase();
     }
+
+    /**
+     * Method to initialize firebase app
+     */
+    private void initFirebase(){
+        FirebaseApp.initializeApp(this);
+    }
+
 
     // TODO: Test with a cell phone that has GPS disabled from the start
     private void showEnableGpsDialog() {
