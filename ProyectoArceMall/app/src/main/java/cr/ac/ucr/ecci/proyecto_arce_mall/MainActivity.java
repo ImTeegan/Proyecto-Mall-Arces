@@ -16,24 +16,28 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
-import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
 public class MainActivity extends AppCompatActivity {
 
     private LocationManager locationManager;
     private static final int REQUEST_LOCATION = 1;
-    private DbHelper dataBase;
+    private CollectionReference usersCollection;
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        dataBase = new DbHelper(this);
 
         this.locationManager = (LocationManager)
                                 getSystemService(Context.LOCATION_SERVICE);
@@ -43,14 +47,27 @@ public class MainActivity extends AppCompatActivity {
         } else {
             this.getLocation();
         }
-        //init all app if there is a logged user
-       //User user =  dataBase.getLoginUser();
-//        if(user.getEmail() != null){
-//            Intent intent = new Intent(this, StoreActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
+        this.usersCollection = FirebaseFirestore.getInstance().collection("Users");
+        startWithLogin();
+
         initFirebase();
+    }
+
+    /**
+     * If the user has previously login to the application it redirects
+     * to the store screen
+     */
+    private void startWithLogin(){
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DocumentReference dataRef = usersCollection.document(userId);
+        dataRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Intent intent = new Intent(MainActivity.this, StoreActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     /**
