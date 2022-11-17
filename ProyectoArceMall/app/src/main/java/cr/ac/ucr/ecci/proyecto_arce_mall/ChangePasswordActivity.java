@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
@@ -15,8 +13,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.io.ByteArrayOutputStream;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
@@ -117,12 +113,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         EncryptPassword encryptPassword = new EncryptPassword();
         user.updatePassword(encryptPassword.encryptPassword(newPassword));
-
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
-//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//        byte[] imageData = stream.toByteArray();
-//        user.setImage(imageData);
 
         if (this.changePassword != null) {
             Intent intent = new Intent(this, ChangePasswordConfirmationActivity.class);

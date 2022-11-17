@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
         String email = this.tilEmail.getEditText().getText().toString();
         String password = this.tilPassword.getEditText().getText().toString();
 
-        boolean validated = this.validateEmailAndPassword(email, password);
+        boolean validated = this.validateEmailAndPassword(email);
 
         if (validated) {
             EncryptPassword encryptPassword = new EncryptPassword();
@@ -115,7 +115,13 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private boolean validateEmailAndPassword(String email, String password) throws Exception {
+    /**
+     *
+     * @param email the user email that we validate
+     * @return true if the email is valid, or false if is invalid
+     * @throws Exception
+     */
+    private boolean validateEmailAndPassword(String email) throws Exception {
         if (email.isEmpty() || !(Patterns.EMAIL_ADDRESS.matcher(email).matches())) {
             this.tilEmail.setError("El correo electrónico no es válido");
             return false;
@@ -124,6 +130,12 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     *
+     * @param email the user's email
+     * @param password the user's password
+     * Sign in the user
+     */
     private void signInUser(String email, String password){
         fAuth.signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -150,20 +162,27 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-
-
+    /**
+     * if the user can't login it shows errors for the fields
+     */
     private void addErrorToFields(){
         this.tilEmail.setError("Correo o contraseña incorrectos");
         this.tilPassword.setError("Correo o contraseña incorrectos");
         this.tilPassword.setErrorIconDrawable(null);
     }
 
+    /**
+     * Shows the screen to change the password
+     */
     private void showChangePasswordScreen() {
         Intent intent = new Intent(this, ChangePasswordActivity.class);
         startActivity(intent);
         finish();
     }
 
+    /**
+     * Shows the screen of the store
+     */
     private void showStore() {
         Intent intent = new Intent(this, StoreActivity.class);
         startActivity(intent);

@@ -26,9 +26,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.reginald.editspinner.EditSpinner;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -57,6 +61,7 @@ public class UserActivity extends AppCompatActivity {
     private Button updateUserButton;
     private DatePickerDialog datePickerDialog;
     private CollectionReference usersCollection;
+    private StorageReference storageReference;
     private byte[] userImage;
 
     @Override
@@ -93,6 +98,9 @@ public class UserActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Get the user that is login in the app
+     */
     private void getActiveUser(){
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DocumentReference dataRef = usersCollection.document(userId);
@@ -101,6 +109,7 @@ public class UserActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 activeUser = documentSnapshot.toObject(UserDataHolder.class);
+                storageReference = FirebaseStorage.getInstance().getReference().child("Users/" + activeUser.getUid());
                 setDropdownProvinces();
                 try {
                     setInformationFields();
@@ -225,10 +234,8 @@ public class UserActivity extends AppCompatActivity {
         this.userId.setText(this.activeUser.getIdentification());
         this.userName.setText(this.activeUser.getName());
         this.userEmail.setText(this.activeUser.getEmail());
-        //InputStream is = new ByteArrayInputStream(this.activeUser.getImage());
-        //Bitmap bmp = BitmapFactory.decodeStream(is);
-        //this.userImageButton.setImageBitmap(bmp);
-        //this.userImageButton.setBackgroundResource(R.drawable.profile_image);
+        setUserImage();
+        this.userImageButton.setBackgroundResource(R.drawable.profile_image);
         this.userAge.setText(getAgeFromBirthdate(this.activeUser.getBirthday()) + " años");
 
         this.userAge.setOnClickListener(new View.OnClickListener() {
@@ -237,6 +244,26 @@ public class UserActivity extends AppCompatActivity {
                 getDatePickerDialog();
             }
         });
+    }
+
+    /**
+     * Sets the user image for the user screen
+     */
+    private void setUserImage(){
+        try{
+            File localFile = File.createTempFile("tempFile", "jpg");
+            storageReference.getFile(localFile)
+                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                            userImageButton.setImageBitmap(bitmap);
+                        }
+                    });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -259,7 +286,7 @@ public class UserActivity extends AppCompatActivity {
      * Checks if the birth date is a valid date and then updates the user information.
      * @throws ParseException
      */
-    private void validateData() throws ParseException {
+    private void validateData() throws ParseException, UnsupportedEncodingException {
         String newBirthDate = this.newDate;
         String newProvince = this.provinceSpinner.getText().toString();
         if (!this.activeUser.getBirthday().equals(this.newDate) && newDate != null){
@@ -270,9 +297,9 @@ public class UserActivity extends AppCompatActivity {
         usersCollection.document(this.activeUser.getUid()).update("province", newProvince);
         Intent intent = new Intent(this, StoreActivity.class);
         startActivity(intent);
-//        if(userImage != null){
-//            this.activeUser.setImage(userImage);
-//        }
+        if(userImage != null){
+            storageReference.putBytes(userImage);
+        }
         usersCollection.document(this.activeUser.getUid()).update("firstTime", 0);
     }
 

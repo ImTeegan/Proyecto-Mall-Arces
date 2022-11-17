@@ -296,10 +296,6 @@ public class RegistrationActivity extends AppCompatActivity {
         user.setPassword(encryptPassword.encryptPassword(user.getPassword()));
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
         Uri image = Uri.parse("android.resource://cr.ac.ucr.ecci.proyecto_arce_mall/drawable/profile_image");
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] imageData = stream.toByteArray();
-        //user.setImage(imageData);
         dataBase.addUserFb(user,image);
         Intent intent = new Intent(  this, RegisterConfirmationActivity.class);
         intent.putExtra("email", user.getEmail());
