@@ -11,6 +11,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -157,12 +158,13 @@ public class DbHelper extends SQLiteOpenHelper {
     * Store the new user on FireBase
     * @param : The New User
     * */
-    public void addUserFb(User user,Uri image){
+    public int addUserFb(User user,Uri image){
+        final int[] error = {0};
         //Firebase can´t serialize bitmap attribute of Use
         fAuth = FirebaseAuth.getInstance();
         FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
         CollectionReference userCollection = dataBase.collection("Users");
-        fAuth.createUserWithEmailAndPassword(user.getEmail(),user.getPassword())
+        Task<AuthResult> Result = fAuth.createUserWithEmailAndPassword(user.getEmail(),user.getPassword())
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -178,7 +180,15 @@ public class DbHelper extends SQLiteOpenHelper {
                             }
                         }
                     }
-                });
+                }
+                );
+            if(Result.isSuccessful()){
+                error[0] = 0;
+            }
+            else{
+                error[0] = 1;
+            };
+        return error[0];
     }
 
 

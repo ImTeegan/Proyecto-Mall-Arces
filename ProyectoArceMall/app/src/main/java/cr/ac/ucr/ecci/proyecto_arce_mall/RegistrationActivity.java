@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -289,7 +290,6 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
 
-
     private void showConfirmationScreen(User user) throws Exception {
         String firstPassword = user.getPassword();
         EncryptPassword encryptPassword = new EncryptPassword();
@@ -300,10 +300,14 @@ public class RegistrationActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] imageData = stream.toByteArray();
         //user.setImage(imageData);
-        dataBase.addUserFb(user,image);
-        Intent intent = new Intent(  this, RegisterConfirmationActivity.class);
-        intent.putExtra("email", user.getEmail());
-        intent.putExtra("password", firstPassword);
-        startActivity(intent);
+        int error = dataBase.addUserFb(user,image);
+        if(error == 0 ) {
+            Intent intent = new Intent(this, RegisterConfirmationActivity.class);
+            intent.putExtra("email", user.getEmail());
+            intent.putExtra("password", firstPassword);
+            startActivity(intent);
+        }else{
+            Toast toast = Toast.makeText(this, "Correo electrónico ya registrado",Toast.LENGTH_LONG);
+        }
     }
 }
