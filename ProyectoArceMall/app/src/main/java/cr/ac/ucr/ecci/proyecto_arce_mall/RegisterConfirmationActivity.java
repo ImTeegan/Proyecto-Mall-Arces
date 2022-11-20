@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
-import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.mail.JavaMailApi;
 
 public class RegisterConfirmationActivity extends AppCompatActivity {

@@ -9,8 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -28,8 +26,6 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.io.ByteArrayOutputStream;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -250,7 +246,7 @@ public class RegistrationActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean validateBirthDate(String birthDate) throws ParseException {
+    private boolean validateBirthDate(String birthDate) {
         if (!birthDate.isEmpty()) {
             LocalDate today = LocalDate.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
@@ -288,18 +284,16 @@ public class RegistrationActivity extends AppCompatActivity {
         }
     }
 
-
-
-    private void showConfirmationScreen(User user) throws Exception {
-        String firstPassword = user.getPassword();
-        EncryptPassword encryptPassword = new EncryptPassword();
-        user.setPassword(encryptPassword.encryptPassword(user.getPassword()));
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+    /**
+     * Shows the confirmation screen after the user is register
+     * @param user the user that is register
+     */
+    private void showConfirmationScreen(User user) {
         Uri image = Uri.parse("android.resource://cr.ac.ucr.ecci.proyecto_arce_mall/drawable/profile_image");
         dataBase.addUserFb(user,image);
         Intent intent = new Intent(  this, RegisterConfirmationActivity.class);
         intent.putExtra("email", user.getEmail());
-        intent.putExtra("password", firstPassword);
+        intent.putExtra("password", user.getPassword());
         startActivity(intent);
     }
 }

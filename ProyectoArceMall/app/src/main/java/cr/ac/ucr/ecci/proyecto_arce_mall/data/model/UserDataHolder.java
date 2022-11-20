@@ -7,7 +7,6 @@ public class UserDataHolder {
     private String email;
     private String birthday;
     private String province;
-    private String password;
     private int firstTime;
     private int login;
 
@@ -21,19 +20,9 @@ public class UserDataHolder {
         setEmail(user.getEmail());
         setBirthday(user.getBirthday());
         setProvince(user.getProvince());
-        setPassword(user.getPassword());
         setFirstTime(user.getFirstTime());
         setLogin(user.getLogin());
         setUid(uid);
-    }
-
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getIdentification() {

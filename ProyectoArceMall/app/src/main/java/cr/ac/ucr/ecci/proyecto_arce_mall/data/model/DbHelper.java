@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -25,7 +24,6 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.List;
 
-import cr.ac.ucr.ecci.proyecto_arce_mall.EncryptPassword;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.PurchaseHistory;
 
@@ -394,65 +392,6 @@ public class DbHelper extends SQLiteOpenHelper {
         }
 
         return registered;
-    }
-
-
-    /**
-     * Gets the user by a given e-mail
-     * @param email The e-mail of the user
-     * @return The user information
-     */
-    public User getUserByEmail(String email) {
-        // Array of columns to fetch
-        String[] columns = {
-                COLUMN_USER_ID,
-                COLUMN_USER_NAME,
-                COLUMN_USER_EMAIL,
-                COLUMN_USER_PROVINCE,
-                COLUMN_USER_BIRTHDAY,
-                COLUMN_USER_PASSWORD,
-                COLUMN_USER_FIRST,
-                COLUMN_USER_LOGIN,
-                COLUMN_USER_IMAGE
-        };
-
-        String selection = COLUMN_USER_EMAIL + " = ?";
-        String[] selectionArgs = { email };
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        User user = new User();
-        // Query the user table
-        Cursor cursor = db.query(TABLE_USER,    // Table to query
-                                 columns,       // Columns to return
-                                 selection,     // Columns for the WHERE clause
-                                 selectionArgs, // The values for the WHERE clause
-                                 null,          // Group the rows
-                                 null,          // Filter by row groups
-                                 null);         // The sort order
-
-        // Traversing through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                user.setIdentification(cursor.getString(
-                        cursor.getColumnIndexOrThrow(COLUMN_USER_ID)));
-                user.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_NAME)));
-                user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_EMAIL)));
-                user.setProvince(cursor.getString(
-                        cursor.getColumnIndexOrThrow(COLUMN_USER_PROVINCE)));
-                user.setBirthday(cursor.getString(
-                        cursor.getColumnIndexOrThrow(COLUMN_USER_BIRTHDAY)));
-                user.setPassword(cursor.getString(
-                        cursor.getColumnIndexOrThrow(COLUMN_USER_PASSWORD)));
-                user.setFirstTime(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_FIRST)));
-                user.setLogin(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_USER_LOGIN)));
-                user.setImage(cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_USER_IMAGE)));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-
-        // Return user list
-        return user;
     }
 
     /**

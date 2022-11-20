@@ -98,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * @throws ParseException
+     * Validates that the email and logins the user
      */
     private void validateData() throws Exception {
         String email = this.tilEmail.getEditText().getText().toString();
@@ -106,11 +107,7 @@ public class LoginActivity extends AppCompatActivity {
         boolean validated = this.validateEmailAndPassword(email);
 
         if (validated) {
-            EncryptPassword encryptPassword = new EncryptPassword();
-            String newPassword = encryptPassword.encryptPassword(password);
-
-            signInUser(email, newPassword);
-
+            signInUser(email, password);
         }
 
     }

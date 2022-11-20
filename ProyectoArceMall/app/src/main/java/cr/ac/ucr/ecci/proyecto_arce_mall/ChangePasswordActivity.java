@@ -111,8 +111,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         dataBase.collection("Users").document(userId).update("firstTime", 0);
 
-        EncryptPassword encryptPassword = new EncryptPassword();
-        user.updatePassword(encryptPassword.encryptPassword(newPassword));
+        user.updatePassword(newPassword);
 
         if (this.changePassword != null) {
             Intent intent = new Intent(this, ChangePasswordConfirmationActivity.class);
