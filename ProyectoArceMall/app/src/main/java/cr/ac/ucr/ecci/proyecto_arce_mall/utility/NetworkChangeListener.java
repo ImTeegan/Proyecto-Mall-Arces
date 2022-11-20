@@ -11,20 +11,19 @@ import android.view.View;
 
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import cr.ac.ucr.ecci.proyecto_arce_mall.MainActivity;
 import cr.ac.ucr.ecci.proyecto_arce_mall.R;
-import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 
 public class NetworkChangeListener extends BroadcastReceiver {
+
+    private FirebaseAuth fAuth;
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
         if(!Common.isConnectedToInternet(context)) {
-            DbHelper dataBase = new DbHelper(context);
-            if(dataBase.getLoginUser().getEmail() != null ){
-                dataBase.deleteUserLogged();
-            }
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             View view = LayoutInflater.from(context)
                     .inflate(R.layout.no_internet_connection, null);
@@ -48,6 +47,8 @@ public class NetworkChangeListener extends BroadcastReceiver {
     }
 
     private void goToMainScreen(Context context) {
+        fAuth = FirebaseAuth.getInstance();
+        fAuth.signOut();
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
         ((Activity) context).finish();

@@ -26,6 +26,10 @@ public class ChangePasswordConfirmationActivity extends AppCompatActivity {
         this.getUserEmail();
     }
 
+    /**
+     * Register the receiver that checks
+     * if the user has internet at every moment
+     */
     @Override
     protected void onStart() {
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -33,6 +37,10 @@ public class ChangePasswordConfirmationActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    /**
+     * Unregister the receiver that checks
+     * if the user has internet at every moment
+     */
     @Override
     protected void onStop() {
         unregisterReceiver(this.networkChangeListener);

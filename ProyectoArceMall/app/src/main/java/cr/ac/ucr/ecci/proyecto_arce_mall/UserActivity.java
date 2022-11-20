@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -17,6 +19,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,6 +47,7 @@ import java.util.Calendar;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.UserDataHolder;
+import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
 public class UserActivity extends AppCompatActivity {
 
@@ -59,10 +63,13 @@ public class UserActivity extends AppCompatActivity {
     private String newDate;
     private Button changePasswordButton;
     private Button updateUserButton;
+    private Button logoutButton;
+    private FirebaseAuth fAuth;
     private DatePickerDialog datePickerDialog;
     private CollectionReference usersCollection;
     private StorageReference storageReference;
     private byte[] userImage;
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +104,28 @@ public class UserActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    /**
+     * Register the receiver that checks
+     * if the user has internet at every moment
+     */
+    @Override
+    protected void onStart() {
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(this.networkChangeListener, intentFilter);
+        super.onStart();
+    }
+
+    /**
+     * Unregister the receiver that checks
+     * if the user has internet at every moment
+     */
+    @Override
+    protected void onStop() {
+        unregisterReceiver(this.networkChangeListener);
+        super.onStop();
+    }
+
 
     /**
      * Get the user that is login in the app
@@ -136,6 +165,7 @@ public class UserActivity extends AppCompatActivity {
         this.updateUserButton = findViewById(R.id.update_button);
         this.changePasswordButton = findViewById(R.id.change_password_button);
         this.usersCollection = FirebaseFirestore.getInstance().collection("Users");
+        this.logoutButton = findViewById(R.id.logout_button);
     }
 
     /**
@@ -175,6 +205,24 @@ public class UserActivity extends AppCompatActivity {
                 }
             }
         });
+
+        this.logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                logoutUser();
+            }
+        });
+    }
+
+    /**
+     * Signs out the user and takes them to the main screen
+     */
+    private void logoutUser(){
+        fAuth = FirebaseAuth.getInstance();
+        fAuth.signOut();
+        Toast.makeText(UserActivity.this, "Se cerró la sesión", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     /**

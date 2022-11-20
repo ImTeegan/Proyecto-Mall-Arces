@@ -19,6 +19,7 @@ import android.view.View;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -57,16 +58,19 @@ public class MainActivity extends AppCompatActivity {
      * to the store screen
      */
     private void startWithLogin(){
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DocumentReference dataRef = usersCollection.document(userId);
-        dataRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Intent intent = new Intent(MainActivity.this, StoreActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user!= null){
+            DocumentReference dataRef = usersCollection.document(user.getUid());
+            dataRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    Intent intent = new Intent(MainActivity.this, StoreActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+        }
+
     }
 
     /**
@@ -121,6 +125,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Register the receiver that checks
+     * if the user has internet at every moment
+     */
     @Override
     protected void onStart() {
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -128,6 +136,10 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    /**
+     * Unregister the receiver that checks
+     * if the user has internet at every moment
+     */
     @Override
     protected void onStop() {
         unregisterReceiver(this.networkChangeListener);
