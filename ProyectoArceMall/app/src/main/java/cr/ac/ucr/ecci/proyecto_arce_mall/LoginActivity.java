@@ -1,16 +1,22 @@
 package cr.ac.ucr.ecci.proyecto_arce_mall;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import androidx.biometric.BiometricPrompt;
+
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,6 +30,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
+import java.util.concurrent.Executor;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.UserDataHolder;
 import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
@@ -37,6 +44,10 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth fAuth;
     private CollectionReference usersCollection;
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+    private Button biometryButton;
+    private Executor executor;
+    private BiometricPrompt biometricPrompt;
+    private BiometricPrompt.PromptInfo promptInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +88,9 @@ public class LoginActivity extends AppCompatActivity {
         this.tvForgotPassword = (TextView) findViewById(R.id.forgot_password);
         this.fAuth = FirebaseAuth.getInstance();
         this.usersCollection = FirebaseFirestore.getInstance().collection("Users");
+        this.biometryButton = (Button) findViewById(R.id.login_Biometry);
+        executor = ContextCompat.getMainExecutor(this);
+        handleBiometryLogin();
     }
 
     /**
@@ -117,7 +131,6 @@ public class LoginActivity extends AppCompatActivity {
         if (validated) {
             signInUser(email, password);
         }
-
     }
 
     /**
@@ -154,8 +167,42 @@ public class LoginActivity extends AppCompatActivity {
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     UserDataHolder user = documentSnapshot.toObject(UserDataHolder.class);
                                     if (user.getFirstTime() == 1){
+
+                                        //store credentials on shared preferences
+                                        SharedPreferences pref =
+                                                getSharedPreferences("credentials", LoginActivity.MODE_PRIVATE);
+                                        SharedPreferences.Editor edt = pref.edit();
+                                        edt.putString("email", email);
+                                        edt.putString("password",password);
+                                        edt.putInt("isLogged", 0);
+
+
+                                        SharedPreferences preferences =
+                                                getSharedPreferences("logged", LoginActivity.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = pref.edit();
+                                        editor.putInt("isLogged", 0);
+
+                                        editor.commit();
+                                        edt.commit();
+
                                         showChangePasswordScreen();
                                     }else{
+
+                                        //store credentials on shared preferences
+                                        SharedPreferences pref =
+                                                getSharedPreferences("credentials", LoginActivity.MODE_PRIVATE);
+                                        SharedPreferences.Editor edt = pref.edit();
+                                        edt.putString("email", email);
+                                        edt.putString("password",password);
+
+                                        SharedPreferences preferences =
+                                                getSharedPreferences("logged", LoginActivity.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = preferences.edit();
+                                        editor.putInt("isLogged", 0);
+
+                                        editor.commit();
+                                        edt.commit();
+
                                         showStore();
                                     }
                                 }
@@ -165,6 +212,64 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+    /**
+     * handle Sign in the user with Biometry
+     */
+    private void handleBiometryLogin(){
+        biometricPrompt = new BiometricPrompt(LoginActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
+
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                Toast.makeText(LoginActivity.this,"Biometria validada ",
+                        Toast.LENGTH_SHORT).show();
+
+                //take credentials from shared preferences
+                SharedPreferences preferences =
+                        getSharedPreferences("credentials",Context.MODE_PRIVATE);
+                String email = preferences.getString("email","NULL");
+                String password = preferences.getString("password","NULL");
+                signInUser(email,password);
+
+            }
+            @Override
+            public void onAuthenticationFailed() {
+                Toast.makeText(LoginActivity.this,"Falla al validar biometría ",
+                        Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onAuthenticationError(int errorCode,@NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode,errString);
+                //fail login
+                Toast.makeText(LoginActivity.this,"Error de autenticación : " + errString,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Autenticación Biometrica")
+                .setSubtitle("Inicio sesión con Biometría")
+                .setNegativeButtonText("Contraseña del App")
+                .build();
+
+
+        biometryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences preferences =
+                        getSharedPreferences("logged",Context.MODE_PRIVATE);
+                int firstTime = preferences.getInt("isLogged",-1);
+                //-1 never logged , o loged
+                if(firstTime == 0) {
+                    biometricPrompt.authenticate(promptInfo);
+                }else{
+                    Toast.makeText(LoginActivity.this,"Debe iniciar sesión por primera vez para usar esta funcionalidad",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
     }
 
     /**
