@@ -200,6 +200,7 @@ public class LoginActivity extends AppCompatActivity {
                                         SharedPreferences.Editor editor = preferences.edit();
                                         editor.putInt("isLogged", 0);
 
+
                                         editor.commit();
                                         edt.commit();
 
@@ -253,15 +254,16 @@ public class LoginActivity extends AppCompatActivity {
                 .setNegativeButtonText("Contraseña del App")
                 .build();
 
+        if(isLogged()){
+            biometryButton.setVisibility(View.VISIBLE);
+        }
 
         biometryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences preferences =
-                        getSharedPreferences("logged",Context.MODE_PRIVATE);
-                int firstTime = preferences.getInt("isLogged",-1);
                 //-1 never logged , o loged
-                if(firstTime == 0) {
+                if(isLogged()) {
+                    biometryButton.setVisibility(View.VISIBLE);
                     biometricPrompt.authenticate(promptInfo);
                 }else{
                     Toast.makeText(LoginActivity.this,"Debe iniciar sesión por primera vez para usar esta funcionalidad",
@@ -270,6 +272,21 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    /**
+     * Method to identificate if an user is logged
+     * @return true if is logged
+     */
+    public boolean isLogged(){
+        boolean isLoggeg = false;
+        SharedPreferences preferences =
+                getSharedPreferences("logged",Context.MODE_PRIVATE);
+        int firstTime = preferences.getInt("isLogged",-1);
+        if(firstTime == 0) {
+            isLoggeg = true;
+        }
+        return isLoggeg;
     }
 
     /**
