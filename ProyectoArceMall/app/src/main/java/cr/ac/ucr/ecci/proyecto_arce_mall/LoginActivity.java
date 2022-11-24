@@ -49,6 +49,10 @@ public class LoginActivity extends AppCompatActivity {
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
 
+    /**
+     * Sets the initial setup of the activity
+     * @param savedInstanceState The activity's previously frozen state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Register the receiver that checks
+     * Registers the receiver that checks
      * if the user has internet at every moment
      */
     @Override
@@ -69,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Unregister the receiver that checks
+     * Unregisters the receiver that checks
      * if the user has internet at every moment
      */
     @Override
@@ -89,8 +93,8 @@ public class LoginActivity extends AppCompatActivity {
         this.fAuth = FirebaseAuth.getInstance();
         this.usersCollection = FirebaseFirestore.getInstance().collection("Users");
         this.biometryButton = (Button) findViewById(R.id.login_Biometry);
-        executor = ContextCompat.getMainExecutor(this);
-        handleBiometryLogin();
+        this.executor = ContextCompat.getMainExecutor(this);
+        this.handleBiometryLogin();
     }
 
     /**
@@ -119,8 +123,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
+     * Checks if e-mail and password are correct and sings in the user
      * @throws ParseException
-     * Validates that the email and logins the user
      */
     private void validateData() throws Exception {
         String email = this.tilEmail.getEditText().getText().toString();
@@ -134,9 +138,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * Validates the e-mail and password of an user
      * @param email the user email that we validate
-     * @return true if the email is valid, or false if is invalid
+     * @return true if the email is valid, false otherwise
      * @throws Exception
      */
     private boolean validateEmailAndPassword(String email) throws Exception {
@@ -149,125 +153,142 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param email the user's email
+     * Signs in the user
+     * @param email the user's e-mail
      * @param password the user's password
-     * Sign in the user
      */
-    private void signInUser(String email, String password){
-        fAuth.signInWithEmailAndPassword(email,password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            DocumentReference dataRef = usersCollection.document(userId);
-                            dataRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    UserDataHolder user = documentSnapshot.toObject(UserDataHolder.class);
-                                    if (user.getFirstTime() == 1){
+    private void signInUser(String email, String password) {
+        this.fAuth.signInWithEmailAndPassword(email, password)
+                  .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
-                                        //store credentials on shared preferences
-                                        SharedPreferences pref =
-                                                getSharedPreferences("credentials", LoginActivity.MODE_PRIVATE);
-                                        SharedPreferences.Editor edt = pref.edit();
-                                        edt.putString("email", email);
-                                        edt.putString("password",password);
-                                        edt.putInt("isLogged", 0);
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
 
+                if (task.isSuccessful()) {
+                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    DocumentReference dataRef = usersCollection.document(userId);
 
-                                        SharedPreferences preferences =
-                                                getSharedPreferences("logged", LoginActivity.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = pref.edit();
-                                        editor.putInt("isLogged", 0);
+                    dataRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            UserDataHolder user = documentSnapshot.toObject(UserDataHolder.class);
 
-                                        editor.commit();
-                                        edt.commit();
+                            if (user.getFirstTime() == 1) {
 
-                                        showChangePasswordScreen();
-                                    }else{
+                                // Store credentials on shared preferences
+                                SharedPreferences pref =
+                                    getSharedPreferences("credentials",
+                                                         LoginActivity.MODE_PRIVATE);
 
-                                        //store credentials on shared preferences
-                                        SharedPreferences pref =
-                                                getSharedPreferences("credentials", LoginActivity.MODE_PRIVATE);
-                                        SharedPreferences.Editor edt = pref.edit();
-                                        edt.putString("email", email);
-                                        edt.putString("password",password);
+                                SharedPreferences.Editor edt = pref.edit();
+                                edt.putString("email", email);
+                                edt.putString("password",password);
+                                edt.putInt("isLogged", 0);
 
-                                        SharedPreferences preferences =
-                                                getSharedPreferences("logged", LoginActivity.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = preferences.edit();
-                                        editor.putInt("isLogged", 0);
+                                SharedPreferences preferences =
+                                    getSharedPreferences("logged",
+                                                         LoginActivity.MODE_PRIVATE);
 
+                                // It wouldn't be "preferences" instead of "pref"? -Gab
+                                SharedPreferences.Editor editor = pref.edit();
+                                editor.putInt("isLogged", 0);
+                                editor.commit();
+                                edt.commit();
 
-                                        editor.commit();
-                                        edt.commit();
+                                showChangePasswordScreen();
+                            } else {
 
-                                        showStore();
-                                    }
-                                }
-                            });
-                        }else{
-                            addErrorToFields();
+                                // Store credentials on shared preferences
+                                SharedPreferences pref =
+                                    getSharedPreferences("credentials",
+                                                         LoginActivity.MODE_PRIVATE);
+
+                                SharedPreferences.Editor edt = pref.edit();
+                                edt.putString("email", email);
+                                edt.putString("password", password);
+
+                                SharedPreferences preferences =
+                                    getSharedPreferences("logged",
+                                                         LoginActivity.MODE_PRIVATE);
+
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putInt("isLogged", 0);
+                                editor.commit();
+                                edt.commit();
+
+                                showStore();
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    addErrorToFields();
+                }
+            }
+        });
     }
+
     /**
-     * handle Sign in the user with Biometry
+     * Handles sign in the user with Biometry
      */
     private void handleBiometryLogin(){
-        biometricPrompt = new BiometricPrompt(LoginActivity.this, executor, new BiometricPrompt.AuthenticationCallback() {
+        this.biometricPrompt = new BiometricPrompt(LoginActivity.this,
+                                                   this.executor,
+                                                   new BiometricPrompt.AuthenticationCallback() {
 
             @Override
-            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+            public void onAuthenticationSucceeded(
+                    @NonNull BiometricPrompt.AuthenticationResult result) {
+
                 super.onAuthenticationSucceeded(result);
-                Toast.makeText(LoginActivity.this,"Biometria validada ",
+                Toast.makeText(LoginActivity.this, "Biometria validada ",
                         Toast.LENGTH_SHORT).show();
 
-                //take credentials from shared preferences
-                SharedPreferences preferences =
-                        getSharedPreferences("credentials",Context.MODE_PRIVATE);
-                String email = preferences.getString("email","NULL");
-                String password = preferences.getString("password","NULL");
-                signInUser(email,password);
-
+                // Take credentials from shared preferences
+                SharedPreferences preferences = getSharedPreferences("credentials",
+                                                                     Context.MODE_PRIVATE);
+                String email = preferences.getString("email", "NULL");
+                String password = preferences.getString("password", "NULL");
+                signInUser(email, password);
             }
+
             @Override
             public void onAuthenticationFailed() {
-                Toast.makeText(LoginActivity.this,"Falla al validar biometría ",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this,"Fallo al validar biometría ",
+                               Toast.LENGTH_SHORT).show();
             }
+
             @Override
-            public void onAuthenticationError(int errorCode,@NonNull CharSequence errString) {
-                super.onAuthenticationError(errorCode,errString);
-                //fail login
-                Toast.makeText(LoginActivity.this,"Error de autenticación : " + errString,
-                        Toast.LENGTH_SHORT).show();
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+
+                // Log in error
+                Toast.makeText(LoginActivity.this,
+                               "Error de autenticación: " + errString,
+                               Toast.LENGTH_SHORT).show();
             }
         });
 
-        promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Autenticación Biometrica")
-                .setSubtitle("Inicio sesión con Biometría")
-                .setNegativeButtonText("Contraseña del App")
-                .build();
+        this.promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                                                        .setTitle("Autenticación Biometrica")
+                                                        .setSubtitle("Inicio sesión con Biometría")
+                                                        .setNegativeButtonText("Contraseña del App")
+                                                        .build();
 
-        if(isLogged()){
-            biometryButton.setVisibility(View.VISIBLE);
+        if (isLogged()) {
+            this.biometryButton.setVisibility(View.VISIBLE);
         }
 
-        biometryButton.setOnClickListener(new View.OnClickListener() {
+        this.biometryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //-1 never logged , o loged
-                if(isLogged()) {
+                // -1 never logged , 0 logged
+                if (isLogged()) {
                     biometryButton.setVisibility(View.VISIBLE);
                     biometricPrompt.authenticate(promptInfo);
-                }else{
-                    Toast.makeText(LoginActivity.this,"Debe iniciar sesión por primera vez para usar esta funcionalidad",
-                            Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(LoginActivity.this,
+                        "Debe iniciar sesión por primera vez para usar esta funcionalidad",
+                        Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -275,31 +296,32 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Method to identificate if an user is logged
-     * @return true if is logged
+     * Verifies if an user is logged
+     * @return true if is logged, false otherwise
      */
-    public boolean isLogged(){
-        boolean isLoggeg = false;
-        SharedPreferences preferences =
-                getSharedPreferences("logged",Context.MODE_PRIVATE);
+    public boolean isLogged() {
+        boolean logged = false;
+        SharedPreferences preferences = getSharedPreferences("logged", Context.MODE_PRIVATE);
         int firstTime = preferences.getInt("isLogged",-1);
-        if(firstTime == 0) {
-            isLoggeg = true;
+
+        if (firstTime == 0) {
+            logged = true;
         }
-        return isLoggeg;
+
+        return logged;
     }
 
     /**
-     * if the user can't login it shows errors for the fields
+     * Adds error messages to fields if wrong data is inserted
      */
-    private void addErrorToFields(){
+    private void addErrorToFields() {
         this.tilEmail.setError("Correo o contraseña incorrectos");
         this.tilPassword.setError("Correo o contraseña incorrectos");
         this.tilPassword.setErrorIconDrawable(null);
     }
 
     /**
-     * Shows the screen to change the password
+     * Shows change password screen
      */
     private void showChangePasswordScreen() {
         Intent intent = new Intent(this, ChangePasswordActivity.class);
@@ -308,7 +330,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows the screen of the store
+     * Shows store screen
      */
     private void showStore() {
         Intent intent = new Intent(this, StoreActivity.class);
@@ -317,7 +339,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows a screen to enter e-mail and start the password recuperation.
+     * Shows a screen to enter e-mail and start the password recuperation
      */
     private void showForgotPasswordScreen() {
         Intent intent = new Intent(this, EmailInputActivity.class);
