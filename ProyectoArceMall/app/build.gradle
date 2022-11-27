@@ -75,4 +75,8 @@ dependencies {
     //biometric info
     implementation "androidx.biometric:biometric:1.1.0"
     implementation 'androidx.biometric:biometric:1.1.0-rc01'
+
+    implementation 'com.google.firebase:firebase-messaging:20.0.0'
 }
+
+apply plugin: 'com.google.gms.google-services'

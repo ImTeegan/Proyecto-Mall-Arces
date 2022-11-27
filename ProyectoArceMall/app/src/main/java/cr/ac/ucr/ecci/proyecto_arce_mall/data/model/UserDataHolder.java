@@ -9,12 +9,13 @@ public class UserDataHolder {
     private String province;
     private int firstTime;
     private int login;
+    private String token;
 
     public UserDataHolder(){
 
     }
 
-    UserDataHolder(User user, String uid) {
+    UserDataHolder(User user, String uid, String token) {
         setIdentification(user.getIdentification());
         setName(user.getName());
         setEmail(user.getEmail());
@@ -23,6 +24,7 @@ public class UserDataHolder {
         setFirstTime(user.getFirstTime());
         setLogin(user.getLogin());
         setUid(uid);
+        setToken(token);
     }
 
     public String getIdentification() {
@@ -87,5 +89,11 @@ public class UserDataHolder {
 
     public void setUid(String uid){
         this.uid = uid;
+    }
+
+    public String getToken() { return this.token; }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

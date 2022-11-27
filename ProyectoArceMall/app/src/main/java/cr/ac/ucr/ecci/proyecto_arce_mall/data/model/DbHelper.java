@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -166,9 +167,20 @@ public class DbHelper extends SQLiteOpenHelper {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            UserDataHolder userFB = new UserDataHolder(user, FirebaseAuth.getInstance().getUid());
-                            userCollection.document(userFB.getUid()).set(userFB);
-                            uploadImage(image);
+                            FirebaseMessaging.getInstance().getToken()
+                                    .addOnCompleteListener(new OnCompleteListener<String>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<String> task) {
+                                            if (!task.isSuccessful()) {
+                                                return;
+                                            }
+                                            // Get new FCM registration token
+                                            String token = task.getResult();
+                                            UserDataHolder userFB = new UserDataHolder(user, FirebaseAuth.getInstance().getUid(), token);
+                                            userCollection.document(userFB.getUid()).set(userFB);
+                                            uploadImage(image);
+                                        }
+                                    });
                         }else{
                             try {
                                 throw task.getException();
