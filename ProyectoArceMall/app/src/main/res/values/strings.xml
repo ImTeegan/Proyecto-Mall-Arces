@@ -34,4 +34,15 @@
     <string name="history">Historial</string>
     <string name="logout">Cerrar sesión</string>
     <string name="FingerPrint">Biometría</string>
+    <string name="history_title">Sus compras</string>
+    <string name="purchase_date">Fecha:</string>
+    <string name="purchase_total_price">Precio total:</string>
+    <string name="purchase_view_details">Ver detalles</string>
+    <string name="purchase_detail_title">Detalle de compra</string>
+    <string name="purchase_detail_date">Fecha y hora de compra:</string>
+    <string name="detail_product_name">Nombre:</string>
+    <string name="detail_product_count">Cantidad:</string>
+    <string name="detail_product_price">Precio:</string>
+    <string name="purchase_product_count">Cantidad total de productos:</string>
+    <string name="share">Compartir</string>
 </resources>
