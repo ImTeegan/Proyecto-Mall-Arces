@@ -17,12 +17,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.PurchaseHistory;
@@ -185,7 +188,7 @@ public class DbHelper extends SQLiteOpenHelper {
      * Creates a product to  and adds it to the database for shopping cart.
      * @param product  The new product to add
      */
-    public String addProduct(Product product , int quantity) {
+    /*public String addProduct(Product product , int quantity) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_CART_NAME,product.getTitle());
@@ -203,6 +206,104 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.close();
         return "TRUE";
+    }*/
+
+    public String addProduct (Product product, int quantity) {
+
+        fAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        CollectionReference cartCollection = dataBase.collection("Cart");
+        dataBase.collection("Cart")
+                .whereEqualTo("UID", fAuth.getUid())
+                .whereEqualTo("productID", product.getId())
+                //.whereEqualTo("quantity", quantity)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot documents = task.getResult();
+                            if (documents.isEmpty()){
+                                Log.d("si ya esta el productos", "no esta el producto");
+                                Map<String, Object> cartMap = new HashMap<>();
+                                cartMap.put("UID", fAuth.getUid());
+                                cartMap.put("productID", product.getId());
+                                cartMap.put("quantity", quantity);
+                                cartCollection.add(cartMap);
+                            }
+                            else {
+
+
+                                updateProductCart(product,0, quantity);
+
+                            }
+                        }
+                    }
+                });
+
+        return "TRUE";
+    }
+
+    /**
+     * Updates a product in the database.
+     * @param product The product to update
+     */
+    /*public void updateProductCart(Product product, int totalPrice) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_CART_PRICE_TOTAL, totalPrice);
+        values.put(COLUMN_CART_QUANTITY, product.getQuantity());
+
+        String userId = getLoginUser().getIdentification();
+
+        // Updating row
+        db.update(TABLE_CART, values, COLUMN_CART_ID + " = ? AND " + COLUMN_CART_ID_USER + " = ?",
+                new String[]{String.valueOf(product.getId()), userId});
+        db.close();
+    }*/
+
+    public void updateProductCart(Product product, int totalPrice, int quantity){
+       fAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        CollectionReference cartCollection = dataBase.collection("Cart");
+        dataBase.collection("Cart")
+                .whereEqualTo("UID", fAuth.getUid())
+                .whereEqualTo("productID", product.getId())
+                //.whereEqualTo("quantity", quantity)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot documents = task.getResult();
+
+                            Log.d("si ya esta el productos", "no esta el producto");
+
+                            String idProd = documents.getDocuments().get(0).getId();
+                            Log.d("si ya esta el productos", idProd);
+                            Map<String,Object> cartMap = new HashMap<>();
+                            cartMap.put("UID",fAuth.getUid());
+                            cartMap.put("productID",product.getId());
+                            cartMap.put("quantity",Integer.parseInt(documents.getDocuments().get(0).get("quantity").toString()) + quantity);
+                            cartCollection.document(idProd).set(cartMap);
+                                //updateProductCart(product, quantity);
+
+
+                        }
+                    }
+                });
+
+
+        /*int quantity = product.getQuantity();
+        int idP = product.getId();
+        String UID = fAuth.getUid();
+        dataBase.collection("Cart")
+                .whereEqualTo("UID", UID)
+                .whereEqualTo("productID", idP)
+                .whereEqualTo("quantity", quantity)*/
+
+
     }
 
     /**
@@ -247,24 +348,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    /**
-     * Updates a product in the database.
-     * @param product The product to update
-     */
-    public void updateProductCart(Product product, int totalPrice) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
 
-        values.put(COLUMN_CART_PRICE_TOTAL, totalPrice);
-        values.put(COLUMN_CART_QUANTITY, product.getQuantity());
-
-        String userId = getLoginUser().getIdentification();
-
-        // Updating row
-        db.update(TABLE_CART, values, COLUMN_CART_ID + " = ? AND " + COLUMN_CART_ID_USER + " = ?",
-                new String[]{String.valueOf(product.getId()), userId});
-        db.close();
-    }
 
     /**
      * Deletes an product from the database.

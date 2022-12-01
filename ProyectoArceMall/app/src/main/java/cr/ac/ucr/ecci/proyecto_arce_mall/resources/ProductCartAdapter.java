@@ -89,7 +89,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<CartViewHolder> {
     private void updateProductCart(Product product, int price, int quantity){
         Product updatedProduct = product;
         updatedProduct.setQuantity(quantity);
-        dataBase.updateProductCart(updatedProduct, price);
+        dataBase.updateProductCart(updatedProduct, price, quantity);
     }
 
     /**
