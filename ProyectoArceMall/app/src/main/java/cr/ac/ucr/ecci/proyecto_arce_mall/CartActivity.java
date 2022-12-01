@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -39,6 +44,9 @@ public class CartActivity extends AppCompatActivity {
     private Button payButton;
     private String Email;
     private Button cancelButton;
+    private CollectionReference usersCollection;
+    private StorageReference storageReference;
+    private FirebaseAuth fAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,6 +209,12 @@ public class CartActivity extends AppCompatActivity {
      */
     private void buildRecycleView(){
         cartProducts = this.dataBase.getProductsCart();
+       /* fAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        CollectionReference cartCollection = dataBase.collection("Cart");
+        cartProducts = cartCollection*/
+
+        Log.d("si ya esta el productos", cartProducts.get(0).getTitle());
         RecyclerView recycler = findViewById(R.id.recyclerCart);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,false);
         recycler.setLayoutManager(gridLayoutManager);

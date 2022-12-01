@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -25,6 +26,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
@@ -33,10 +35,11 @@ import cr.ac.ucr.ecci.proyecto_arce_mall.resources.PurchaseHistory;
 public class DbHelper extends SQLiteOpenHelper {
 
     //Variables to use FireBase as Database provider
-    private FirebaseAuth fAuth;
-    private FirebaseUser fUser;
-    private FirebaseStorage firebaseStorage;
-    private StorageReference storageReference;
+    FirebaseAuth fAuth;
+    FirebaseUser fUser;
+    FirebaseStorage firebaseStorage;
+    StorageReference storageReference;
+    Context context;
 
 
 
@@ -120,8 +123,9 @@ public class DbHelper extends SQLiteOpenHelper {
     // Drop table sql query
     private String DROP_TABLE_PURCHASE_HISTORY = "DROP TABLE IF EXISTS " + TABLE_PURCHASE_HISTORY;
 
-    public DbHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    public DbHelper(Context context){
+        //super(context);
+        this.context = context;
     }
 
     @Override
@@ -216,6 +220,7 @@ public class DbHelper extends SQLiteOpenHelper {
         dataBase.collection("Cart")
                 .whereEqualTo("UID", fAuth.getUid())
                 .whereEqualTo("productID", product.getId())
+
                 //.whereEqualTo("quantity", quantity)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -229,6 +234,10 @@ public class DbHelper extends SQLiteOpenHelper {
                                 cartMap.put("UID", fAuth.getUid());
                                 cartMap.put("productID", product.getId());
                                 cartMap.put("quantity", quantity);
+                                cartMap.put("name", product.getTitle());
+                                cartMap.put("price", product.getPrice());
+                                cartMap.put("totalPrice", product.getTotalPrice());
+                                cartMap.put("stock", product.getStock());
                                 cartCollection.add(cartMap);
                             }
                             else {
@@ -264,7 +273,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }*/
 
     public void updateProductCart(Product product, int totalPrice, int quantity){
-       fAuth = FirebaseAuth.getInstance();
+        fAuth = FirebaseAuth.getInstance();
         FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
         CollectionReference cartCollection = dataBase.collection("Cart");
         dataBase.collection("Cart")
@@ -286,6 +295,10 @@ public class DbHelper extends SQLiteOpenHelper {
                             cartMap.put("UID",fAuth.getUid());
                             cartMap.put("productID",product.getId());
                             cartMap.put("quantity",Integer.parseInt(documents.getDocuments().get(0).get("quantity").toString()) + quantity);
+                            cartMap.put("name", product.getTitle());
+                            cartMap.put("price", product.getPrice());
+                            cartMap.put("totalPrice", product.getTotalPrice());
+                            cartMap.put("stock", product.getStock());
                             cartCollection.document(idProd).set(cartMap);
                                 //updateProductCart(product, quantity);
 
@@ -380,7 +393,7 @@ public class DbHelper extends SQLiteOpenHelper {
      * Returns a list of the products in the cart in the database.
      * @return list of the products in the cart
      */
-    public List<Product> getProductsCart() {
+    /*public List<Product> getProductsCart() {
         // Array of columns to fetch
         String[] columns = {
                 COLUMN_CART_ID,
@@ -429,6 +442,46 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
 
         // Return product list
+        return productList;
+    }*/
+
+    public List<Product> getProductsCart() {
+        List<Product> productList = new ArrayList<>();
+
+
+        this.fAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        CollectionReference cartCollection = dataBase.collection("Cart");
+        Log.d("si ya esta el productos", "si entra al getproductscart");
+        dataBase.collection("Cart")
+                .whereEqualTo("UID", this.fAuth.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()){
+                        for (QueryDocumentSnapshot document : task.getResult()){
+                            Product product = new Product();
+                            Log.d("si ya esta el productos", "Si entra al for de getproductcart");
+                            Log.d("si ya esta el productos", document.get("name").toString());
+                            product.setId(Integer.parseInt(document.get("productID").toString()));
+                            Log.d("si ya esta el productos", (document.get("productID").toString()));
+                            product.setTitle(document.get("name").toString());
+                            product.setPrice(Integer.parseInt(document.get("price").toString()));
+                            Log.d("si ya esta el productos", document.get("price").toString());
+                            product.setTotalPrice(Integer.parseInt(document.get("totalPrice").toString()));
+                            Log.d("si ya esta el productos", document.get("totalPrice").toString());
+
+                            product.setQuantity(Integer.parseInt(document.get("quantity").toString()));
+                            Log.d("si ya esta el productos", document.get("quantity").toString());
+                            product.setStock(Integer.parseInt(document.get("stock").toString()));
+                            Log.d("si ya esta el productos", document.get("stock").toString());
+                            productList.add(product);
+                        }
+                    }
+                    }
+                });
+
         return productList;
     }
 
