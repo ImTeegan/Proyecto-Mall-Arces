@@ -90,6 +90,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         Product updatedProduct = product;
         updatedProduct.setQuantity(quantity);
         dataBase.updateProductCart(updatedProduct, price, quantity);
+        dataBase.updateProduct(updatedProduct, price);
     }
 
     /**
@@ -99,6 +100,7 @@ public class ProductCartAdapter extends RecyclerView.Adapter<CartViewHolder> {
      */
     private void deleteProductCart(Product product, int position){
         dataBase.deleteProductCart(product);
+        dataBase.deleteProduct(product);
         products.remove(position);
         notifyItemRemoved(position);
     }

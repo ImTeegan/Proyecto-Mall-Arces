@@ -16,12 +16,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
@@ -137,6 +142,7 @@ public class CartActivity extends AppCompatActivity {
     private void cleanStoreCart(){
         if(this.cartProducts.size() > 0){
             this.dataBase.deleteAllProductCart(activeUser.getIdentification());
+            this.dataBase.deleteAll();
             buildRecycleView();
             getTotalPurchasePrice();
         }
@@ -208,19 +214,54 @@ public class CartActivity extends AppCompatActivity {
      * Creates the Recycler view with the products list
      */
     private void buildRecycleView(){
+        //cartProducts = this.dataBase.getProductsCart();
         cartProducts = this.dataBase.getProductsCart();
-       /* fAuth = FirebaseAuth.getInstance();
-        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
-        CollectionReference cartCollection = dataBase.collection("Cart");
-        cartProducts = cartCollection*/
-
-        Log.d("si ya esta el productos", cartProducts.get(0).getTitle());
         RecyclerView recycler = findViewById(R.id.recyclerCart);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,false);
         recycler.setLayoutManager(gridLayoutManager);
         this.dataBase = new DbHelper(this);
         Adapter = new ProductCartAdapter(getApplicationContext(), this.cartProducts, this.dataBase);
         recycler.setAdapter(Adapter);
+
+      /*  cartProducts = new ArrayList<>();
+        this.fAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        CollectionReference cartCollection = dataBase.collection("Cart");
+        Log.d("si ya esta el productos", "si entra al getproductscart");
+        dataBase.collection("Cart")
+                .whereEqualTo("UID", this.fAuth.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            for (QueryDocumentSnapshot document : task.getResult()){
+                                Product product = new Product();
+                                Log.d("si ya esta el productos", "desde recycle Si entra al for de getproductcart");
+                                Log.d("si ya esta el productos", document.get("name").toString());
+                                product.setId(Integer.parseInt(document.get("productID").toString()));
+                                Log.d("si ya esta el productos", (document.get("productID").toString()));
+                                product.setTitle(document.get("name").toString());
+                                product.setPrice(Integer.parseInt(document.get("price").toString()));
+                                Log.d("si ya esta el productos", document.get("price").toString());
+                                product.setTotalPrice(Integer.parseInt(document.get("totalPrice").toString()));
+                                Log.d("si ya esta el productos", document.get("totalPrice").toString());
+
+                                product.setQuantity(Integer.parseInt(document.get("quantity").toString()));
+                                Log.d("si ya esta el productos", document.get("quantity").toString());
+                                product.setStock(Integer.parseInt(document.get("stock").toString()));
+                                Log.d("si ya esta el productos", document.get("stock").toString());
+                                cartProducts.add(product);
+                            }
+                        }
+                    }
+                });
+        RecyclerView recycler = findViewById(R.id.recyclerCart);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,false);
+        recycler.setLayoutManager(gridLayoutManager);
+        this.dataBase = new DbHelper(this);
+        Adapter = new ProductCartAdapter(getApplicationContext(), this.cartProducts, this.dataBase);
+        recycler.setAdapter(Adapter);*/
     }
 
     /**

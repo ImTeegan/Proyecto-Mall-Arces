@@ -133,6 +133,7 @@ public class ProductActivity extends AppCompatActivity {
                     Product productCart = product;
                     productCart.setTotalPrice(Integer.parseInt(product.getPrice()) *  Integer.parseInt(quantity.getText().toString()));
                     dataBase.addProduct(productCart,Integer.parseInt(quantity.getText().toString()));
+                    dataBase.productAdd(productCart, Integer.parseInt(quantity.getText().toString()));
                     Toast.makeText(ProductActivity.this, "Producto agregado con éxito", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(ProductActivity.this, "La cantidad del producto no puede exceder el stock ni ser 0", Toast.LENGTH_SHORT).show();

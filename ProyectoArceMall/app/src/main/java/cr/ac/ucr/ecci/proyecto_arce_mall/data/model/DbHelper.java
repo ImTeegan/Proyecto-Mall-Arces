@@ -16,6 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -125,7 +126,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public DbHelper(Context context){
         //super(context);
-        this.context = context;
+        //this.context = context;
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -192,7 +194,7 @@ public class DbHelper extends SQLiteOpenHelper {
      * Creates a product to  and adds it to the database for shopping cart.
      * @param product  The new product to add
      */
-    /*public String addProduct(Product product , int quantity) {
+    public String productAdd(Product product , int quantity) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_CART_NAME,product.getTitle());
@@ -210,7 +212,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.close();
         return "TRUE";
-    }*/
+    }
 
     public String addProduct (Product product, int quantity) {
 
@@ -257,7 +259,7 @@ public class DbHelper extends SQLiteOpenHelper {
      * Updates a product in the database.
      * @param product The product to update
      */
-    /*public void updateProductCart(Product product, int totalPrice) {
+    public void updateProduct(Product product, int totalPrice) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -270,7 +272,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.update(TABLE_CART, values, COLUMN_CART_ID + " = ? AND " + COLUMN_CART_ID_USER + " = ?",
                 new String[]{String.valueOf(product.getId()), userId});
         db.close();
-    }*/
+    }
 
     public void updateProductCart(Product product, int totalPrice, int quantity){
         fAuth = FirebaseAuth.getInstance();
@@ -294,7 +296,7 @@ public class DbHelper extends SQLiteOpenHelper {
                             Map<String,Object> cartMap = new HashMap<>();
                             cartMap.put("UID",fAuth.getUid());
                             cartMap.put("productID",product.getId());
-                            cartMap.put("quantity",Integer.parseInt(documents.getDocuments().get(0).get("quantity").toString()) + quantity);
+                            cartMap.put("quantity",product.getQuantity());
                             cartMap.put("name", product.getTitle());
                             cartMap.put("price", product.getPrice());
                             cartMap.put("totalPrice", product.getTotalPrice());
@@ -376,6 +378,49 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteProduct(Product product){
+        fAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        CollectionReference cartCollection = dataBase.collection("Cart");
+        dataBase.collection("Cart")
+                .whereEqualTo("UID", fAuth.getUid())
+                .whereEqualTo("productID", product.getId())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            for(QueryDocumentSnapshot document : task.getResult()){
+                                cartCollection.document(document.getId()).delete();
+                            }
+                        }
+                    }
+                });
+       /* String productId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        fAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        CollectionReference cartCollection = dataBase.collection("Cart");
+        dataBase.collection("Cart");
+        DocumentReference dataRef = dataBase.collection("Cart").;
+        /*fAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        CollectionReference cartCollection = dataBase.collection("Cart");
+        dataBase.collection("Cart")
+                .whereEqualTo("UID", fAuth.getUid())
+                .whereEqualTo("productID", product.getId())
+                .get()
+                .
+                .addOnCompleteListener(new OnCompleteListener<DocmuentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            QuerySnapshot document = task.getResult();
+                            cartCollection.document(document)
+                        }
+                    }
+                });*/
+    }
+
     /**
      * Deletes all the products in the cart from the database.
      */
@@ -387,13 +432,32 @@ public class DbHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteAll (){
+        fAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        CollectionReference cartCollection = dataBase.collection("Cart");
+        dataBase.collection("Cart")
+                .whereEqualTo("UID", fAuth.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            for(QueryDocumentSnapshot document : task.getResult()){
+                                cartCollection.document(document.getId()).delete();
+                            }
+                        }
+                    }
+                });
+    }
+
 
 
     /**
      * Returns a list of the products in the cart in the database.
      * @return list of the products in the cart
      */
-    /*public List<Product> getProductsCart() {
+    public List<Product> getProductsCart() {
         // Array of columns to fetch
         String[] columns = {
                 COLUMN_CART_ID,
@@ -443,9 +507,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
         // Return product list
         return productList;
-    }*/
+    }
 
-    public List<Product> getProductsCart() {
+    /*public List<Product> getProductsCart() {
         List<Product> productList = new ArrayList<>();
 
 
@@ -484,7 +548,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         return productList;
     }
-
+*/
 
     /**
      * Checks if a user is registered by a given e-mail.
