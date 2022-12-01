@@ -17,12 +17,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.PurchaseHistory;
@@ -209,7 +212,26 @@ public class DbHelper extends SQLiteOpenHelper {
         fAuth = FirebaseAuth.getInstance();
         FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
         CollectionReference cartCollection = dataBase.collection("Cart");
-
+        dataBase.collection("Cart")
+                .whereEqualTo("UID", fAuth.getUid())
+                .whereEqualTo("productID", product.getId())
+                .whereEqualTo("quantity", quantity)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot documents = task.getResult();
+                            if (documents.isEmpty()){
+                                Map<String, Object> cartMap = new HashMap<>();
+                                cartMap.put("UID", fAuth.getUid());
+                                cartMap.put("productID", product.getId());
+                                cartMap.put("quatity", quantity);
+                                cartCollection.add(cartMap);
+                            }
+                        }
+                    }
+                });
 
         return "TRUE";
     }
