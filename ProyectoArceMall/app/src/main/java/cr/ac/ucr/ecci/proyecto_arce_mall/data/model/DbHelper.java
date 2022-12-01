@@ -185,7 +185,7 @@ public class DbHelper extends SQLiteOpenHelper {
      * Creates a product to  and adds it to the database for shopping cart.
      * @param product  The new product to add
      */
-    public String addProduct(Product product , int quantity) {
+    /*public String addProduct(Product product , int quantity) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_CART_NAME,product.getTitle());
@@ -202,6 +202,15 @@ public class DbHelper extends SQLiteOpenHelper {
         db = getWritableDatabase();
 
         db.close();
+        return "TRUE";
+    }*/
+
+    public String addProduct (Product product, int quantity) {
+        fAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        CollectionReference cartCollection = dataBase.collection("Cart");
+
+
         return "TRUE";
     }
 
@@ -265,6 +274,21 @@ public class DbHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(product.getId()), userId});
         db.close();
     }
+
+    /*public void updateProductCart(Product product, int totalPrice){
+        fAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        CollectionReference cartCollection = dataBase.collection("Cart");
+        int quantity = product.getQuantity();
+        int idP = product.getId();
+        String UID = fAuth.getUid();
+        dataBase.collection("Cart")
+                .whereEqualTo("UID", UID)
+                .whereEqualTo("productID", idP)
+                .whereEqualTo("quantity", quantity)
+
+
+    }*/
 
     /**
      * Deletes an product from the database.
