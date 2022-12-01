@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
+import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Purchase;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.PurchaseHistory;
 
 public class DbHelper extends SQLiteOpenHelper {
@@ -322,6 +323,34 @@ public class DbHelper extends SQLiteOpenHelper {
 
         db.close();
         return "TRUE";
+    }
+
+    public void addPurchaseToHistory(Purchase purchase) {
+        this.fAuth = FirebaseAuth.getInstance();
+        final FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
+        final CollectionReference historyCollection = dataBase.collection("History");
+        dataBase.collection("History")
+                .whereEqualTo("UID", fAuth.getUid())
+                .whereEqualTo("date", purchase.getDate())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            final QuerySnapshot documents = task.getResult();
+
+                            if (documents.isEmpty()) {
+                                Map<String, Object> historyMap = new HashMap<>();
+                                historyMap.put("UID", fAuth.getUid());
+                                historyMap.put("date", purchase.getDate());
+                                historyMap.put("products", purchase.getProducts());
+                                historyMap.put("productCount", purchase.getProductCount());
+                                historyMap.put("totalPrice", purchase.getTotalPrice());
+                                historyCollection.add(historyMap);
+                            }
+                        }
+                    }
+                });
     }
 
     /**

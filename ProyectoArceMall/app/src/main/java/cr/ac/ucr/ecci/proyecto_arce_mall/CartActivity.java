@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Date;
 import java.util.List;
 
 import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.DbHelper;
@@ -24,6 +25,7 @@ import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.User;
 import cr.ac.ucr.ecci.proyecto_arce_mall.mail.JavaMailApi;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Product;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.ProductCartAdapter;
+import cr.ac.ucr.ecci.proyecto_arce_mall.resources.Purchase;
 import cr.ac.ucr.ecci.proyecto_arce_mall.resources.PurchaseHistory;
 
 public class CartActivity extends AppCompatActivity {
@@ -116,11 +118,21 @@ public class CartActivity extends AppCompatActivity {
      * Saves the purchase to the database
      */
     private void savePurchase() {
-        PurchaseHistory purchaseHistory = new PurchaseHistory();
+        final Purchase purchase = new Purchase();
+
+        purchase.setUserId(this.activeUser.getIdentification());
+        purchase.setDate((new Date()).toString());
+        purchase.setProducts(this.cartProducts);
+        purchase.setProductCount(this.cartProducts.size());
+        purchase.setTotalPrice(Integer.parseInt(String.valueOf(this.totalPrice)));
+
+        this.dataBase.addPurchaseToHistory(purchase);
+        
+        /*PurchaseHistory purchaseHistory = new PurchaseHistory();
         purchaseHistory.setUserId(this.activeUser.getIdentification());
         purchaseHistory.setTotalPrice(getTotalPurchasePrice());
         purchaseHistory.setItemsId(this.cartProducts.toString());
-        this.dataBase.addPurchase(purchaseHistory);
+        this.dataBase.addPurchase(purchaseHistory);*/
     }
 
     /**
