@@ -224,7 +224,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return "TRUE";
     }
 
-    public String addProduct (Product product, int quantity) {
+    public String productAdd (Product product, int quantity) {
 
         fAuth = FirebaseAuth.getInstance();
         FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
