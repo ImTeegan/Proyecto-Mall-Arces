@@ -25,6 +25,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import cr.ac.ucr.ecci.proyecto_arce_mall.data.model.UserDataHolder;
 import cr.ac.ucr.ecci.proyecto_arce_mall.utility.NetworkChangeListener;
 
 public class MainActivity extends AppCompatActivity {
@@ -64,9 +65,12 @@ public class MainActivity extends AppCompatActivity {
             dataRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    Intent intent = new Intent(MainActivity.this, StoreActivity.class);
-                    startActivity(intent);
-                    finish();
+                    UserDataHolder activeUser = documentSnapshot.toObject(UserDataHolder.class);
+                    if (activeUser.getFirstTime() == 0){
+                        Intent intent = new Intent(MainActivity.this, StoreActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             });
         }
